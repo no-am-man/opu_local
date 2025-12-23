@@ -13,6 +13,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Current Version: 3.0.0**
 
+## Screenshot
+
+The OPU Cognitive Map visualization shows the real-time state of the system, including surprise score (s_score), coherence, maturity, and voice pitch. Here's the OPU at full maturity (1.00) - a fully evolved sage:
+
+![OPU Cognitive Map](assets/Screen%20Shot%202025-12-23%20at%2018.32.54.png)
+
+*The visualization displays: s_score (surprise), coherence (shape integrity), maturity (0.0-1.0), and current voice pitch. The yellow ring indicates maturity level, the central shapes show cognitive state, and the purple trace shows historical patterns.*
+
 ## Architecture
 
 The OPU consists of several interconnected subsystems:
