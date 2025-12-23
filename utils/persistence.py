@@ -112,18 +112,20 @@ class OPUPersistence:
                     cortex.character_profile.update(cortex_data['character_profile'])
                 
                 # Restore memory levels
+                # FIX: Set on brain.memory_levels since memory_levels is now a property
                 if 'memory_levels' in cortex_data:
-                    cortex.memory_levels = self._deserialize_memory_levels(cortex_data['memory_levels'])
+                    cortex.brain.memory_levels = self._deserialize_memory_levels(cortex_data['memory_levels'])
                 
                 # Restore history
+                # FIX: Set on audio_cortex since these are now properties
                 if 'genomic_bits_history' in cortex_data:
-                    cortex.genomic_bits_history = self._deserialize_array(cortex_data['genomic_bits_history'])
+                    cortex.audio_cortex.genomic_bits_history = self._deserialize_array(cortex_data['genomic_bits_history'])
                 
                 if 'mu_history' in cortex_data:
-                    cortex.mu_history = self._deserialize_array(cortex_data['mu_history'])
+                    cortex.audio_cortex.mu_history = self._deserialize_array(cortex_data['mu_history'])
                 
                 if 'sigma_history' in cortex_data:
-                    cortex.sigma_history = self._deserialize_array(cortex_data['sigma_history'])
+                    cortex.audio_cortex.sigma_history = self._deserialize_array(cortex_data['sigma_history'])
                 
                 # Restore current state
                 if 'current_state' in cortex_data:

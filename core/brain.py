@@ -4,6 +4,7 @@ Handles memory abstraction, character evolution, and state management.
 """
 
 import numpy as np
+import time  # For EPOCH timestamps
 from config import MATURITY_INCREMENT
 
 
@@ -35,12 +36,13 @@ class Brain:
     def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN", timestamp=None):
         """
         Stores a memory at the appropriate abstraction level.
+        Uses EPOCH timestamps for temporal synchronization.
         
         Args:
             genomic_bit: the genomic bit to store
             s_score: the surprise score (determines level)
             sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1")
-            timestamp: optional timestamp (if None, uses total memories count)
+            timestamp: optional timestamp (if None, uses time.time() - EPOCH time)
         """
         # Determine abstraction level based on surprise
         # Maps to 7 maturity levels (0-6)
@@ -57,10 +59,13 @@ class Brain:
         else:
             level = 5  # 1 year - Wisdom/Transcendent
         
-        # Calculate timestamp if not provided
-        # Use total memories stored across all levels (before adding this one)
+        # --- FIX: DEFAULT TO EPOCH TIME ---
+        # EPOCH time (time.time()) creates a universal "Wall Clock" that forces
+        # Audio and Video to align perfectly on the timeline, regardless of
+        # processing rates (FPS vs Sample Rate).
+        # Old logical time: timestamp = sum(len(level_mem) for level_mem in self.memory_levels.values())
         if timestamp is None:
-            timestamp = sum(len(level_mem) for level_mem in self.memory_levels.values())
+            timestamp = time.time()
         
         # Store in appropriate level with sense label
         self.memory_levels[level].append({

@@ -43,7 +43,8 @@ class AudioCortex:
         Returns:
             s_score: surprise score (higher = more surprising)
         """
-        self.g_now = genomic_bit
+        # Update current genomic bit immediately
+        self.g_now = float(genomic_bit) if genomic_bit is not None else 0.0
         
         # Cap histories BEFORE appending to ensure we never exceed max_history_size
         if len(self.genomic_bits_history) >= self.max_history_size:
@@ -54,30 +55,40 @@ class AudioCortex:
             if len(self.sigma_history) > 0:
                 self.sigma_history.pop(0)
         
-        self.genomic_bits_history.append(genomic_bit)
+        # Append current genomic bit
+        self.genomic_bits_history.append(self.g_now)
         
         # Need at least 2 data points for meaningful introspection
         if len(self.genomic_bits_history) < 2:
             self.s_score = 0.0
+            self.coherence = 1.0  # Perfect coherence when no history
             return self.s_score
         
-        # Calculate historical statistics
-        history_array = np.array(self.genomic_bits_history)
-        mu_history = np.mean(history_array)
-        sigma_history = np.std(history_array)
+        # Calculate historical statistics from ALL history (not just mu/sigma history)
+        history_array = np.array(self.genomic_bits_history, dtype=np.float64)
+        mu_history = float(np.mean(history_array))
+        sigma_history = float(np.std(history_array))
         
-        # Store for later use
+        # --- FIX: ADD EPSILON TO PREVENT DIVIDE BY ZERO ---
+        # A perfectly silent room has sigma=0. We enforce a minimum noise floor.
+        # This prevents s_score from exploding to infinity when sigma is zero.
+        if sigma_history < 0.0001:
+            sigma_history = 0.0001
+        
+        # Store for later use (these are for backward compatibility)
         self.mu_history.append(mu_history)
         self.sigma_history.append(sigma_history)
         
-        # Calculate surprise score
-        if sigma_history > 0:
-            self.s_score = abs(genomic_bit - mu_history) / sigma_history
-        else:
-            self.s_score = abs(genomic_bit - mu_history) if mu_history > 0 else abs(genomic_bit)
+        # Calculate surprise score (Z-score formula)
+        # Now safe because sigma_history is guaranteed >= 0.0001
+        self.s_score = float(abs(self.g_now - mu_history) / sigma_history)
         
         # Calculate coherence (inverse of surprise, normalized)
-        self.coherence = 1.0 / (1.0 + self.s_score)
+        self.coherence = float(1.0 / (1.0 + self.s_score))
+        
+        # Ensure s_score is never negative (safety check)
+        if self.s_score < 0:
+            self.s_score = 0.0
         
         return self.s_score
     

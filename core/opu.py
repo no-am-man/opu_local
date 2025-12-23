@@ -13,6 +13,7 @@ Now supports Observer Pattern for state change notifications.
 """
 
 import numpy as np
+import time  # For EPOCH timestamps
 from core.brain import Brain
 from core.audio_cortex import AudioCortex
 from core.vision_cortex import VisualCortex
@@ -44,24 +45,13 @@ class OrthogonalProcessingUnit(ObservableOPU):
         self.audio_cortex = AudioCortex()
         self.vision_cortex = VisualCortex()
         
-        # Expose memory_levels for backward compatibility
-        self.memory_levels = self.brain.memory_levels
-        self.character_profile = self.brain.character_profile
-        
-        # Expose visual memory for backward compatibility
-        self.visual_memory = self.vision_cortex.visual_memory
-        self.max_visual_history = self.vision_cortex.max_visual_history
-        self.visual_stats = self.vision_cortex.visual_stats
-        
-        # Expose audio cortex attributes for backward compatibility
-        self.genomic_bits_history = self.audio_cortex.genomic_bits_history
-        self.mu_history = self.audio_cortex.mu_history
-        self.sigma_history = self.audio_cortex.sigma_history
-        self.max_history_size = self.audio_cortex.max_history_size
+        # DO NOT create shadow copies - use properties/delegation instead
+        # This prevents synchronization issues when cortex objects update their internal state
     
     def introspect(self, genomic_bit):
         """
         Audio introspection (delegates to AudioCortex).
+        Ensures state is properly updated and synchronized.
         
         Args:
             genomic_bit: current genomic bit (standard deviation from perception)
@@ -69,9 +59,12 @@ class OrthogonalProcessingUnit(ObservableOPU):
         Returns:
             s_score: surprise score (higher = more surprising)
         """
+        # Delegate to audio cortex - this updates self.audio_cortex.s_score
         s_score = self.audio_cortex.introspect(genomic_bit)
-        # Notify observers of state change
+        
+        # Notify observers of state change (reads fresh state)
         self._notify_state_change()
+        
         return s_score
     
     def introspect_visual(self, visual_vector):
@@ -93,15 +86,20 @@ class OrthogonalProcessingUnit(ObservableOPU):
     def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN"):
         """
         Store memory (delegates to Brain).
+        Uses EPOCH time for temporal synchronization across all senses.
         
         Args:
             genomic_bit: the genomic bit to store
             s_score: the surprise score (determines level)
             sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1")
         """
-        # Calculate timestamp based on genomic bits history length
-        # This matches the original behavior where timestamp reflected processing count
-        timestamp = len(self.genomic_bits_history)
+        # --- FIX: USE EPOCH TIME FOR GLOBAL SYNC ---
+        # EPOCH time (time.time()) creates a universal "Wall Clock" that forces
+        # Audio and Video to align perfectly on the timeline, regardless of
+        # processing rates (FPS vs Sample Rate).
+        # Old logical time: timestamp = len(self.audio_cortex.genomic_bits_history)
+        timestamp = time.time()
+        
         self.brain.store_memory(genomic_bit, s_score, sense_label=sense_label, timestamp=timestamp)
     
     def consolidate_memory(self, level):
@@ -134,10 +132,12 @@ class OrthogonalProcessingUnit(ObservableOPU):
     def get_current_state(self):
         """
         Returns current cognitive state (combines audio and brain state).
+        Always reads fresh state from subsystems to avoid stale data.
         
         Returns:
             dict with s_score, coherence, g_now, maturity
         """
+        # Always read fresh state directly from audio_cortex
         audio_state = self.audio_cortex.get_state()
         return {
             's_score': audio_state['s_score'],
@@ -151,10 +151,57 @@ class OrthogonalProcessingUnit(ObservableOPU):
         state = self.get_current_state()
         self.notify_observers(state)
     
-    # Expose properties for backward compatibility
+    # --- PROPERTIES FOR BACKWARD COMPATIBILITY ---
+    # These delegate directly to subsystems (no shadow copies)
+    
+    @property
+    def memory_levels(self):
+        """Memory levels (delegates to Brain)."""
+        return self.brain.memory_levels
+    
+    @property
+    def character_profile(self):
+        """Character profile (delegates to Brain)."""
+        return self.brain.character_profile
+    
+    @property
+    def visual_memory(self):
+        """Visual memory (delegates to VisualCortex)."""
+        return self.vision_cortex.visual_memory
+    
+    @property
+    def max_visual_history(self):
+        """Max visual history (delegates to VisualCortex)."""
+        return self.vision_cortex.max_visual_history
+    
+    @property
+    def visual_stats(self):
+        """Visual stats (delegates to VisualCortex)."""
+        return self.vision_cortex.visual_stats
+    
+    @property
+    def genomic_bits_history(self):
+        """Genomic bits history (delegates to AudioCortex)."""
+        return self.audio_cortex.genomic_bits_history
+    
+    @property
+    def mu_history(self):
+        """Mean history (delegates to AudioCortex)."""
+        return self.audio_cortex.mu_history
+    
+    @property
+    def sigma_history(self):
+        """Sigma history (delegates to AudioCortex)."""
+        return self.audio_cortex.sigma_history
+    
+    @property
+    def max_history_size(self):
+        """Max history size (delegates to AudioCortex)."""
+        return self.audio_cortex.max_history_size
+    
     @property
     def s_score(self):
-        """Current audio surprise score."""
+        """Current audio surprise score (delegates to AudioCortex)."""
         return self.audio_cortex.s_score
     
     @s_score.setter
@@ -164,7 +211,7 @@ class OrthogonalProcessingUnit(ObservableOPU):
     
     @property
     def coherence(self):
-        """Current coherence score."""
+        """Current coherence score (delegates to AudioCortex)."""
         return self.audio_cortex.coherence
     
     @coherence.setter
@@ -174,7 +221,7 @@ class OrthogonalProcessingUnit(ObservableOPU):
     
     @property
     def g_now(self):
-        """Current genomic bit."""
+        """Current genomic bit (delegates to AudioCortex)."""
         return self.audio_cortex.g_now
     
     @g_now.setter

@@ -11,7 +11,7 @@ if platform.system() == 'Darwin':
     os.environ['TK_SILENCE_DEPRECATION'] = '1'
 
 import tkinter as tk
-from tkinter import scrolledtext
+from tkinter import scrolledtext, filedialog, messagebox
 import queue
 import sys
 from datetime import datetime
@@ -38,7 +38,56 @@ class OPULogWindow:
         self.root.title(title)
         self.root.geometry(f"{width}x{height}")
         
-        # Create scrolled text widget
+        # Create button frame
+        self.button_frame = tk.Frame(self.root, bg='#1e1e1e')
+        self.button_frame.pack(fill=tk.X, padx=5, pady=2)
+        
+        # Copy All button
+        self.copy_all_btn = tk.Button(
+            self.button_frame,
+            text="Copy All",
+            command=self.copy_all,
+            bg='#264f78',
+            fg='#d4d4d4',
+            activebackground='#3a6ba0',
+            activeforeground='#ffffff',
+            relief=tk.FLAT,
+            padx=10,
+            pady=2
+        )
+        self.copy_all_btn.pack(side=tk.LEFT, padx=2)
+        
+        # Copy Selected button
+        self.copy_selected_btn = tk.Button(
+            self.button_frame,
+            text="Copy Selected",
+            command=self.copy_selected,
+            bg='#264f78',
+            fg='#d4d4d4',
+            activebackground='#3a6ba0',
+            activeforeground='#ffffff',
+            relief=tk.FLAT,
+            padx=10,
+            pady=2
+        )
+        self.copy_selected_btn.pack(side=tk.LEFT, padx=2)
+        
+        # Save to File button
+        self.save_btn = tk.Button(
+            self.button_frame,
+            text="Save to File",
+            command=self.save_to_file,
+            bg='#264f78',
+            fg='#d4d4d4',
+            activebackground='#3a6ba0',
+            activeforeground='#ffffff',
+            relief=tk.FLAT,
+            padx=10,
+            pady=2
+        )
+        self.save_btn.pack(side=tk.LEFT, padx=2)
+        
+        # Create scrolled text widget (ENABLED for selection/copying)
         self.text_widget = scrolledtext.ScrolledText(
             self.root,
             wrap=tk.WORD,
@@ -47,9 +96,13 @@ class OPULogWindow:
             fg='#d4d4d4',  # Light text
             insertbackground='#d4d4d4',
             selectbackground='#264f78',
-            state=tk.DISABLED  # Disable editing
+            state=tk.NORMAL  # ENABLED for text selection
         )
         self.text_widget.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        
+        # Bind Ctrl+C for copying
+        self.text_widget.bind('<Control-c>', lambda e: self.copy_selected())
+        self.text_widget.bind('<Command-c>', lambda e: self.copy_selected())  # macOS
         
         # Configure text tags for different log levels
         self.text_widget.tag_config('timestamp', foreground='#808080')
@@ -115,8 +168,7 @@ class OPULogWindow:
     def _append_text(self, message, tag='normal'):
         """Append text to the widget (must be called from main thread)."""
         try:
-            self.text_widget.config(state=tk.NORMAL)
-            
+            # Widget is always in NORMAL state now for selection
             # Auto-detect log level from message
             if not tag or tag == 'normal':
                 if '[ERROR]' in message or 'Error' in message:
@@ -138,11 +190,53 @@ class OPULogWindow:
             lines = int(self.text_widget.index('end-1c').split('.')[0])
             if lines > 10000:
                 self.text_widget.delete('1.0', f'{lines - 10000}.0')
-            
-            self.text_widget.config(state=tk.DISABLED)
         except Exception as e:
             # Fallback to original stdout
             self.original_stdout.write(f"Log append error: {e}\n")
+    
+    def copy_all(self):
+        """Copy all log content to clipboard."""
+        try:
+            content = self.text_widget.get('1.0', tk.END)
+            self.root.clipboard_clear()
+            self.root.clipboard_append(content)
+            self.root.update()  # Update clipboard
+            # Show brief feedback
+            self.text_widget.insert(tk.END, "\n[LOG] All content copied to clipboard\n", 'info')
+            self.text_widget.see(tk.END)
+        except Exception as e:
+            messagebox.showerror("Copy Error", f"Failed to copy: {e}")
+    
+    def copy_selected(self):
+        """Copy selected text to clipboard."""
+        try:
+            if self.text_widget.tag_ranges(tk.SEL):
+                content = self.text_widget.get(tk.SEL_FIRST, tk.SEL_LAST)
+                self.root.clipboard_clear()
+                self.root.clipboard_append(content)
+                self.root.update()  # Update clipboard
+            else:
+                messagebox.showinfo("No Selection", "Please select text to copy.")
+        except Exception as e:
+            messagebox.showerror("Copy Error", f"Failed to copy: {e}")
+    
+    def save_to_file(self):
+        """Save all log content to a file."""
+        try:
+            filename = filedialog.asksaveasfilename(
+                defaultextension=".txt",
+                filetypes=[("Text files", "*.txt"), ("Log files", "*.log"), ("All files", "*.*")],
+                title="Save OPU Log"
+            )
+            if filename:
+                content = self.text_widget.get('1.0', tk.END)
+                with open(filename, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                messagebox.showinfo("Saved", f"Log saved to:\n{filename}")
+                self.text_widget.insert(tk.END, f"\n[LOG] Saved to: {filename}\n", 'info')
+                self.text_widget.see(tk.END)
+        except Exception as e:
+            messagebox.showerror("Save Error", f"Failed to save: {e}")
     
     def on_closing(self):
         """Handle window close event."""

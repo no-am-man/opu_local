@@ -15,6 +15,7 @@ import numpy as np
 import sounddevice as sd
 import time
 import sys
+import argparse
 from datetime import datetime
 
 # Optional cv2 import for visual display
@@ -38,6 +39,7 @@ from core.camera import VisualPerception
 from core.object_detection import ObjectDetector
 from utils.visualization import CognitiveMapVisualizer
 from utils.persistence import OPUPersistence
+from utils.file_logger import FileLogger
 
 # Optional log window - may not work on all systems (e.g., macOS with Python 3.13+)
 # NOTE: On macOS, you MUST use ./run_opu.sh launcher script to set TK_SILENCE_DEPRECATION
@@ -56,8 +58,16 @@ class OPUEventLoop:
     Coordinates all subsystems and runs the abstraction cycle.
     """
     
-    def __init__(self, state_file=None):
-        # Initialize subsystems
+    def __init__(self, state_file=None, log_file=None, enable_log_window=True):
+        """
+        Initialize the OPU event loop.
+        
+        Args:
+            state_file: Path to state file (defaults to config.STATE_FILE)
+            log_file: Path to log file (None to disable file logging)
+            enable_log_window: Whether to enable the GUI log window
+        """
+        # Initialize subsystems first (before any logging redirection)
         self.genesis = GenesisKernel()
         self.cortex = OrthogonalProcessingUnit()
         self.afl = AestheticFeedbackLoop(base_pitch=BASE_FREQUENCY)
@@ -73,12 +83,16 @@ class OPUEventLoop:
         # Initialize persistence
         self.persistence = OPUPersistence(state_file=state_file or STATE_FILE)
         
-        # Initialize log window (must be after other initializations)
+        # Store original stdout/stderr BEFORE any redirection
+        self.original_stdout = sys.stdout
+        self.original_stderr = sys.stderr
+        
+        # Initialize log window FIRST (if enabled)
         # This will redirect stdout/stderr to the log window
         # NOTE: On macOS, the environment variable TK_SILENCE_DEPRECATION must be set
         # BEFORE Python starts (use ./run_opu.sh launcher script)
         self.log_window = None
-        if LOG_WINDOW_AVAILABLE:
+        if enable_log_window and LOG_WINDOW_AVAILABLE:
             # Try to create the log window
             try:
                 self.log_window = OPULogWindow(title="OPU Log - Real-time Output")
@@ -95,8 +109,24 @@ class OPUEventLoop:
                 else:
                     print(f"[OPU] Note: Log window unavailable (using terminal output): {type(e).__name__}: {error_msg}")
                 self.log_window = None
+        elif not enable_log_window:
+            print("[OPU] Log window disabled (use --log-window to enable)")
         else:
             print("[OPU] Note: Log window module unavailable (using terminal output)")
+        
+        # Initialize file logger AFTER log window (chains to log window if available)
+        # This ensures file logging works with or without the log window
+        self.file_logger = None
+        if log_file:
+            # Chain to current stdout (log window if it exists, otherwise original)
+            # The file logger will write to file AND pass through to the chained stdout
+            chain_target = sys.stdout if self.log_window else self.original_stdout
+            self.file_logger = FileLogger(log_file, chain_to=chain_target)
+            if self.file_logger.enabled:
+                # Redirect stdout/stderr to file logger (which chains to log window or original)
+                sys.stdout = self.file_logger
+                sys.stderr = self.file_logger
+                print(f"[OPU] File logging enabled: {self.file_logger.get_log_path()}")
         
         # Timing for abstraction cycles (7 maturity levels: 0-6)
         self.start_time = time.time()
@@ -176,19 +206,20 @@ class OPUEventLoop:
     def get_audio_input(self):
         """
         Get audio input from microphone or generate simulated input.
-        Reads ALL available data aggressively to prevent buffer overflow.
-        Uses non-blocking read to avoid delays.
+        Robust non-blocking read that handles empty buffers gracefully.
+        
+        FIX: Returns dithering noise (tiny random values) instead of pure zeros
+        when buffer is empty. This prevents divide-by-zero in introspection
+        and ensures s_score can be calculated even in silence.
         
         FEEDBACK PREVENTION: When OPU is actively speaking (outputting audio),
         we mute the microphone input to prevent acoustic feedback loops.
-        The microphone picks up the speaker output, which causes a feedback loop.
         
         Returns:
-            numpy array of audio samples
+            numpy array of audio samples (never returns pure zeros)
         """
         if self.use_microphone and self.audio_stream is not None:
             # FEEDBACK PREVENTION: If OPU is speaking, mute microphone input
-            # This prevents the microphone from picking up the speaker output
             if self.afl.is_active():
                 # OPU is speaking - mute microphone to prevent feedback
                 # Aggressively drain buffer to prevent overflow
@@ -206,9 +237,11 @@ class OPUEventLoop:
                             available = self.audio_stream.read_available
                             if available <= 0:
                                 break
-                    return np.zeros(CHUNK_SIZE, dtype=np.float32)
+                    # Return dithering noise instead of zeros to prevent divide-by-zero
+                    return np.random.normal(0, 0.0001, CHUNK_SIZE).astype(np.float32)
                 except Exception:
-                    return np.zeros(CHUNK_SIZE, dtype=np.float32)
+                    # Return dithering noise instead of zeros
+                    return np.random.normal(0, 0.0001, CHUNK_SIZE).astype(np.float32)
             
             try:
                 # AGGRESSIVE BUFFER DRAINING: Read ALL available data to prevent overflow
@@ -242,8 +275,8 @@ class OPUEventLoop:
                         try:
                             data, overflowed = self.audio_stream.read(CHUNK_SIZE, blocking=False)
                         except:
-                            # Last resort: return zeros
-                            return np.zeros(CHUNK_SIZE, dtype=np.float32)
+                            # Last resort: return dithering noise instead of zeros
+                            return np.random.normal(0, 0.0001, CHUNK_SIZE).astype(np.float32)
                     
                     if overflowed:
                         # Only print occasionally to avoid spam
@@ -263,8 +296,9 @@ class OPUEventLoop:
                         padded[:len(data_flat)] = data_flat
                         return padded
                 else:
-                    # No data available, return zeros
-                    return np.zeros(CHUNK_SIZE, dtype=np.float32)
+                    # No data available - return dithering noise instead of zeros
+                    # This prevents divide-by-zero in introspection
+                    return np.random.normal(0, 0.0001, CHUNK_SIZE).astype(np.float32)
             except Exception as e:
                 # Silently fall back to simulated input on errors
                 return self.generate_simulated_input()
@@ -432,10 +466,17 @@ class OPUEventLoop:
             self.display_visual_cortex(processed_frame, s_global, s_visual, s_audio, channel_scores, detections)
         
         # --- 10. UPDATE COGNITIVE MAP ---
+        # Use the actual introspection results (s_audio) to ensure synchronization
+        # The s_score from get_current_state() should match, but use the fresh value
         state = self.cortex.get_current_state()
         character = self.cortex.get_character_state()
+        
+        # Use the actual s_score from introspection (s_audio) to ensure accuracy
+        # This ensures we're using the value that was just calculated, not a stale cached value
+        effective_s_score = s_audio if s_audio > 0 else state['s_score']
+        
         self.visualizer.update_state(
-            state['s_score'],
+            effective_s_score,
             state['coherence'],
             state['maturity'],
             character.get('maturity_level', 0)
@@ -653,8 +694,11 @@ class OPUEventLoop:
                 last_cycle_time = time.time()
                 
                 # Periodic status with s_score info
+                # Note: This reads state after the cycle, so s_score should be current
                 if cycle_count % 100 == 0:
                     state = self.cortex.get_current_state()
+                    # Verify s_score is being updated correctly
+                    # If it's 0 but we expect non-zero, there's a sync issue
                     print(f"[CYCLE {cycle_count}] "
                           f"s_score: {state['s_score']:.2f}, "
                           f"coherence: {state['coherence']:.2f}, "
@@ -699,12 +743,23 @@ class OPUEventLoop:
         if CV2_AVAILABLE:
             cv2.destroyAllWindows()
         
-        # Cleanup log window (restore stdout/stderr)
+        # Cleanup file logger first (restore stdout/stderr to log window or original)
+        if self.file_logger:
+            sys.stdout = self.file_logger.original_stdout
+            sys.stderr = self.file_logger.original_stderr
+            self.file_logger.close()
+        
+        # Cleanup log window (restore to original stdout/stderr)
         if hasattr(self, 'log_window') and self.log_window is not None:
             try:
                 self.log_window.stop()
             except Exception:
                 pass
+        
+        # Final restore to original stdout/stderr
+        if hasattr(self, 'original_stdout'):
+            sys.stdout = self.original_stdout
+            sys.stderr = self.original_stderr
         
         print("[OPU] Cleanup complete.")
 
@@ -713,6 +768,41 @@ def main():
     """Entry point."""
     from config import OPU_VERSION
     
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description='Orthogonal Processing Unit (OPU) - Process-Centric AI Architecture',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python main.py                          # Run with default settings
+  python main.py --log-file opu.log       # Enable file logging
+  python main.py --no-log-window          # Disable GUI log window
+  python main.py --log-file debug.log --no-log-window  # File logging only
+        """
+    )
+    parser.add_argument(
+        '--log-file',
+        type=str,
+        default=None,
+        help='Path to log file (enables file logging). Default: opu_debug.log'
+    )
+    parser.add_argument(
+        '--no-log-window',
+        action='store_true',
+        help='Disable the GUI log window'
+    )
+    parser.add_argument(
+        '--state-file',
+        type=str,
+        default=None,
+        help='Path to OPU state file (default: from config.py)'
+    )
+    
+    args = parser.parse_args()
+    
+    # Default log file if --log-file is specified without a path
+    log_file = args.log_file if args.log_file else ('opu_debug.log' if args.log_file is not None else None)
+    
     print("=" * 60)
     print("Orthogonal Processing Unit (OPU)")
     print(f"Version {OPU_VERSION} - MIT License")
@@ -720,7 +810,11 @@ def main():
     print("=" * 60)
     print()
     
-    opu = OPUEventLoop()
+    opu = OPUEventLoop(
+        state_file=args.state_file,
+        log_file=log_file,
+        enable_log_window=not args.no_log_window
+    )
     opu.run()
 
 

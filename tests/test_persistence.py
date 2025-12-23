@@ -76,9 +76,10 @@ class TestOPUPersistence:
         phoneme_analyzer = PhonemeAnalyzer()
         
         # Add memories to multiple levels
+        # FIX: Access via brain since memory_levels is now a property
         for level in range(7):
             for i in range(3):
-                cortex.memory_levels[level].append({
+                cortex.brain.memory_levels[level].append({
                     'genomic_bit': float(i),
                     's_score': float(level)
                 })

@@ -271,9 +271,19 @@ class TestOrthogonalProcessingUnit:
         assert abs(opu.coherence - expected_coherence) < 1e-10
     
     def test_store_memory_timestamp(self):
-        """Test that store_memory includes timestamp."""
+        """Test that store_memory includes EPOCH timestamp."""
+        import time
         opu = OrthogonalProcessingUnit()
-        opu.genomic_bits_history = [0.1, 0.2, 0.3]
+        # Set history directly on audio_cortex (since genomic_bits_history is now a property)
+        opu.audio_cortex.genomic_bits_history = [0.1, 0.2, 0.3]
+        
+        before_time = time.time()
         opu.store_memory(0.4, 0.3)
-        assert opu.memory_levels[0][0]['timestamp'] == 3
+        after_time = time.time()
+        
+        timestamp = opu.memory_levels[0][0]['timestamp']
+        # Should be EPOCH time (float > 1e9)
+        assert isinstance(timestamp, float)
+        assert timestamp > 1000000000  # EPOCH time check
+        assert before_time <= timestamp <= after_time  # Should be between before and after
 
