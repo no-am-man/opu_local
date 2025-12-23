@@ -298,9 +298,9 @@ class OPUEventLoop:
                           " | ".join([f"L{i}={len(self.cortex.memory_levels[i])}" 
                                      for i in range(6)]))
                     
-                    # Save state after significant abstraction cycles (Level 2+)
-                    if level >= 2:
-                        self._save_state()
+                    # Save state after any abstraction cycle (all levels)
+                    # This ensures state is saved regularly
+                    self._save_state()
                 
                 # Increment day counter only for Level 2 (1 day)
                 if level == 2:

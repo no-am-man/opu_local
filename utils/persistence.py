@@ -36,28 +36,37 @@ class OPUPersistence:
             day_counter: Current day counter
         """
         try:
+            # Serialize character profile (handle numpy types)
+            character_profile = {}
+            for key, value in cortex.character_profile.items():
+                if isinstance(value, (np.integer, np.floating, np.float32, np.float64, 
+                                     np.int32, np.int64, np.int_, np.float_)):
+                    character_profile[key] = float(value)
+                else:
+                    character_profile[key] = value
+            
             state = {
                 'version': '1.0',
                 'day_counter': day_counter,
                 
                 # Cortex state
                 'cortex': {
-                    'character_profile': cortex.character_profile.copy(),
+                    'character_profile': character_profile,
                     'memory_levels': self._serialize_memory_levels(cortex.memory_levels),
                     'genomic_bits_history': self._serialize_array(cortex.genomic_bits_history),
                     'mu_history': self._serialize_array(cortex.mu_history),
                     'sigma_history': self._serialize_array(cortex.sigma_history),
                     'current_state': {
-                        'g_now': float(cortex.g_now) if cortex.g_now is not None else None,
-                        's_score': float(cortex.s_score),
-                        'coherence': float(cortex.coherence)
+                        'g_now': float(cortex.g_now) if cortex.g_now is not None and not isinstance(cortex.g_now, (str, type(None))) else None,
+                        's_score': float(cortex.s_score) if not isinstance(cortex.s_score, (str, type(None))) else 0.0,
+                        'coherence': float(cortex.coherence) if not isinstance(cortex.coherence, (str, type(None))) else 0.0
                     }
                 },
                 
                 # Phoneme analyzer state
                 'phonemes': {
                     'history': phoneme_analyzer.phoneme_history.copy(),
-                    'speech_threshold': phoneme_analyzer.speech_threshold
+                    'speech_threshold': float(phoneme_analyzer.speech_threshold) if isinstance(phoneme_analyzer.speech_threshold, (np.integer, np.floating, np.float32, np.float64)) else phoneme_analyzer.speech_threshold
                 }
             }
             
@@ -73,7 +82,10 @@ class OPUPersistence:
             return True
             
         except Exception as e:
+            import traceback
             print(f"[PERSISTENCE] Error saving state: {e}")
+            print(f"[PERSISTENCE] Traceback:")
+            traceback.print_exc()
             return False
     
     def load_state(self, cortex, phoneme_analyzer):
@@ -162,10 +174,18 @@ class OPUPersistence:
             for mem in memories:
                 serialized_mem = {}
                 for key, value in mem.items():
-                    if isinstance(value, (np.integer, np.floating)):
+                    # Handle all numpy types
+                    if isinstance(value, (np.integer, np.floating, np.float32, np.float64, 
+                                         np.int32, np.int64, np.int_, np.float_)):
                         serialized_mem[key] = float(value)
                     elif isinstance(value, np.ndarray):
-                        serialized_mem[key] = value.tolist()
+                        serialized_mem[key] = [float(x) for x in value.tolist()]
+                    elif isinstance(value, (list, tuple)):
+                        # Recursively handle lists/tuples that might contain numpy types
+                        serialized_mem[key] = [float(x) if isinstance(x, (np.integer, np.floating, 
+                                                                          np.float32, np.float64,
+                                                                          np.int32, np.int64)) 
+                                              else x for x in value]
                     else:
                         serialized_mem[key] = value
                 serialized[str(level)].append(serialized_mem)
@@ -202,8 +222,17 @@ class OPUPersistence:
         if isinstance(arr, np.ndarray):
             return [float(x) for x in arr.tolist()]
         elif isinstance(arr, list):
-            # Convert any numpy types in list
-            return [float(x) if isinstance(x, (np.integer, np.floating, np.float32, np.float64)) else x for x in arr]
+            # Convert any numpy types in list (handle all numpy scalar types)
+            result = []
+            for x in arr:
+                if isinstance(x, (np.integer, np.floating, np.float32, np.float64, 
+                                 np.int32, np.int64, np.int_, np.float_)):
+                    result.append(float(x))
+                elif isinstance(x, np.ndarray):
+                    result.append([float(y) for y in x.tolist()])
+                else:
+                    result.append(x)
+            return result
         return arr
     
     def _deserialize_array(self, data):

@@ -32,7 +32,8 @@ class OrthogonalProcessingUnit:
             "stability_threshold": 3.0  # Easily surprised initially
         }
         
-        # History for introspection
+        # History for introspection (capped to prevent unbounded growth)
+        self.max_history_size = 10000  # Cap introspection history
         self.mu_history = []  # Mean of historical genomic bits
         self.sigma_history = []  # Std dev of historical genomic bits
         self.genomic_bits_history = []  # Raw genomic bits
@@ -67,9 +68,16 @@ class OrthogonalProcessingUnit:
         mu_history = np.mean(history_array)
         sigma_history = np.std(history_array)
         
-        # Store for later use
+        # Store for later use (with cap to prevent unbounded growth)
         self.mu_history.append(mu_history)
         self.sigma_history.append(sigma_history)
+        
+        # Cap histories to prevent memory growth over very long runtimes
+        if len(self.genomic_bits_history) > self.max_history_size:
+            # Keep only the most recent history
+            self.genomic_bits_history = self.genomic_bits_history[-self.max_history_size:]
+            self.mu_history = self.mu_history[-self.max_history_size:]
+            self.sigma_history = self.sigma_history[-self.max_history_size:]
         
         # Calculate surprise score
         if sigma_history > 0:

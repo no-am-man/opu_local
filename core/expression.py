@@ -10,18 +10,25 @@ from config import BASE_FREQUENCY, SAMPLE_RATE
 
 class AestheticFeedbackLoop:
     """
-    Continuous Phase Oscillator.
-    Eliminates clipping by maintaining phase continuity across buffer callbacks.
-    Creates a smooth, theremin-like voice that glides between pitches.
+    Continuous Phase Oscillator with Syllabic Articulation.
     """
     
     def __init__(self, base_pitch=440.0):
         self.base_pitch = base_pitch
         self.sample_rate = SAMPLE_RATE
+        
+        # Oscillator State
         self.current_frequency = base_pitch
         self.target_frequency = base_pitch
-        self.amplitude = 0.0
         self.phase = 0.0
+        
+        # Amplitude State
+        self.current_amp = 0.0
+        self.target_amp = 0.0
+        
+        # Articulation (The "Talking" Rhythm)
+        self.syllable_phase = 0.0
+        self.is_speaking = False
         
         # Audio Stream State
         self.stream = None
@@ -38,93 +45,85 @@ class AestheticFeedbackLoop:
         t = np.arange(frames) / self.sample_rate
         
         # 1. SMOOTH PITCH GLIDE (Portamento)
-        # Move current freq 10% closer to target freq per buffer
-        # This creates smooth pitch transitions instead of instant jumps
         self.current_frequency += (self.target_frequency - self.current_frequency) * 0.1
+        self.current_amp += (self.target_amp - self.current_amp) * 0.1
         
-        # 2. CALCULATE PHASE INCREMENT
-        # phase_increment = 2 * pi * freq / sample_rate
+        # 2. GENERATE CARRIER WAVE
         phase_increment = 2 * np.pi * self.current_frequency / self.sample_rate
-        
-        # 3. GENERATE WAVEFORM WITH PHASE CONTINUITY
-        # We add the increment to the accumulated phase
-        # This ensures the wave connects perfectly to the previous chunk
         phases = self.phase + np.arange(frames) * phase_increment
-        self.phase = phases[-1] % (2 * np.pi)  # Wrap phase to keep numbers small
+        self.phase = phases[-1] % (2 * np.pi) 
         
-        # Sine Wave
-        waveform = np.sin(phases)
+        carrier = np.sin(phases)
         
-        # 4. APPLY AMPLITUDE (Volume)
-        # Smoothly decay amplitude if no new input (natural fade)
-        self.amplitude *= 0.98
+        # 3. APPLY SYLLABIC RHYTHM (The "Words")
+        # If we are "speaking" (High S_Score), we modulate volume at 8Hz
+        if self.is_speaking:
+            # 8Hz LFO for syllable rate
+            syllable_inc = 2 * np.pi * 8.0 / self.sample_rate
+            syllable_phases = self.syllable_phase + np.arange(frames) * syllable_inc
+            self.syllable_phase = syllable_phases[-1] % (2 * np.pi)
+            
+            # Create a "wah-wah" envelope (0.6 to 1.0 amplitude)
+            articulation = 0.6 + (0.4 * np.sin(syllable_phases))
+        else:
+            articulation = 1.0 # Flat drone if just humming
         
-        # Fill buffer
-        # 0.1 is a safe master volume to prevent clipping
-        outdata[:] = (waveform * self.amplitude * 0.1).reshape(-1, 1).astype(np.float32)
+        # 4. OUTPUT
+        # Signal = Wave * Volume * Rhythm * MasterGain (0.5)
+        # We removed the decay (*= 0.98) because it killed the sound too fast
+        signal = carrier * self.current_amp * articulation * 0.5
+        
+        outdata[:] = signal.reshape(-1, 1).astype(np.float32)
     
     def start(self):
-        """Start the audio output stream."""
         try:
             self.stream = sd.OutputStream(
                 channels=1,
                 callback=self.callback,
                 samplerate=self.sample_rate,
                 dtype=np.float32,
-                latency='low'
+                latency='low',
+                blocksize=1024 # Slightly larger buffer for stability
             )
             self.stream.start()
             self.running = True
             print("[AFL] Continuous phase oscillator initialized.")
         except Exception as e:
-            print(f"[AFL] Warning: Could not initialize audio output stream: {e}")
-            print("[AFL] Audio feedback will be disabled.")
-            self.stream = None
+            print(f"[AFL] Error: {e}")
             self.running = False
-    
+            
     def update_pitch(self, base_pitch):
-        """Update the base pitch (called when character evolves)."""
         self.base_pitch = base_pitch
-        # Update target frequency to reflect new base pitch
-        # Keep the relative s_score mapping intact
-    
+
     def play_tone(self, s_score, duration=None):
         """
         Updates the continuous oscillator based on surprise.
-        The sound persists until s_score drops or changes.
-        
-        Args:
-            s_score: surprise score
-            duration: ignored (continuous oscillator)
         """
-        # Only respond to significant surprise (reduce audio spam)
-        if s_score < 0.8:
-            # Fade out quickly if below threshold
-            self.amplitude *= 0.9
+        # NOISE GATE: If bored, go silent
+        if s_score < 0.2:
+            self.target_amp = 0.0
+            self.is_speaking = False
             return
         
-        # Map S_Score to Pitch (Surprise = High Pitch)
-        # Formula: base_pitch * (1 + s_score / 10)
-        # This maintains the original mapping but allows smooth transitions
+        # 1. SET VOLUME (Attention)
+        self.target_amp = min(1.0, s_score / 3.0)
+        
+        # 2. SET PITCH (Surprise)
+        # Base * (1 + score/10)
         new_freq = self.base_pitch * (1.0 + s_score / 10.0)
         self.target_frequency = np.clip(new_freq, 50.0, 2000.0)
         
-        # Map S_Score to Volume (Attention = Louder)
-        # Higher surprise = louder response
-        target_amp = min(1.0, s_score / 3.0)
-        # Smooth amplitude transition
-        self.amplitude += (target_amp - self.amplitude) * 0.2
-    
+        # 3. TRIGGER ARTICULATION
+        # If surprise is high, turn on the "Syllable LFO"
+        if s_score > 1.5:
+            self.is_speaking = True
+        else:
+            self.is_speaking = False
+
     def cleanup(self):
-        """Clean up audio output stream."""
         if self.stream:
-            try:
-                self.stream.stop()
-                self.stream.close()
-                self.stream = None
-                self.running = False
-            except:
-                pass
+            self.stream.stop()
+            self.stream.close()
 
 
 class PhonemeAnalyzer:
@@ -133,9 +132,10 @@ class PhonemeAnalyzer:
     Filters out noise and only recognizes "Spoken" sounds with Structural Intent.
     """
     
-    def __init__(self, speech_threshold=1.5):
+    def __init__(self, speech_threshold=1.5, max_history=10000):
         self.speech_threshold = speech_threshold
         self.phoneme_history = []
+        self.max_history = max_history 
     
     def analyze(self, s_score, pitch):
         """
@@ -169,12 +169,16 @@ class PhonemeAnalyzer:
             # Plosives (Hard break)
             phoneme = "k"
         
-        # Store in history
+        # Store in history (with cap to prevent unbounded growth)
         self.phoneme_history.append({
             'phoneme': phoneme,
             's_score': s_score,
             'pitch': pitch
         })
+        
+        # Cap history to prevent memory leak over very long runtimes (years)
+        if len(self.phoneme_history) > self.max_history:
+            self.phoneme_history = self.phoneme_history[-self.max_history:]
         
         return phoneme
     
@@ -223,4 +227,3 @@ class PhonemeAnalyzer:
                 'plosives': plosives / len(phonemes) if len(phonemes) > 0 else 0
             }
         }
-
