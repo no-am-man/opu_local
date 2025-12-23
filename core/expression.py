@@ -5,183 +5,124 @@ Maps surprise scores to audio frequencies and phonemes.
 
 import numpy as np
 import sounddevice as sd
-import time
-from collections import deque
-from threading import Lock
 from config import BASE_FREQUENCY, SAMPLE_RATE
 
 
 class AestheticFeedbackLoop:
     """
-    Maps surprise score (s_score) to audio frequency.
-    Uses sounddevice OutputStream with queue for reliable non-blocking audio playback.
+    Continuous Phase Oscillator.
+    Eliminates clipping by maintaining phase continuity across buffer callbacks.
+    Creates a smooth, theremin-like voice that glides between pitches.
     """
     
     def __init__(self, base_pitch=440.0):
         self.base_pitch = base_pitch
         self.sample_rate = SAMPLE_RATE
         self.current_frequency = base_pitch
+        self.target_frequency = base_pitch
+        self.amplitude = 0.0
+        self.phase = 0.0
         
-        # Audio output queue and stream
-        self.audio_queue = deque(maxlen=1)  # Only one tone at a time
-        self.queue_lock = Lock()
-        self.output_stream = None
-        self.is_playing = False  # Track if currently playing
+        # Audio Stream State
+        self.stream = None
+        self.running = False
         
-        # Throttle to prevent too many tones too quickly
-        self.last_tone_time = 0.0
-        self.min_tone_interval = 0.15  # Minimum 150ms between tones
-        
-        self._init_output_stream()
+        self.start()
     
-    def _init_output_stream(self):
-        """Initialize a non-blocking audio output stream with callback."""
+    def callback(self, outdata, frames, time_info, status):
+        """Audio callback - generates continuous waveform with phase continuity."""
+        if status:
+            print(f"[AFL] Audio output status: {status}")
+        
+        # Time array for this buffer chunk
+        t = np.arange(frames) / self.sample_rate
+        
+        # 1. SMOOTH PITCH GLIDE (Portamento)
+        # Move current freq 10% closer to target freq per buffer
+        # This creates smooth pitch transitions instead of instant jumps
+        self.current_frequency += (self.target_frequency - self.current_frequency) * 0.1
+        
+        # 2. CALCULATE PHASE INCREMENT
+        # phase_increment = 2 * pi * freq / sample_rate
+        phase_increment = 2 * np.pi * self.current_frequency / self.sample_rate
+        
+        # 3. GENERATE WAVEFORM WITH PHASE CONTINUITY
+        # We add the increment to the accumulated phase
+        # This ensures the wave connects perfectly to the previous chunk
+        phases = self.phase + np.arange(frames) * phase_increment
+        self.phase = phases[-1] % (2 * np.pi)  # Wrap phase to keep numbers small
+        
+        # Sine Wave
+        waveform = np.sin(phases)
+        
+        # 4. APPLY AMPLITUDE (Volume)
+        # Smoothly decay amplitude if no new input (natural fade)
+        self.amplitude *= 0.98
+        
+        # Fill buffer
+        # 0.1 is a safe master volume to prevent clipping
+        outdata[:] = (waveform * self.amplitude * 0.1).reshape(-1, 1).astype(np.float32)
+    
+    def start(self):
+        """Start the audio output stream."""
         try:
-            def audio_callback(outdata, frames, time_info, status):
-                """Callback to fill output buffer from queue."""
-                if status:
-                    print(f"[AFL] Audio output status: {status}")
-                
-                # Always start with silence
-                outdata.fill(0.0)
-                
-                with self.queue_lock:
-                    if len(self.audio_queue) > 0:
-                        # Get next audio chunk from queue
-                        audio_data = self.audio_queue.popleft()
-                        self.is_playing = True
-                        
-                        # Copy as much as we can
-                        copy_len = min(len(audio_data), frames)
-                        if copy_len > 0:
-                            outdata[:copy_len, 0] = audio_data[:copy_len]
-                        
-                        # If we used all the audio data, mark as not playing
-                        if copy_len >= len(audio_data):
-                            self.is_playing = False
-                    else:
-                        # No audio in queue, mark as not playing
-                        self.is_playing = False
-            
-            self.output_stream = sd.OutputStream(
-                samplerate=self.sample_rate,
+            self.stream = sd.OutputStream(
                 channels=1,
+                callback=self.callback,
+                samplerate=self.sample_rate,
                 dtype=np.float32,
-                blocksize=0,  # Let sounddevice choose optimal blocksize
-                latency='low',  # Low latency for responsive feedback
-                callback=audio_callback
+                latency='low'
             )
-            self.output_stream.start()
-            print("[AFL] Audio output stream initialized.")
+            self.stream.start()
+            self.running = True
+            print("[AFL] Continuous phase oscillator initialized.")
         except Exception as e:
             print(f"[AFL] Warning: Could not initialize audio output stream: {e}")
             print("[AFL] Audio feedback will be disabled.")
-            self.output_stream = None
+            self.stream = None
+            self.running = False
     
     def update_pitch(self, base_pitch):
         """Update the base pitch (called when character evolves)."""
         self.base_pitch = base_pitch
+        # Update target frequency to reflect new base pitch
+        # Keep the relative s_score mapping intact
     
-    def generate_tone(self, s_score, duration=0.1):
+    def play_tone(self, s_score, duration=None):
         """
-        Generates a tone based on surprise score.
-        
-        Formula: frequency = base_pitch * (1 + s_score / 10)
+        Updates the continuous oscillator based on surprise.
+        The sound persists until s_score drops or changes.
         
         Args:
             s_score: surprise score
-            duration: duration in seconds
-            
-        Returns:
-            numpy array of audio samples
+            duration: ignored (continuous oscillator)
         """
-        # Map s_score to frequency
-        # Higher surprise = higher pitch
-        frequency = self.base_pitch * (1.0 + s_score / 10.0)
-        
-        # Clamp frequency to reasonable range
-        frequency = np.clip(frequency, 50.0, 2000.0)
-        
-        self.current_frequency = frequency
-        
-        # Generate sine wave with reduced amplitude to prevent clipping
-        num_samples = int(self.sample_rate * duration)
-        t = np.linspace(0, duration, num_samples)
-        tone = np.sin(2 * np.pi * frequency * t)
-        
-        # Apply smooth envelope: attack, sustain, release
-        # Attack: 10% of duration
-        # Release: 30% of duration
-        attack_samples = int(num_samples * 0.1)
-        release_samples = int(num_samples * 0.3)
-        sustain_samples = num_samples - attack_samples - release_samples
-        
-        envelope = np.ones(num_samples)
-        
-        # Attack (fade in)
-        if attack_samples > 0:
-            envelope[:attack_samples] = np.linspace(0, 1, attack_samples)
-        
-        # Sustain (full volume)
-        # Already 1.0, no change needed
-        
-        # Release (fade out)
-        if release_samples > 0:
-            envelope[-release_samples:] = np.linspace(1, 0, release_samples)
-        
-        # Apply envelope and reduce amplitude significantly to prevent clipping
-        # Use 0.05 amplitude (5% of max) to leave plenty of headroom
-        tone = tone * envelope * 0.05
-        
-        # Add longer silence padding at the end to prevent overlap
-        silence_padding = int(self.sample_rate * 0.05)  # 50ms silence between tones
-        tone_with_padding = np.concatenate([tone, np.zeros(silence_padding, dtype=np.float32)])
-        
-        return tone_with_padding.astype(np.float32)
-    
-    def play_tone(self, s_score, duration=0.1):
-        """
-        Plays a tone based on surprise score.
-        Queues audio for non-blocking playback via OutputStream callback.
-        Includes throttling to prevent too many tones too quickly.
-        Only one tone plays at a time to prevent clipping.
-        
-        Args:
-            s_score: surprise score
-            duration: duration in seconds (default 0.1 for clearer tones)
-        """
-        # Only play if s_score is significant (reduce audio spam)
+        # Only respond to significant surprise (reduce audio spam)
         if s_score < 0.8:
-            return  # Skip very low surprise events
-        
-        # If output stream is not available, skip
-        if self.output_stream is None:
+            # Fade out quickly if below threshold
+            self.amplitude *= 0.9
             return
         
-        # Throttle: don't play if we just played a tone recently
-        current_time = time.time()
-        if current_time - self.last_tone_time < self.min_tone_interval:
-            return  # Skip this tone, too soon after last one
+        # Map S_Score to Pitch (Surprise = High Pitch)
+        # Formula: base_pitch * (1 + s_score / 10)
+        # This maintains the original mapping but allows smooth transitions
+        new_freq = self.base_pitch * (1.0 + s_score / 10.0)
+        self.target_frequency = np.clip(new_freq, 50.0, 2000.0)
         
-        try:
-            with self.queue_lock:
-                # Only play if not currently playing and queue is empty
-                if not self.is_playing and len(self.audio_queue) == 0:
-                    tone = self.generate_tone(s_score, duration)
-                    self.audio_queue.append(tone)
-                    self.last_tone_time = current_time
-                # If already playing, skip this tone to prevent overlap/clipping
-        except Exception as e:
-            # Silently fail to avoid spam
-            pass
+        # Map S_Score to Volume (Attention = Louder)
+        # Higher surprise = louder response
+        target_amp = min(1.0, s_score / 3.0)
+        # Smooth amplitude transition
+        self.amplitude += (target_amp - self.amplitude) * 0.2
     
     def cleanup(self):
         """Clean up audio output stream."""
-        if self.output_stream is not None:
+        if self.stream:
             try:
-                self.output_stream.stop()
-                self.output_stream.close()
-                self.output_stream = None
+                self.stream.stop()
+                self.stream.close()
+                self.stream = None
+                self.running = False
             except:
                 pass
 
