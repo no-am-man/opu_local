@@ -1,17 +1,16 @@
 """
-The Brain: Introspection & Memory Abstraction.
-Implements the Orthogonal Processing Unit with introspection,
-memory layers, and character evolution.
+The Brain: Core Cognitive Processing.
+Handles memory abstraction, character evolution, and state management.
 """
 
 import numpy as np
 from config import MATURITY_INCREMENT
 
 
-class OrthogonalProcessingUnit:
+class Brain:
     """
-    The core processing unit with introspection and memory abstraction.
-    Evolves from a noisy child to a deep-voiced sage through memory consolidation.
+    The core brain: Memory abstraction and character evolution.
+    Manages 6-level memory hierarchy and personality development.
     """
     
     def __init__(self):
@@ -31,72 +30,15 @@ class OrthogonalProcessingUnit:
             "base_pitch": 440.0,     # Starts high (Child), drops to 110Hz (Sage)
             "stability_threshold": 3.0  # Easily surprised initially
         }
-        
-        # History for introspection (capped to prevent unbounded growth)
-        self.max_history_size = 10000  # Cap introspection history
-        self.mu_history = []  # Mean of historical genomic bits
-        self.sigma_history = []  # Std dev of historical genomic bits
-        self.genomic_bits_history = []  # Raw genomic bits
-        
-        # Current state
-        self.g_now = None
-        self.s_score = 0.0
-        self.coherence = 0.0
     
-    def introspect(self, genomic_bit):
-        """
-        Calculates surprise score (s_score) through introspection.
-        
-        Formula: s_score = |g_now - mu_history| / sigma_history
-        
-        Args:
-            genomic_bit: current genomic bit (standard deviation from perception)
-            
-        Returns:
-            s_score: surprise score (higher = more surprising)
-        """
-        self.g_now = genomic_bit
-        self.genomic_bits_history.append(genomic_bit)
-        
-        # Need at least 2 data points for meaningful introspection
-        if len(self.genomic_bits_history) < 2:
-            self.s_score = 0.0
-            return self.s_score
-        
-        # Calculate historical statistics
-        history_array = np.array(self.genomic_bits_history)
-        mu_history = np.mean(history_array)
-        sigma_history = np.std(history_array)
-        
-        # Store for later use (with cap to prevent unbounded growth)
-        self.mu_history.append(mu_history)
-        self.sigma_history.append(sigma_history)
-        
-        # Cap histories to prevent memory growth over very long runtimes
-        if len(self.genomic_bits_history) > self.max_history_size:
-            # Keep only the most recent history
-            self.genomic_bits_history = self.genomic_bits_history[-self.max_history_size:]
-            self.mu_history = self.mu_history[-self.max_history_size:]
-            self.sigma_history = self.sigma_history[-self.max_history_size:]
-        
-        # Calculate surprise score
-        if sigma_history > 0:
-            self.s_score = abs(genomic_bit - mu_history) / sigma_history
-        else:
-            self.s_score = abs(genomic_bit - mu_history) if mu_history > 0 else abs(genomic_bit)
-        
-        # Calculate coherence (inverse of surprise, normalized)
-        self.coherence = 1.0 / (1.0 + self.s_score)
-        
-        return self.s_score
-    
-    def store_memory(self, genomic_bit, s_score):
+    def store_memory(self, genomic_bit, s_score, timestamp=None):
         """
         Stores a memory at the appropriate abstraction level.
         
         Args:
             genomic_bit: the genomic bit to store
             s_score: the surprise score (determines level)
+            timestamp: optional timestamp (if None, uses total memories count)
         """
         # Determine abstraction level based on surprise
         # Maps to 6 maturity levels (0-5)
@@ -113,11 +55,16 @@ class OrthogonalProcessingUnit:
         else:
             level = 5  # 1 year - Wisdom/Transcendent
         
+        # Calculate timestamp if not provided
+        # Use total memories stored across all levels (before adding this one)
+        if timestamp is None:
+            timestamp = sum(len(level_mem) for level_mem in self.memory_levels.values())
+        
         # Store in appropriate level
         self.memory_levels[level].append({
             'genomic_bit': genomic_bit,
             's_score': s_score,
-            'timestamp': len(self.genomic_bits_history)
+            'timestamp': timestamp
         })
         
         # Check if we should consolidate (trigger evolution)
@@ -237,18 +184,4 @@ class OrthogonalProcessingUnit:
             dict with maturity_index, base_pitch, stability_threshold
         """
         return self.character_profile.copy()
-    
-    def get_current_state(self):
-        """
-        Returns current cognitive state.
-        
-        Returns:
-            dict with s_score, coherence, g_now
-        """
-        return {
-            's_score': self.s_score,
-            'coherence': self.coherence,
-            'g_now': self.g_now,
-            'maturity': self.character_profile['maturity_index']
-        }
 

@@ -10,14 +10,24 @@ import time
 import sys
 from datetime import datetime
 
+# Optional cv2 import for visual display
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
+    print("[OPU] Warning: opencv-python not installed. Visual display disabled.")
+
 from config import (
     SAMPLE_RATE, CHUNK_SIZE, ABSTRACTION_CYCLE_SECONDS,
     BASE_FREQUENCY, STATE_FILE, MATURITY_LEVEL_TIMES, TIME_SCALE_MULTIPLIER
 )
 from core.genesis import GenesisKernel
-from core.perception import perceive
-from core.cortex import OrthogonalProcessingUnit
+from core.mic import perceive
+from core.opu import OrthogonalProcessingUnit
 from core.expression import AestheticFeedbackLoop, PhonemeAnalyzer
+from core.camera import VisualPerception
+from core.object_detection import ObjectDetector
 from utils.visualization import CognitiveMapVisualizer
 from utils.persistence import OPUPersistence
 
@@ -35,6 +45,12 @@ class OPUEventLoop:
         self.afl = AestheticFeedbackLoop(base_pitch=BASE_FREQUENCY)
         self.phoneme_analyzer = PhonemeAnalyzer()
         self.visualizer = CognitiveMapVisualizer()
+        
+        # Initialize Visual Perception (NEW: Multi-Modal Integration)
+        self.visual_perception = VisualPerception(camera_index=0)
+        
+        # Initialize Object Detection (NEW: Visual Object Recognition)
+        self.object_detector = ObjectDetector(use_dnn=False, confidence_threshold=0.5)
         
         # Initialize persistence
         self.persistence = OPUPersistence(state_file=state_file or STATE_FILE)
@@ -196,52 +212,72 @@ class OPUEventLoop:
     
     def process_cycle(self):
         """
+        The Synesthesia Loop: Multi-Modal Processing
+        
         Process one cycle of the OPU pipeline:
-        1. Capture audio input
-        2. Perceive (scale-invariant)
-        3. Introspect (calculate s_score)
-        4. Apply ethical veto
-        5. Store memory
-        6. Generate expression (audio + phonemes)
-        7. Update visualization
+        1. Capture audio input (Hear)
+        2. Capture visual input (See)
+        3. Perceive both streams (scale-invariant)
+        4. Introspect on both (calculate s_scores)
+        5. Sensory Fusion (S_global = max(S_audio, S_visual))
+        6. Apply ethical veto
+        7. Store memory
+        8. Generate expression (audio + phonemes) - Synesthesia
+        9. Update visualization
         """
-        # 1. Capture input
+        # --- 1. AUDIO PERCEPTION ---
         audio_input = self.get_audio_input()
+        perception_a = perceive(audio_input)
+        genomic_bit_audio = perception_a['genomic_bit']
+        s_audio = self.cortex.introspect(genomic_bit_audio)
         
-        # 2. Perceive (scale-invariant perception)
-        perception = perceive(audio_input)
-        genomic_bit = perception['genomic_bit']
+        # --- 2. VISUAL PERCEPTION (NEW: Multi-Modal) ---
+        visual_vector, frame = self.visual_perception.get_visual_input()
+        s_visual, channel_scores = self.cortex.introspect_visual(visual_vector)
         
-        # 3. Introspect (calculate surprise)
-        s_score = self.cortex.introspect(genomic_bit)
+        # --- 3. SENSORY FUSION (Synesthesia) ---
+        # The OPU reacts to the most intense reality, whether light or sound.
+        # If you wave a red flag (High S_visual), the OPU will "Scream".
+        # If you scream (High S_audio), the OPU will also "Scream".
+        s_global = max(s_audio, s_visual)
         
-        # 4. Apply ethical veto to action vector
-        # (In this case, the "action" is the expression output)
-        action_vector = np.array([s_score, genomic_bit])
+        # --- 4. APPLY ETHICAL VETO ---
+        # Apply safety kernel to the fused score
+        action_vector = np.array([s_global, genomic_bit_audio])
         safe_action = self.genesis.ethical_veto(action_vector)
-        safe_s_score = safe_action[0] if len(safe_action) > 0 else s_score
+        safe_s_score = safe_action[0] if len(safe_action) > 0 else s_global
         
-        # 5. Store memory
-        self.cortex.store_memory(genomic_bit, safe_s_score)
+        # --- 5. STORE MEMORY ---
+        # Store using global score (represents overall surprise)
+        self.cortex.store_memory(genomic_bit_audio, safe_s_score)
         
-        # 6. Get character state for expression
+        # --- 6. GET CHARACTER STATE ---
         character = self.cortex.get_character_state()
         self.afl.update_pitch(character['base_pitch'])
         
-        # 7. Generate expression (audio feedback)
-        # Play tone asynchronously (non-blocking)
+        # --- 7. GENERATE EXPRESSION (Synesthesia) ---
+        # The voice pitch is now driven by the Global Score.
+        # Visual chaos creates audio response (true synesthesia).
         try:
             self.afl.play_tone(safe_s_score, duration=0.05)
         except:
             pass  # Don't block on audio errors
         
-        # 8. Analyze phonemes (use original s_score, not clamped, for pattern recognition)
+        # --- 8. ANALYZE PHONEMES ---
+        # Phonemes still primarily driven by Audio structure
+        # (We don't want visual noise to create "false phonemes")
         current_pitch = self.afl.current_frequency
-        phoneme = self.phoneme_analyzer.analyze(s_score, current_pitch)  # Use original s_score
+        phoneme = self.phoneme_analyzer.analyze(s_audio, current_pitch)  # Use audio s_score
         if phoneme:
-            print(f"[PHONEME] {phoneme} (s_score: {s_score:.2f}, pitch: {current_pitch:.0f}Hz)")
+            print(f"[PHONEME] {phoneme} (s_score: {s_audio:.2f}, pitch: {current_pitch:.0f}Hz)")
         
-        # 9. Update visualization
+        # --- 9. OBJECT DETECTION & DISPLAY (Visual Recognition) ---
+        if frame is not None:
+            # Run object detection
+            detections = self.object_detector.detect_objects(frame)
+            self.display_visual_cortex(frame, s_global, s_visual, s_audio, channel_scores, detections)
+        
+        # --- 10. UPDATE COGNITIVE MAP ---
         state = self.cortex.get_current_state()
         character = self.cortex.get_character_state()
         self.visualizer.update_state(
@@ -255,10 +291,77 @@ class OPUEventLoop:
         
         return {
             's_score': safe_s_score,
-            'genomic_bit': genomic_bit,
+            's_audio': s_audio,
+            's_visual': s_visual,
+            's_global': s_global,
+            'genomic_bit': genomic_bit_audio,
             'phoneme': phoneme,
-            'maturity': character['maturity_index']
+            'maturity': character['maturity_index'],
+            'channel_scores': channel_scores
         }
+    
+    def display_visual_cortex(self, frame, s_global, s_visual, s_audio, channel_scores, detections=None):
+        """
+        Overlays OPU cognitive state onto the camera feed.
+        Creates a HUD showing R, G, B channel entropy, global surprise, and object detections.
+        
+        Args:
+            frame: Raw BGR frame from camera
+            s_global: Global surprise score (max of audio/visual)
+            s_visual: Visual surprise score
+            s_audio: Audio surprise score
+            channel_scores: dict with {'R': float, 'G': float, 'B': float}
+            detections: List of detected objects (optional)
+        """
+        if not CV2_AVAILABLE or frame is None:
+            return
+        
+        # Create a HUD overlay
+        display = frame.copy()
+        
+        # Draw object detections first (so HUD overlays on top)
+        if detections:
+            display = self.object_detector.draw_detections(display, detections)
+        
+        h, w, _ = display.shape
+        
+        # Color map for channels
+        c_map = {'R': (0, 0, 255), 'G': (0, 255, 0), 'B': (255, 0, 0)}
+        y_pos = 30
+        
+        # 1. Bar Charts for R, G, B Entropy
+        # We draw bars proportional to the Surprise in each channel
+        for chan in ['R', 'G', 'B']:
+            score = channel_scores.get(chan, 0.0)
+            bar_len = int(min(score, 5.0) * 50)  # Scale for display (max 250px)
+            color = c_map[chan]
+            
+            # Label
+            cv2.putText(display, f"{chan}: {score:.2f}", (10, y_pos), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+            # Bar
+            cv2.rectangle(display, (100, y_pos-15), (100+bar_len, y_pos+5), color, -1)
+            y_pos += 30
+
+        # 2. Global State Overlay
+        # Color changes based on Attention (Green=Calm, Yellow=Interest, Red=Panic)
+        if s_global > 3.0:
+            status_color = (0, 0, 255)  # RED - ALERT
+        elif s_global > 1.5:
+            status_color = (0, 255, 255)  # YELLOW - INTEREST
+        else:
+            status_color = (0, 255, 0)  # GREEN - CALM
+        
+        cv2.putText(display, f"GLOBAL SURPRISE: {s_global:.2f}", (10, h - 20), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, status_color, 2)
+
+        # 3. Audio/Visual Split
+        cv2.putText(display, f"A: {s_audio:.2f} | V: {s_visual:.2f}", (10, h - 50),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
+
+        # Show Window
+        cv2.imshow('OPU Visual Cortex', display)
+        cv2.waitKey(1)  # Non-blocking, allows other processing
     
     def check_abstraction_cycle(self):
         """
@@ -369,6 +472,16 @@ class OPUEventLoop:
         
         # Cleanup audio output
         self.afl.cleanup()
+        
+        # Cleanup visual perception
+        self.visual_perception.cleanup()
+        
+        # Cleanup object detector
+        if hasattr(self, 'object_detector'):
+            self.object_detector.cleanup()
+        
+        if CV2_AVAILABLE:
+            cv2.destroyAllWindows()
         
         print("[OPU] Cleanup complete.")
 

@@ -1,7 +1,10 @@
 """
-The Ear: Scale-Invariant Perception.
+The Ear: Microphone Capture Module.
 Normalizes input to create a "Scale Invariant" signature.
 Uses Standard Deviation as the "Genomic Bit".
+
+This is PERCEPTION (like camera.py for visual).
+For INTROSPECTION, see audio_cortex.py.
 """
 
 import numpy as np

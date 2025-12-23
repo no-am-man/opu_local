@@ -5,7 +5,7 @@ Tests for core/cortex.py - The Brain (Introspection & Memory Abstraction)
 
 import pytest
 import numpy as np
-from core.cortex import OrthogonalProcessingUnit
+from core.opu import OrthogonalProcessingUnit
 
 
 class TestOrthogonalProcessingUnit:

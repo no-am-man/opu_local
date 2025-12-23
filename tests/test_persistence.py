@@ -8,7 +8,7 @@ import numpy as np
 import json
 import os
 from pathlib import Path
-from core.cortex import OrthogonalProcessingUnit
+from core.opu import OrthogonalProcessingUnit
 from core.expression import PhonemeAnalyzer
 from utils.persistence import OPUPersistence
 

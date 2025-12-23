@@ -1,11 +1,11 @@
 """
-Tests for core/perception.py - Scale-Invariant Perception
+Tests for core/mic.py - Scale-Invariant Perception
 100% code coverage target
 """
 
 import pytest
 import numpy as np
-from core.perception import perceive
+from core.mic import perceive
 from config import SCALE_INVARIANCE_ENABLED
 
 
@@ -74,9 +74,9 @@ class TestPerception:
         monkeypatch.setattr('config.SCALE_INVARIANCE_ENABLED', False)
         # Need to reload the module to pick up the change
         import importlib
-        import core.perception
-        importlib.reload(core.perception)
-        from core.perception import perceive as perceive_reload
+        import core.mic
+        importlib.reload(core.mic)
+        from core.mic import perceive as perceive_reload
         
         input_vector = np.array([1.0, 2.0, 3.0])
         result = perceive_reload(input_vector)
