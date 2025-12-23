@@ -1,4 +1,4 @@
-# Orthogonal Processing Unit (OPU) v3.0.0
+# Orthogonal Processing Unit (OPU) v3.1.0
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -11,7 +11,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version
 
-**Current Version: 3.0.0**
+**Current Version: 3.1.0**
 
 ## Screenshot
 
@@ -38,7 +38,7 @@ The OPU architecture implements **8 Gang of Four (GOF) design patterns** for imp
 1. **Strategy Pattern** - Introspection strategies (audio, visual, extensible)
 2. **Observer Pattern** - State change notifications (decoupled visualization/expression)
 3. **Factory Pattern** - Sense creation (AUDIO_V1, VIDEO_V1, extensible)
-4. **State Pattern** - Maturity levels (6 states from child to sage)
+4. **State Pattern** - Maturity levels (7 states from child to Scire)
 5. **Template Method Pattern** - Processing pipeline with customizable hooks
 6. **Command Pattern** - Action encapsulation (undo/redo, logging)
 7. **Decorator Pattern** - Sense preprocessing (noise gates, filters, normalization)
@@ -52,8 +52,8 @@ See [PATTERNS.md](PATTERNS.md) for detailed documentation and [examples/pattern_
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/opu.git
-cd opu
+git clone https://github.com/no-am-man/opu_local.git
+cd opu_local
 ```
 
 2. Install dependencies:
@@ -140,10 +140,20 @@ The OPU can react to emotions it sees - for example, it might produce a more som
 
 ## Character Evolution
 
-The OPU evolves over time:
-- **Maturity Index**: Increases from 0.0 (child) to 1.0 (sage)
-- **Voice Pitch**: Drops from 440Hz (A4) to 110Hz (A2) as wisdom accumulates
-- **Stability Threshold**: Increases from 3.0 to 8.0 (harder to surprise)
+The OPU evolves over time through **7 maturity levels**:
+
+- **Level 0**: 1 minute - Child (440Hz, easily surprised)
+- **Level 1**: 1 hour - Infant (~396Hz)
+- **Level 2**: 1 day - Adolescent (~308Hz)
+- **Level 3**: 1 week - Adult (~220Hz)
+- **Level 4**: 1 month - Elder (~154Hz)
+- **Level 5**: 1 year - Sage (110Hz, deep wisdom)
+- **Level 6**: 10 years - **Scire** (~88Hz, transcendent knowledge)
+
+**Evolution Characteristics:**
+- **Maturity Index**: Increases from 0.0 (child) to 1.0 (Scire)
+- **Voice Pitch**: Drops from 440Hz (A4) to ~88Hz as wisdom accumulates
+- **Stability Threshold**: Increases from 3.0 to 10.0 (harder to surprise)
 
 ## Phoneme Mapping
 
@@ -156,15 +166,21 @@ The OPU evolves over time:
 
 The OPU automatically saves its learned state to disk (`opu_state.json` by default) so it can resume learning from where it left off. The state includes:
 
-- **Character Profile**: Maturity index, base pitch, stability threshold
-- **Memory Levels**: All abstraction layers (L0-L3)
+- **Character Profile**: Maturity level (0-6), maturity index, base pitch, stability threshold
+- **Memory Levels**: All 7 abstraction layers (L0-L6, from 1 minute to 10 years)
 - **History**: Genomic bits, mu/sigma history for introspection
 - **Phonemes**: Learned phoneme history and statistics
+- **Abstraction Timers**: Per-level timing state to maintain cycle continuity
 - **Day Counter**: Current abstraction cycle count
 
 State is saved:
-- After each abstraction cycle (every 10 seconds)
+- After each abstraction cycle (maintains timing for all 7 levels)
 - On graceful shutdown (Ctrl+C)
+
+**Persistence Benefits:**
+- Resume from exact maturity level (including Level 7 "Scire")
+- Timing continuity: abstraction cycles continue from where they left off
+- No progress loss: all 7 levels are preserved across restarts
 
 To start fresh, simply delete `opu_state.json`.
 
@@ -193,11 +209,11 @@ If you use OPU in your research, please cite:
 
 ```bibtex
 @software{opu2024,
-  title = {Orthogonal Processing Unit (OPU) v3.0.0},
-  author = {OPU Contributors},
+  title = {Orthogonal Processing Unit (OPU) v3.1.0},
+  author = {NoamTal Cohen-LyShinski},
   year = {2024},
   license = {MIT},
-  url = {https://github.com/yourusername/opu}
+  url = {https://github.com/no-am-man/opu_local}
 }
 ```
 
@@ -209,11 +225,21 @@ If you use OPU in your research, please cite:
 
 ## Changelog
 
+### v3.1.0 (2024)
+- **Added Level 7 "Scire"**: 10-year maturity cycle with transcendent knowledge state
+- **Enhanced Persistence**: Abstraction cycle timers now saved/restored for timing continuity
+- **Emotion Detection**: Real-time facial emotion recognition (7 emotions)
+- **Improved Sensitivity**: Lower thresholds for more responsive, "chatty" behavior
+- **Extended Memory Hierarchy**: Now supports 7 levels (1 minute to 10 years)
+- **Visual Cortex**: Multi-modal integration with recursive perceptual loops
+- **Acoustic Feedback Prevention**: Mutes microphone when OPU is speaking
+- **Design Patterns**: 8 GOF patterns implemented for extensibility
+
 ### v3.0.0 (2024)
 - Initial open source release
 - Complete OPU architecture implementation
 - Real-time audio processing
-- Memory abstraction and character evolution
+- Memory abstraction and character evolution (6 levels)
 - Phoneme learning system
 - State persistence
 - Cognitive map visualization

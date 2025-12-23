@@ -14,8 +14,8 @@ class TestOrthogonalProcessingUnit:
     def test_init(self):
         """Test OrthogonalProcessingUnit initialization."""
         opu = OrthogonalProcessingUnit()
-        assert len(opu.memory_levels) == 6
-        assert all(level in opu.memory_levels for level in range(6))
+        assert len(opu.memory_levels) == 7  # Updated for 7 levels (0-6)
+        assert all(level in opu.memory_levels for level in range(7))
         assert opu.character_profile['maturity_index'] == 0.0
         assert opu.character_profile['maturity_level'] == 0
         assert opu.character_profile['base_pitch'] == 440.0
@@ -164,16 +164,18 @@ class TestOrthogonalProcessingUnit:
         opu.consolidate_memory(0)
         # Should skip invalid memories
     
-    def test_consolidate_memory_level_5_no_next_level(self):
-        """Test consolidate_memory for level 5 (no next level)."""
+    def test_consolidate_memory_level_6_no_next_level(self):
+        """Test consolidate_memory for level 6 (no next level - Scire is the highest)."""
         opu = OrthogonalProcessingUnit()
-        opu.memory_levels[5].append({
+        opu.memory_levels[6].append({
             'genomic_bit': 1.0,
-            's_score': 6.0
+            's_score': 7.0
         })
-        opu.consolidate_memory(5)
-        # Should not create level 6 (doesn't exist)
-        assert 6 not in opu.memory_levels
+        opu.consolidate_memory(6)
+        # Should not create level 7 (doesn't exist - level 6 is the maximum)
+        assert 7 not in opu.memory_levels
+        # Level 6 should still have its memory (consolidation doesn't clear source level)
+        assert len(opu.memory_levels[6]) > 0
     
     def test_consolidate_memory_triggers_evolution_level_2(self):
         """Test that consolidation at level 2+ triggers evolution."""
@@ -228,7 +230,7 @@ class TestOrthogonalProcessingUnit:
         """Test that maturity_index is capped at 1.0."""
         opu = OrthogonalProcessingUnit()
         # Fill all levels to maximum
-        for level in range(6):
+        for level in range(7):
             for i in range(20):
                 opu.memory_levels[level].append({'genomic_bit': float(i)})
         opu.evolve_character(5)

@@ -167,7 +167,8 @@ class CognitiveMapVisualizer(OPUObserver):
                 2: "1 day",
                 3: "1 week",
                 4: "1 month",
-                5: "1 year"
+                5: "1 year",
+                6: "10 years"
             }
             time_scale = time_scales.get(self.current_maturity_level, "unknown")
             

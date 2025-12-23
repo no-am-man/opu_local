@@ -10,24 +10,25 @@ from config import MATURITY_INCREMENT
 class Brain:
     """
     The core brain: Memory abstraction and character evolution.
-    Manages 6-level memory hierarchy and personality development.
+    Manages 7-level memory hierarchy and personality development.
     """
     
     def __init__(self):
-        # Memory abstraction layers (6 levels: 0 = 1 minute, 5 = 1 year)
+        # Memory abstraction layers (7 levels: 0 = 1 minute, 6 = 10 years)
         # Level 0: 1 minute - Immediate/short-term memory
         # Level 1: 1 hour - Short-term patterns
         # Level 2: 1 day - Daily patterns
         # Level 3: 1 week - Weekly patterns
         # Level 4: 1 month - Monthly patterns
         # Level 5: 1 year - Yearly patterns/wisdom
-        self.memory_levels = {0: [], 1: [], 2: [], 3: [], 4: [], 5: []}
+        # Level 6: 10 years - Decade patterns/Scire (Knowledge)
+        self.memory_levels = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []}
         
         # Character profile that evolves over time
         self.character_profile = {
-            "maturity_index": 0.0,  # 0.0 = Child, 1.0 = Sage
-            "maturity_level": 0,    # Current maturity level (0-5)
-            "base_pitch": 440.0,     # Starts high (Child), drops to 110Hz (Sage)
+            "maturity_index": 0.0,  # 0.0 = Child, 1.0 = Scire
+            "maturity_level": 0,    # Current maturity level (0-6)
+            "base_pitch": 440.0,     # Starts high (Child), drops to 110Hz (Scire)
             "stability_threshold": 3.0  # Easily surprised initially
         }
     
@@ -42,7 +43,7 @@ class Brain:
             timestamp: optional timestamp (if None, uses total memories count)
         """
         # Determine abstraction level based on surprise
-        # Maps to 6 maturity levels (0-5)
+        # Maps to 7 maturity levels (0-6)
         if s_score < 0.5:
             level = 0  # 1 minute - Routine/background
         elif s_score < 1.0:
@@ -77,7 +78,8 @@ class Brain:
             2: 20,   # Level 2: every 20 items (1 day scale)
             3: 10,   # Level 3: every 10 items (1 week scale)
             4: 5,    # Level 4: every 5 items (1 month scale)
-            5: 3     # Level 5: every 3 items (1 year scale - wisdom)
+            5: 3,    # Level 5: every 3 items (1 year scale - wisdom)
+            6: 2     # Level 6: every 2 items (10 year scale - Scire/Knowledge)
         }
         
         threshold = consolidation_thresholds.get(level, 10)
@@ -129,7 +131,7 @@ class Brain:
         }
         
         # Store abstraction in next level (if exists)
-        if level < 5:  # Now we have 6 levels (0-5)
+        if level < 6:  # Now we have 7 levels (0-6)
             self.memory_levels[level + 1].append(abstraction)
         
         # Trigger character evolution (only for higher levels)
@@ -141,27 +143,27 @@ class Brain:
         Reflects on deep memory to mature the personality.
         Call this every time a higher abstraction level (Level 2+) is filled.
         
-        Implements the "Aging" process: evolves from noisy child to deep-voiced sage.
-        Now supports 6 maturity levels (1 minute to 1 year).
+        Implements the "Aging" process: evolves from noisy child to deep-voiced Scire.
+        Now supports 7 maturity levels (1 minute to 10 years).
         
         Args:
-            level: The abstraction level that triggered evolution (0-5)
+            level: The abstraction level that triggered evolution (0-6)
         """
         # Update maturity level based on highest level with consolidated memories
         highest_level = 0
-        for lvl in range(5, -1, -1):
+        for lvl in range(6, -1, -1):
             if len(self.memory_levels[lvl]) > 0:
                 highest_level = lvl
                 break
         
-        # Maturity level is the highest level reached (0-5)
+        # Maturity level is the highest level reached (0-6)
         self.character_profile["maturity_level"] = highest_level
         
         # Maturity index is a continuous value from 0.0 to 1.0
         # Based on both the level reached and how much of that level is filled
         level_progress = min(1.0, len(self.memory_levels[highest_level]) / 10.0) if highest_level > 0 else 0.0
-        base_maturity = highest_level / 5.0  # 0.0, 0.2, 0.4, 0.6, 0.8, 1.0
-        self.character_profile["maturity_index"] = min(1.0, base_maturity + (level_progress * 0.2))
+        base_maturity = highest_level / 6.0  # 0.0, 0.167, 0.333, 0.5, 0.667, 0.833, 1.0
+        self.character_profile["maturity_index"] = min(1.0, base_maturity + (level_progress * 0.167))
         
         # 2. Voice Deepens with Wisdom
         # Drops from 440Hz (A4) to 110Hz (A2) as maturity increases
@@ -179,7 +181,8 @@ class Brain:
             2: "1 day",
             3: "1 week",
             4: "1 month",
-            5: "1 year"
+            5: "1 year",
+            6: "10 years"
         }
         time_scale = time_scales.get(highest_level, "unknown")
         

@@ -45,7 +45,7 @@ class MaturityState(ABC):
     @abstractmethod
     def get_level(self) -> int:
         """
-        Return maturity level number (0-5).
+        Return maturity level number (0-6).
         
         Returns:
             int: Level number
@@ -149,6 +149,22 @@ class SageState(MaturityState):
         return 5
 
 
+class ScireState(MaturityState):
+    """Level 6: Scire state (10 years) - Knowledge/Transcendence."""
+    
+    def get_pitch_multiplier(self):
+        return 0.2  # ~88Hz (even deeper, approaching fundamental)
+    
+    def get_stability_threshold(self):
+        return 10.0  # Very hard to surprise - true wisdom
+    
+    def get_time_scale(self):
+        return "10 years"
+    
+    def get_level(self):
+        return 6
+
+
 class MaturityContext:
     """Context that maintains current maturity state."""
     
@@ -159,6 +175,7 @@ class MaturityContext:
         3: AdultState(),
         4: ElderState(),
         5: SageState(),
+        6: ScireState(),
     }
     
     def __init__(self):
@@ -171,9 +188,9 @@ class MaturityContext:
         Transition to a specific maturity level.
         
         Args:
-            level: Maturity level (0-5)
+            level: Maturity level (0-6)
         """
-        if 0 <= level <= 5:
+        if 0 <= level <= 6:
             self._state = self._state_map[level]
     
     def get_current_state(self) -> MaturityState:

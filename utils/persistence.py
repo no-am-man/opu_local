@@ -26,7 +26,7 @@ class OPUPersistence:
         # Ensure directory exists
         self.state_dir.mkdir(parents=True, exist_ok=True)
     
-    def save_state(self, cortex, phoneme_analyzer, day_counter=0):
+    def save_state(self, cortex, phoneme_analyzer, day_counter=0, last_abstraction_times=None):
         """
         Save OPU state to disk.
         
@@ -34,6 +34,7 @@ class OPUPersistence:
             cortex: OrthogonalProcessingUnit instance
             phoneme_analyzer: PhonemeAnalyzer instance
             day_counter: Current day counter
+            last_abstraction_times: Dict of last abstraction times per level (optional)
         """
         try:
             # Serialize character profile (handle numpy types)
@@ -59,7 +60,10 @@ class OPUPersistence:
                 },
                 
                 # Phoneme analyzer state
-                'phonemes': self._serialize_phoneme_history(phoneme_analyzer)
+                'phonemes': self._serialize_phoneme_history(phoneme_analyzer),
+                
+                # Abstraction cycle timers (NEW: persist timing state)
+                'abstraction_timers': self._convert_numpy_types_to_native(last_abstraction_times) if last_abstraction_times else None
             }
             
             # Write to file atomically
@@ -89,11 +93,11 @@ class OPUPersistence:
             phoneme_analyzer: PhonemeAnalyzer instance to populate
             
         Returns:
-            tuple: (success: bool, day_counter: int)
+            tuple: (success: bool, day_counter: int, last_abstraction_times: dict or None)
         """
         if not self.state_file.exists():
             print(f"[PERSISTENCE] No saved state found at {self.state_file}")
-            return False, 0
+            return False, 0, None
         
         try:
             with open(self.state_file, 'r') as f:
@@ -138,17 +142,28 @@ class OPUPersistence:
             
             day_counter = state.get('day_counter', 0)
             
+            # Load abstraction cycle timers (NEW: restore timing state)
+            last_abstraction_times = None
+            if 'abstraction_timers' in state and state['abstraction_timers']:
+                last_abstraction_times = {}
+                for level_str, timestamp in state['abstraction_timers'].items():
+                    level = int(level_str)
+                    if 0 <= level <= 6:  # Support all 7 levels
+                        last_abstraction_times[level] = float(timestamp)
+            
             print(f"[PERSISTENCE] State loaded from {self.state_file}")
             print(f"  Maturity Level: {cortex.character_profile.get('maturity_level', 0)} | Index: {cortex.character_profile['maturity_index']:.2f}")
-            print(f"  Memory: " + " | ".join([f"L{i}={len(cortex.memory_levels.get(i, []))}" for i in range(6)]))
+            print(f"  Memory: " + " | ".join([f"L{i}={len(cortex.memory_levels.get(i, []))}" for i in range(7)]))
             print(f"  Phonemes: {len(phoneme_analyzer.phoneme_history)}")
             print(f"  Day: {day_counter}")
+            if last_abstraction_times:
+                print(f"  Abstraction Timers: Restored for {len(last_abstraction_times)} levels")
             
-            return True, day_counter
+            return True, day_counter, last_abstraction_times
             
         except Exception as e:
             print(f"[PERSISTENCE] Error loading state: {e}")
-            return False, 0
+            return False, 0, None
     
     def _serialize_phoneme_history(self, phoneme_analyzer):
         """
@@ -254,8 +269,8 @@ class OPUPersistence:
         Returns:
             dict with deserialized memory levels
         """
-        # Support both old format (4 levels) and new format (6 levels)
-        memory_levels = {0: [], 1: [], 2: [], 3: [], 4: [], 5: []}
+        # Support old format (4 levels), new format (6 levels), and current format (7 levels)
+        memory_levels = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []}
         for level_str, memories in serialized.items():
             level = int(level_str)
             if level in memory_levels:

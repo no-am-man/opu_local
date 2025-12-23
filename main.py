@@ -98,9 +98,9 @@ class OPUEventLoop:
         else:
             print("[OPU] Note: Log window module unavailable (using terminal output)")
         
-        # Timing for abstraction cycles (6 maturity levels)
+        # Timing for abstraction cycles (7 maturity levels: 0-6)
         self.start_time = time.time()
-        self.last_abstraction_times = {level: time.time() for level in range(6)}  # Track each level separately
+        self.last_abstraction_times = {level: time.time() for level in range(7)}  # Track each level separately (0-6)
         self.day_counter = 0
         self.maturity_level_times = MATURITY_LEVEL_TIMES
         
@@ -116,12 +116,17 @@ class OPUEventLoop:
     
     def _load_state(self):
         """Load saved OPU state from disk."""
-        success, day_counter = self.persistence.load_state(
+        success, day_counter, last_abstraction_times = self.persistence.load_state(
             self.cortex,
             self.phoneme_analyzer
         )
         if success:
             self.day_counter = day_counter
+            # Restore abstraction cycle timers if available
+            if last_abstraction_times:
+                for level, timestamp in last_abstraction_times.items():
+                    if 0 <= level <= 6:
+                        self.last_abstraction_times[level] = timestamp
             # Update AFL pitch based on loaded character state
             character = self.cortex.get_character_state()
             self.afl.update_pitch(character['base_pitch'])
@@ -131,7 +136,8 @@ class OPUEventLoop:
         self.persistence.save_state(
             self.cortex,
             self.phoneme_analyzer,
-            self.day_counter
+            self.day_counter,
+            self.last_abstraction_times  # Save abstraction cycle timers
         )
     
     def setup_audio_input(self):
@@ -533,7 +539,7 @@ class OPUEventLoop:
     def check_abstraction_cycle(self):
         """
         Check if it's time for abstraction cycles at any maturity level.
-        Each level has its own time scale (1 minute to 1 year).
+        Each level has its own time scale (1 minute to 10 years).
         """
         current_time = time.time()
         time_scales = {
@@ -542,11 +548,12 @@ class OPUEventLoop:
             2: "1 day",
             3: "1 week",
             4: "1 month",
-            5: "1 year"
+            5: "1 year",
+            6: "10 years"
         }
         
         # Check each maturity level for its abstraction cycle
-        for level in range(6):
+        for level in range(7):
             elapsed = current_time - self.last_abstraction_times[level]
             level_time = self.maturity_level_times[level]
             
@@ -566,7 +573,7 @@ class OPUEventLoop:
                     print(f"  Maturity Level: {character['maturity_level']} | Index: {state['maturity']:.2f}")
                     print(f"  Memory Distribution: " + 
                           " | ".join([f"L{i}={len(self.cortex.memory_levels[i])}" 
-                                     for i in range(6)]))
+                                     for i in range(7)]))
                 
                 # Save state after ANY abstraction cycle trigger (even if no memories)
                 # This ensures state is saved regularly regardless of memory state
@@ -654,9 +661,9 @@ class OPUEventLoop:
                           f"maturity: {state['maturity']:.2f}, "
                           f"genomic_bit: {state.get('g_now', 0):.4f}")
                     
-                    # Show memory distribution (all 6 levels)
+                    # Show memory distribution (all 7 levels)
                     mem_dist = {k: len(v) for k, v in self.cortex.memory_levels.items()}
-                    print(f"  Memory: " + " | ".join([f"L{i}={mem_dist[i]}" for i in range(6)]))
+                    print(f"  Memory: " + " | ".join([f"L{i}={mem_dist[i]}" for i in range(7)]))
         
         except KeyboardInterrupt:
             print("\n[OPU] Shutting down gracefully...")

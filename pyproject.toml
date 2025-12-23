@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "opu"
-version = "3.0.0"
+version = "3.1.0"
 description = "Orthogonal Processing Unit - A Process-Centric AI Architecture"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "MIT"}
 authors = [
-    {name = "OPU Contributors"}
+    {name = "NoamTal Cohen-LyShinski", email = ""}
 ]
 keywords = ["ai", "process-centric", "audio-processing", "cognitive-architecture", "real-time"]
 classifiers = [
@@ -35,10 +35,10 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/opu"
-Documentation = "https://github.com/yourusername/opu#readme"
-Repository = "https://github.com/yourusername/opu.git"
-Issues = "https://github.com/yourusername/opu/issues"
+Homepage = "https://github.com/no-am-man/opu_local"
+Documentation = "https://github.com/no-am-man/opu_local#readme"
+Repository = "https://github.com/no-am-man/opu_local.git"
+Issues = "https://github.com/no-am-man/opu_local/issues"
 
 [project.optional-dependencies]
 dev = [

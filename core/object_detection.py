@@ -154,40 +154,49 @@ class ObjectDetector:
         if not self.active or frame is None:
             return []
         
-        detections = []
-        
-        # Face detection (always available)
-        if self.face_cascade is not None:
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            faces = self.face_cascade.detectMultiScale(
-                gray,
-                scaleFactor=1.1,
-                minNeighbors=5,
-                minSize=(30, 30)
-            )
+        try:
+            detections = []
             
-            for (x, y, w, h) in faces:
-                detection = {
-                    'label': 'face',
-                    'confidence': 0.9,  # Haar cascades don't provide confidence
-                    'bbox': (int(x), int(y), int(w), int(h))
-                }
+            # Face detection (always available)
+            if self.face_cascade is not None:
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                faces = self.face_cascade.detectMultiScale(
+                    gray,
+                    scaleFactor=1.1,
+                    minNeighbors=5,
+                    minSize=(30, 30)
+                )
                 
-                # Add emotion detection if enabled
-                if self.detect_emotions and self.emotion_method:
-                    emotion = self._detect_emotion(frame, x, y, w, h)
-                    if emotion:
-                        detection['emotion'] = emotion
-                
-                detections.append(detection)
+                for (x, y, w, h) in faces:
+                    detection = {
+                        'label': 'face',
+                        'confidence': 0.9,  # Haar cascades don't provide confidence
+                        'bbox': (int(x), int(y), int(w), int(h))
+                    }
+                    
+                    # Add emotion detection if enabled
+                    if self.detect_emotions and self.emotion_method:
+                        emotion = self._detect_emotion(frame, x, y, w, h)
+                        if emotion:
+                            detection['emotion'] = emotion
+                    
+                    detections.append(detection)
+            
+            # DNN detection (if available)
+            if self.use_dnn and self.net is not None:
+                # This would run DNN inference
+                # For now, skip since we don't have model files
+                pass
+            
+            return detections
         
-        # DNN detection (if available)
-        if self.use_dnn and self.net is not None:
-            # This would run DNN inference
-            # For now, skip since we don't have model files
-            pass
-        
-        return detections
+        except (KeyboardInterrupt, SystemExit):
+            # Re-raise to allow proper shutdown
+            raise
+        except Exception:
+            # Silently ignore OpenCV errors (e.g., threading issues, window closed)
+            # This prevents crashes when OpenCV operations are interrupted
+            return []
     
     def _detect_emotion(self, frame, x, y, w, h):
         """
@@ -242,7 +251,10 @@ class ObjectDetector:
                     'confidence': 0.5
                 }
             
-        except Exception as e:
+        except (KeyboardInterrupt, SystemExit):
+            # Re-raise to allow proper shutdown
+            raise
+        except Exception:
             # Silently fail - emotion detection is optional
             return None
         
@@ -262,73 +274,82 @@ class ObjectDetector:
         if not self.active or frame is None:
             return frame
         
-        display = frame.copy()
-        
-        for det in detections:
-            label = det['label']
-            confidence = det.get('confidence', 0.0)
-            x, y, w, h = det['bbox']
-            emotion = det.get('emotion', None)
+        try:
+            display = frame.copy()
             
-            # Color based on label and emotion
-            if label == 'face':
-                # Color based on detected emotion
+            for det in detections:
+                label = det['label']
+                confidence = det.get('confidence', 0.0)
+                x, y, w, h = det['bbox']
+                emotion = det.get('emotion', None)
+                
+                # Color based on label and emotion
+                if label == 'face':
+                    # Color based on detected emotion
+                    if emotion:
+                        emotion_name = emotion.get('emotion', 'neutral') if isinstance(emotion, dict) else emotion
+                        color_map = {
+                            'happy': (0, 255, 0),      # Green
+                            'sad': (255, 0, 0),        # Blue
+                            'angry': (0, 0, 255),       # Red
+                            'surprise': (255, 255, 0), # Cyan
+                            'fear': (128, 0, 128),     # Purple
+                            'disgust': (0, 128, 128),   # Teal
+                            'neutral': (0, 255, 255)   # Yellow
+                        }
+                        color = color_map.get(emotion_name, (0, 255, 255))
+                    else:
+                        color = (0, 255, 255)  # Yellow for faces without emotion
+                else:
+                    color = (0, 255, 0)  # Green for other objects
+                
+                # Draw bounding box
+                cv2.rectangle(display, (x, y), (x + w, y + h), color, 2)
+                
+                # Draw label with confidence and emotion
+                label_text = f"{label}"
                 if emotion:
-                    emotion_name = emotion.get('emotion', 'neutral') if isinstance(emotion, dict) else emotion
-                    color_map = {
-                        'happy': (0, 255, 0),      # Green
-                        'sad': (255, 0, 0),        # Blue
-                        'angry': (0, 0, 255),       # Red
-                        'surprise': (255, 255, 0), # Cyan
-                        'fear': (128, 0, 128),     # Purple
-                        'disgust': (0, 128, 128),   # Teal
-                        'neutral': (0, 255, 255)   # Yellow
-                    }
-                    color = color_map.get(emotion_name, (0, 255, 255))
-                else:
-                    color = (0, 255, 255)  # Yellow for faces without emotion
-            else:
-                color = (0, 255, 0)  # Green for other objects
+                    if isinstance(emotion, dict):
+                        emotion_name = emotion.get('emotion', 'unknown')
+                        emotion_conf = emotion.get('confidence', 0.0)
+                        label_text += f": {emotion_name} ({emotion_conf:.2f})"
+                    else:
+                        label_text += f": {emotion}"
+                elif confidence > 0:
+                    label_text += f" {confidence:.2f}"
+                
+                # Background for text
+                (text_width, text_height), _ = cv2.getTextSize(
+                    label_text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1
+                )
+                cv2.rectangle(
+                    display,
+                    (x, y - text_height - 5),
+                    (x + text_width, y),
+                    color,
+                    -1
+                )
+                
+                # Text
+                cv2.putText(
+                    display,
+                    label_text,
+                    (x, y - 5),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 0, 0),
+                    1
+                )
             
-            # Draw bounding box
-            cv2.rectangle(display, (x, y), (x + w, y + h), color, 2)
-            
-            # Draw label with confidence and emotion
-            label_text = f"{label}"
-            if emotion:
-                if isinstance(emotion, dict):
-                    emotion_name = emotion.get('emotion', 'unknown')
-                    emotion_conf = emotion.get('confidence', 0.0)
-                    label_text += f": {emotion_name} ({emotion_conf:.2f})"
-                else:
-                    label_text += f": {emotion}"
-            elif confidence > 0:
-                label_text += f" {confidence:.2f}"
-            
-            # Background for text
-            (text_width, text_height), _ = cv2.getTextSize(
-                label_text, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1
-            )
-            cv2.rectangle(
-                display,
-                (x, y - text_height - 5),
-                (x + text_width, y),
-                color,
-                -1
-            )
-            
-            # Text
-            cv2.putText(
-                display,
-                label_text,
-                (x, y - 5),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.5,
-                (0, 0, 0),
-                1
-            )
+            return display
         
-        return display
+        except (KeyboardInterrupt, SystemExit):
+            # Re-raise to allow proper shutdown
+            raise
+        except Exception:
+            # Silently ignore OpenCV errors (e.g., threading issues, window closed)
+            # Return original frame if drawing fails
+            return frame
     
     def cleanup(self):
         """Cleanup resources."""

@@ -76,7 +76,7 @@ class TestOPUPersistence:
         phoneme_analyzer = PhonemeAnalyzer()
         
         # Add memories to multiple levels
-        for level in range(6):
+        for level in range(7):
             for i in range(3):
                 cortex.memory_levels[level].append({
                     'genomic_bit': float(i),
@@ -90,7 +90,7 @@ class TestOPUPersistence:
         with open(temp_state_file, 'r') as f:
             state = json.load(f)
         assert 'memory_levels' in state['cortex']
-        assert len(state['cortex']['memory_levels']) == 6
+        assert len(state['cortex']['memory_levels']) == 7  # Updated for 7 levels
     
     def test_save_state_phoneme_history(self, temp_state_file):
         """Test that phoneme history is properly serialized."""
@@ -117,9 +117,10 @@ class TestOPUPersistence:
         cortex = OrthogonalProcessingUnit()
         phoneme_analyzer = PhonemeAnalyzer()
         
-        success, day_counter = persistence.load_state(cortex, phoneme_analyzer)
+        success, day_counter, timers = persistence.load_state(cortex, phoneme_analyzer)
         assert success is False
         assert day_counter == 0
+        assert timers is None
     
     def test_load_state_success(self, temp_state_file):
         """Test successful state load."""
@@ -139,12 +140,13 @@ class TestOPUPersistence:
         new_cortex = OrthogonalProcessingUnit()
         new_phoneme_analyzer = PhonemeAnalyzer()
         
-        success, day_counter = persistence.load_state(new_cortex, new_phoneme_analyzer)
+        success, day_counter, timers = persistence.load_state(new_cortex, new_phoneme_analyzer)
         assert success is True
         assert day_counter == 10
         assert new_cortex.character_profile['maturity_index'] == 0.6
         assert len(new_cortex.memory_levels[2]) > 0
         assert len(new_phoneme_analyzer.phoneme_history) > 0
+        # timers may be None for old state files
     
     def test_load_state_backward_compatible_4_levels(self, temp_state_file):
         """Test loading state with old 4-level format."""
@@ -188,11 +190,12 @@ class TestOPUPersistence:
         cortex = OrthogonalProcessingUnit()
         phoneme_analyzer = PhonemeAnalyzer()
         
-        success, day_counter = persistence.load_state(cortex, phoneme_analyzer)
+        success, day_counter, timers = persistence.load_state(cortex, phoneme_analyzer)
         assert success is True
         assert day_counter == 5
-        # Should have 6 levels (4 from old + 2 empty)
-        assert len(cortex.memory_levels) == 6
+        # Should have 7 levels (4 from old + 3 empty, updated for 7 levels)
+        assert len(cortex.memory_levels) == 7
+        # timers may be None for old state files
     
     def test_convert_numpy_types_to_native_none(self):
         """Test _convert_numpy_types_to_native with None."""
@@ -269,10 +272,11 @@ class TestOPUPersistence:
             '5': [{'genomic_bit': 0.7}]
         }
         result = persistence._deserialize_memory_levels(serialized)
-        assert len(result) == 6
+        assert len(result) == 7  # Updated for 7 levels
         assert len(result[0]) == 1
         assert len(result[1]) == 1
         assert len(result[5]) == 1
+        assert len(result[6]) == 0  # Level 6 should exist but be empty
     
     def test_deserialize_array(self):
         """Test _deserialize_array."""
@@ -302,12 +306,13 @@ class TestOPUPersistence:
         # Load
         new_cortex = OrthogonalProcessingUnit()
         new_phoneme_analyzer = PhonemeAnalyzer()
-        success, day_counter = persistence.load_state(new_cortex, new_phoneme_analyzer)
+        success, day_counter, timers = persistence.load_state(new_cortex, new_phoneme_analyzer)
         
         assert success is True
         assert day_counter == 42
         assert new_cortex.character_profile['maturity_index'] == 0.75
         assert len(new_phoneme_analyzer.phoneme_history) == 2
+        # timers may be None for state files without timers
     
     def test_save_state_exception_handling(self, temp_state_file, monkeypatch, capsys):
         """Test save_state exception handling (covers lines 76-81)."""
@@ -337,9 +342,10 @@ class TestOPUPersistence:
         cortex = OrthogonalProcessingUnit()
         phoneme_analyzer = PhonemeAnalyzer()
         
-        success, day_counter = persistence.load_state(cortex, phoneme_analyzer)
+        success, day_counter, timers = persistence.load_state(cortex, phoneme_analyzer)
         assert success is False
         assert day_counter == 0
+        assert timers is None
         captured = capsys.readouterr()
         assert "[PERSISTENCE] Error loading state" in captured.out
     
