@@ -145,7 +145,8 @@ class TestOPUPersistence:
         assert success is True
         assert day_counter == 10
         assert new_cortex.character_profile['maturity_index'] == 0.6
-        assert len(new_cortex.memory_levels[2]) > 0
+        # With natural learning, memory goes to level 0 first
+        assert len(new_cortex.memory_levels[0]) > 0
         assert len(new_phoneme_analyzer.phoneme_history) > 0
         # timers may be None for old state files
     

@@ -1,4 +1,4 @@
-# Orthogonal Processing Unit (OPU) v3.1.0
+# Orthogonal Processing Unit (OPU) v3.2.0
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -11,7 +11,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version
 
-**Current Version: 3.1.0**
+**Current Version: 3.2.0**
+
+### ⚠️ Breaking Change in v3.2.0
+
+**Natural Learning Process**: All memories now start at Level 0 and progress through time-based consolidation. This fixes "Trauma Evolution" where high surprise scores could instantly jump to Level 6.
+
+**Action Required**: Delete `opu_state.json` to reset the OPU to a child state. Existing state files contain false memories from the previous bug.
 
 ## Screenshot
 
@@ -209,7 +215,7 @@ If you use OPU in your research, please cite:
 
 ```bibtex
 @software{opu2024,
-  title = {Orthogonal Processing Unit (OPU) v3.1.0},
+  title = {Orthogonal Processing Unit (OPU) v3.2.0},
   author = {NoamTal Cohen-LyShinski},
   year = {2024},
   license = {MIT},
@@ -225,7 +231,15 @@ If you use OPU in your research, please cite:
 
 ## Changelog
 
-### v3.1.0 (2024)
+### v3.2.0 (2024-12-24)
+- **Natural Learning Process**: Enforced "Cognitive Sedimentation" - all memories start at Level 0, preventing "Trauma Evolution"
+- **EPOCH Timestamps**: Perfect temporal synchronization across audio and video senses
+- **Audio Dead Zone Fix**: Dithering noise prevents audio flatlining to 0.0
+- **State Synchronization**: Fixed s_score always showing 0.00 by removing stale shadow copies
+- **Trauma Evolution Bug Fix**: High surprise scores no longer jump directly to Level 5/6
+- **Breaking Change**: Delete `opu_state.json` to reset (existing files contain false memories)
+
+### v3.1.0 (2024-12-23)
 - **Added Level 7 "Scire"**: 10-year maturity cycle with transcendent knowledge state
 - **Enhanced Persistence**: Abstraction cycle timers now saved/restored for timing continuity
 - **Emotion Detection**: Real-time facial emotion recognition (7 emotions)

@@ -69,11 +69,13 @@ class AudioCortex:
         mu_history = float(np.mean(history_array))
         sigma_history = float(np.std(history_array))
         
-        # --- FIX: ADD EPSILON TO PREVENT DIVIDE BY ZERO ---
+        # --- FIX: RAISE NOISE FLOOR TO PREVENT "TRAUMA LEARNING" ---
         # A perfectly silent room has sigma=0. We enforce a minimum noise floor.
-        # This prevents s_score from exploding to infinity when sigma is zero.
-        if sigma_history < 0.0001:
-            sigma_history = 0.0001
+        # 0.0001 was too sensitive - it caused tiny glitches to generate s_score > 5.0,
+        # which triggered "Trauma Evolution" (jumping directly to Level 5).
+        # 0.01 prevents false high scores from silence while still allowing real surprises.
+        if sigma_history < 0.01:
+            sigma_history = 0.01
         
         # Store for later use (these are for backward compatibility)
         self.mu_history.append(mu_history)

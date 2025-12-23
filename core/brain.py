@@ -35,29 +35,32 @@ class Brain:
     
     def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN", timestamp=None):
         """
-        Stores a memory at the appropriate abstraction level.
-        Uses EPOCH timestamps for temporal synchronization.
+        Stores a memory at Level 0 (raw sensory input).
+        
+        CRITICAL: All raw sensory data MUST enter at Level 0.
+        Wisdom cannot be "jumped" to via high surprise scores.
+        Evolution must be earned through time-based consolidation, not trauma.
+        
+        The hierarchy of time:
+        - Level 0: Raw input (every 50ms)
+        - Level 1: Short-term patterns (after 100 Level 0 items consolidate)
+        - Level 2: Daily patterns (after 50 Level 1 items consolidate)
+        - Level 3: Weekly patterns (after 20 Level 2 items consolidate)
+        - Level 4: Monthly patterns (after 10 Level 3 items consolidate)
+        - Level 5: Yearly patterns (after 5 Level 4 items consolidate)
+        - Level 6: Decade patterns/Scire (after 3 Level 5 items consolidate)
         
         Args:
             genomic_bit: the genomic bit to store
-            s_score: the surprise score (determines level)
+            s_score: the surprise score (used for filtering, not level assignment)
             sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1")
             timestamp: optional timestamp (if None, uses time.time() - EPOCH time)
         """
-        # Determine abstraction level based on surprise
-        # Maps to 7 maturity levels (0-6)
-        if s_score < 0.5:
-            level = 0  # 1 minute - Routine/background
-        elif s_score < 1.0:
-            level = 1  # 1 hour - Notable
-        elif s_score < 2.0:
-            level = 2  # 1 day - Significant
-        elif s_score < 3.5:
-            level = 3  # 1 week - Important
-        elif s_score < 5.0:
-            level = 4  # 1 month - Exceptional
-        else:
-            level = 5  # 1 year - Wisdom/Transcendent
+        # --- FIX: ENFORCE HIERARCHY - ALL INPUTS START AT LEVEL 0 ---
+        # We cannot "jump" to Level 5 just because we are surprised.
+        # Even the most surprising event must start at Level 0 and progress
+        # through consolidation over time. This is "Cognitive Sedimentation."
+        level = 0  # All raw sensory data enters at the bottom of the hierarchy
         
         # --- FIX: DEFAULT TO EPOCH TIME ---
         # EPOCH time (time.time()) creates a universal "Wall Clock" that forces
@@ -67,29 +70,22 @@ class Brain:
         if timestamp is None:
             timestamp = time.time()
         
-        # Store in appropriate level with sense label
+        # Store in Level 0 with sense label
+        # All raw sensory data enters here, regardless of surprise score
+        # This enforces "Cognitive Sedimentation" - wisdom must be earned through time
         self.memory_levels[level].append({
             'genomic_bit': genomic_bit,
-            's_score': s_score,
+            's_score': s_score,  # Store s_score for reference, but it doesn't determine level
             'sense': sense_label,  # Label the input sense (AUDIO_V1, VIDEO_V1, etc.)
             'timestamp': timestamp
         })
         
-        # Check if we should consolidate (trigger evolution)
-        # Higher levels trigger consolidation more frequently
-        consolidation_thresholds = {
-            0: 100,  # Level 0: every 100 items (1 minute scale)
-            1: 50,   # Level 1: every 50 items (1 hour scale)
-            2: 20,   # Level 2: every 20 items (1 day scale)
-            3: 10,   # Level 3: every 10 items (1 week scale)
-            4: 5,    # Level 4: every 5 items (1 month scale)
-            5: 3,    # Level 5: every 3 items (1 year scale - wisdom)
-            6: 2     # Level 6: every 2 items (10 year scale - Scire/Knowledge)
-        }
-        
-        threshold = consolidation_thresholds.get(level, 10)
-        if len(self.memory_levels[level]) % threshold == 0 and len(self.memory_levels[level]) > 0:
-            self.consolidate_memory(level)
+        # Check if we should consolidate Level 0
+        # Level 0 consolidates every 100 items (approximately 5-10 seconds of real-time input)
+        # This is the first step in the "Cognitive Sedimentation" process
+        # Higher levels consolidate automatically when their thresholds are met during consolidation
+        if len(self.memory_levels[0]) % 100 == 0 and len(self.memory_levels[0]) > 0:
+            self.consolidate_memory(0)
     
     def consolidate_memory(self, level):
         """
@@ -137,7 +133,25 @@ class Brain:
         
         # Store abstraction in next level (if exists)
         if level < 6:  # Now we have 7 levels (0-6)
-            self.memory_levels[level + 1].append(abstraction)
+            next_level = level + 1
+            self.memory_levels[next_level].append(abstraction)
+            
+            # Check if the next level should also consolidate (cascade consolidation)
+            # This ensures the hierarchy progresses naturally through time
+            consolidation_thresholds = {
+                0: 100,  # Level 0: every 100 items (1 minute scale)
+                1: 50,   # Level 1: every 50 items (1 hour scale)
+                2: 20,   # Level 2: every 20 items (1 day scale)
+                3: 10,   # Level 3: every 10 items (1 week scale)
+                4: 5,    # Level 4: every 5 items (1 month scale)
+                5: 3,    # Level 5: every 3 items (1 year scale - wisdom)
+                6: 2     # Level 6: every 2 items (10 year scale - Scire/Knowledge)
+            }
+            
+            threshold = consolidation_thresholds.get(next_level, 10)
+            if len(self.memory_levels[next_level]) % threshold == 0:
+                # Cascade: consolidate the next level too
+                self.consolidate_memory(next_level)
         
         # Trigger character evolution (only for higher levels)
         if level >= 2:  # Level 2+ (1 day and above) triggers evolution

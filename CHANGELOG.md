@@ -5,6 +5,40 @@ All notable changes to the Orthogonal Processing Unit (OPU) project will be docu
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2024-12-24
+
+### Added
+- **Natural Learning Process**: Enforced "Cognitive Sedimentation" - all memories must start at Level 0 and progress through time-based consolidation
+- **EPOCH Timestamps**: Switched from logical timestamps to EPOCH time (`time.time()`) for perfect temporal synchronization across all senses
+- **File Logging**: Command-line option `--log-file` to save all OPU output for debugging
+- **Log Window Copy Features**: Copy All, Copy Selected, and Save to File buttons in the log window
+
+### Changed
+- **Memory Hierarchy**: All raw sensory data now enters at Level 0, regardless of surprise score (prevents "Trauma Evolution")
+- **Noise Floor**: Epsilon increased from 0.0001 to 0.01 to prevent false high s_score values from silence
+- **Audio Input**: Returns dithering noise instead of pure zeros when buffer is empty (prevents divide-by-zero)
+- **State Delegation**: Removed shadow copies in `opu.py`, now uses property-based delegation for proper state synchronization
+
+### Fixed
+- **Trauma Evolution Bug**: Fixed instant maturity jump to Level 6 caused by high s_score values bypassing the hierarchy
+- **Audio Dead Zone**: Fixed audio flatlining to 0.0 by returning dithering noise instead of zeros
+- **Temporal Sync Error**: Fixed desynchronization between audio and video by using EPOCH timestamps
+- **State Synchronization**: Fixed s_score always showing 0.00 by removing stale shadow copies
+- **Divide-by-Zero**: Enhanced epsilon floor to prevent s_score explosion in silent environments
+- **Persistence**: Fixed property setter issues when loading state files
+
+### Breaking Changes
+- **State File Reset Required**: Existing `opu_state.json` files contain false memories from trauma evolution and must be deleted
+- **Memory Storage**: Memories no longer jump to higher levels based on s_score - all start at Level 0
+
+### Technical Details
+- Natural learning enforces: 100 Level 0 → 1 Level 1 → 50 Level 1 → 1 Level 2, etc.
+- EPOCH timestamps ensure audio (sample rate) and video (FPS) align on universal timeline
+- Dithering noise (σ=0.0001) prevents audio dead zone while maintaining signal integrity
+- Cascade consolidation: when Level N consolidates, it checks if Level N+1 should also consolidate
+
+---
+
 ## [3.1.0] - 2024-12-23
 
 ### Added
@@ -72,6 +106,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[3.2.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.2.0
 [3.1.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.1.0
 [3.0.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.0.0
 

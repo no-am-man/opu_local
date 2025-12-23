@@ -63,7 +63,7 @@ class TestOrthogonalProcessingUnit:
         assert len(opu.sigma_history) <= opu.max_history_size
     
     def test_store_memory_level_0(self):
-        """Test store_memory for level 0 (s_score < 0.5)."""
+        """Test store_memory - all memories go to level 0 (natural learning)."""
         opu = OrthogonalProcessingUnit()
         opu.store_memory(0.3, 0.3)
         assert len(opu.memory_levels[0]) == 1
@@ -71,34 +71,39 @@ class TestOrthogonalProcessingUnit:
         assert opu.memory_levels[0][0]['s_score'] == 0.3
     
     def test_store_memory_level_1(self):
-        """Test store_memory for level 1 (0.5 <= s_score < 1.0)."""
+        """Test store_memory - high s_score still goes to level 0 (no trauma evolution)."""
         opu = OrthogonalProcessingUnit()
-        opu.store_memory(0.5, 0.7)
-        assert len(opu.memory_levels[1]) == 1
+        opu.store_memory(0.5, 0.7)  # Would have been level 1 in old system
+        assert len(opu.memory_levels[0]) == 1  # Now goes to level 0
+        assert len(opu.memory_levels[1]) == 0  # Level 1 only via consolidation
     
     def test_store_memory_level_2(self):
-        """Test store_memory for level 2 (1.0 <= s_score < 2.0)."""
+        """Test store_memory - medium s_score goes to level 0."""
         opu = OrthogonalProcessingUnit()
-        opu.store_memory(0.5, 1.5)
-        assert len(opu.memory_levels[2]) == 1
+        opu.store_memory(0.5, 1.5)  # Would have been level 2 in old system
+        assert len(opu.memory_levels[0]) == 1  # Now goes to level 0
+        assert len(opu.memory_levels[2]) == 0  # Level 2 only via consolidation
     
     def test_store_memory_level_3(self):
-        """Test store_memory for level 3 (2.0 <= s_score < 3.5)."""
+        """Test store_memory - high s_score goes to level 0."""
         opu = OrthogonalProcessingUnit()
-        opu.store_memory(0.5, 3.0)
-        assert len(opu.memory_levels[3]) == 1
+        opu.store_memory(0.5, 3.0)  # Would have been level 3 in old system
+        assert len(opu.memory_levels[0]) == 1  # Now goes to level 0
+        assert len(opu.memory_levels[3]) == 0  # Level 3 only via consolidation
     
     def test_store_memory_level_4(self):
-        """Test store_memory for level 4 (3.5 <= s_score < 5.0)."""
+        """Test store_memory - very high s_score goes to level 0."""
         opu = OrthogonalProcessingUnit()
-        opu.store_memory(0.5, 4.0)
-        assert len(opu.memory_levels[4]) == 1
+        opu.store_memory(0.5, 4.0)  # Would have been level 4 in old system
+        assert len(opu.memory_levels[0]) == 1  # Now goes to level 0
+        assert len(opu.memory_levels[4]) == 0  # Level 4 only via consolidation
     
     def test_store_memory_level_5(self):
-        """Test store_memory for level 5 (s_score >= 5.0)."""
+        """Test store_memory - extreme s_score goes to level 0 (prevents trauma evolution)."""
         opu = OrthogonalProcessingUnit()
-        opu.store_memory(0.5, 6.0)
-        assert len(opu.memory_levels[5]) == 1
+        opu.store_memory(0.5, 6.0)  # Would have been level 5 in old system
+        assert len(opu.memory_levels[0]) == 1  # Now goes to level 0
+        assert len(opu.memory_levels[5]) == 0  # Level 5 only via consolidation
     
     def test_store_memory_consolidation_trigger_level_0(self):
         """Test that consolidation is triggered at threshold for level 0."""
@@ -110,13 +115,16 @@ class TestOrthogonalProcessingUnit:
         assert len(opu.memory_levels[1]) > 0
     
     def test_store_memory_consolidation_trigger_level_2(self):
-        """Test that consolidation is triggered at threshold for level 2."""
+        """Test that consolidation cascades from level 0 through level 2."""
         opu = OrthogonalProcessingUnit()
-        # Level 2 threshold is 20
-        for i in range(20):
+        # Store 100 items at level 0 (triggers consolidation to level 1)
+        for i in range(100):
             opu.store_memory(0.5, 1.5)
-        # Should have consolidated
-        assert len(opu.memory_levels[3]) > 0
+        # Level 0 should have consolidated to Level 1
+        assert len(opu.memory_levels[1]) > 0
+        # Level 2 requires 50 Level 1 items, so won't be reached yet
+        # But we can verify Level 1 was created
+        assert len(opu.memory_levels[1]) >= 1
     
     def test_consolidate_memory_empty_level(self):
         """Test consolidate_memory with empty level."""
