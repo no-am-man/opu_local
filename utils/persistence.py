@@ -37,13 +37,8 @@ class OPUPersistence:
         """
         try:
             # Serialize character profile (handle numpy types)
-            character_profile = {}
-            for key, value in cortex.character_profile.items():
-                if isinstance(value, (np.integer, np.floating, np.float32, np.float64, 
-                                     np.int32, np.int64, np.int_, np.float_)):
-                    character_profile[key] = float(value)
-                else:
-                    character_profile[key] = value
+            # Use robust conversion function (NumPy 2.0 compatible)
+            character_profile = self._convert_numpy_types_to_native(cortex.character_profile)
             
             state = {
                 'version': '1.0',
@@ -56,18 +51,15 @@ class OPUPersistence:
                     'genomic_bits_history': self._serialize_array(cortex.genomic_bits_history),
                     'mu_history': self._serialize_array(cortex.mu_history),
                     'sigma_history': self._serialize_array(cortex.sigma_history),
-                    'current_state': {
-                        'g_now': float(cortex.g_now) if cortex.g_now is not None and not isinstance(cortex.g_now, (str, type(None))) else None,
-                        's_score': float(cortex.s_score) if not isinstance(cortex.s_score, (str, type(None))) else 0.0,
-                        'coherence': float(cortex.coherence) if not isinstance(cortex.coherence, (str, type(None))) else 0.0
-                    }
+                    'current_state': self._convert_numpy_types_to_native({
+                        'g_now': cortex.g_now,
+                        's_score': cortex.s_score,
+                        'coherence': cortex.coherence
+                    })
                 },
                 
                 # Phoneme analyzer state
-                'phonemes': {
-                    'history': phoneme_analyzer.phoneme_history.copy(),
-                    'speech_threshold': float(phoneme_analyzer.speech_threshold) if isinstance(phoneme_analyzer.speech_threshold, (np.integer, np.floating, np.float32, np.float64)) else phoneme_analyzer.speech_threshold
-                }
+                'phonemes': self._serialize_phoneme_history(phoneme_analyzer)
             }
             
             # Write to file atomically
@@ -158,6 +150,79 @@ class OPUPersistence:
             print(f"[PERSISTENCE] Error loading state: {e}")
             return False, 0
     
+    def _serialize_phoneme_history(self, phoneme_analyzer):
+        """
+        Serialize phoneme history, handling numpy types in s_score and pitch.
+        
+        Args:
+            phoneme_analyzer: PhonemeAnalyzer instance
+            
+        Returns:
+            dict with serialized phoneme data
+        """
+        # Use robust conversion function for phoneme history
+        phoneme_history_serialized = self._convert_numpy_types_to_native(phoneme_analyzer.phoneme_history)
+        
+        return {
+            'history': phoneme_history_serialized,
+            'speech_threshold': self._convert_numpy_types_to_native(phoneme_analyzer.speech_threshold)
+        }
+    
+    def _convert_numpy_types_to_native(self, obj):
+        """
+        Recursively convert numpy types to native Python types.
+        Handles all numpy scalar types including float32, float64, int32, int64, etc.
+        NumPy 2.0 compatible (doesn't use deprecated np.float_ or np.int_).
+        
+        Args:
+            obj: Any object that might contain numpy types
+            
+        Returns:
+            Object with all numpy types converted to native Python types
+        """
+        # Handle None values
+        if obj is None:
+            return None
+        
+        # Handle numpy arrays
+        if isinstance(obj, np.ndarray):
+            return [self._convert_numpy_types_to_native(x) for x in obj.tolist()]
+        
+        # Handle lists and tuples
+        if isinstance(obj, (list, tuple)):
+            return [self._convert_numpy_types_to_native(x) for x in obj]
+        
+        # Handle dictionaries
+        if isinstance(obj, dict):
+            return {k: self._convert_numpy_types_to_native(v) for k, v in obj.items()}
+        
+        # Handle numpy scalar types (NumPy 2.0 compatible)
+        # np.generic is the base class for all numpy scalars
+        if isinstance(obj, np.generic):
+            if np.issubdtype(type(obj), np.integer):
+                return int(obj)
+            elif np.issubdtype(type(obj), np.floating):
+                return float(obj)
+            else:
+                # Fallback: try to convert to float, then int if that fails
+                try:
+                    return float(obj)
+                except (ValueError, TypeError):
+                    try:
+                        return int(obj)
+                    except (ValueError, TypeError):
+                        return str(obj)  # Last resort: convert to string
+        
+        # Handle numpy number types (additional check)
+        # Note: This is effectively unreachable because all np.integer/np.floating
+        # are also np.generic, so they're caught by the check above.
+        # Kept for defensive programming and potential future numpy versions.
+        if isinstance(obj, (np.integer, np.floating)):  # pragma: no cover
+            return float(obj) if np.issubdtype(type(obj), np.floating) else int(obj)
+        
+        # Return as-is for native Python types
+        return obj
+    
     def _serialize_memory_levels(self, memory_levels):
         """
         Serialize memory levels to JSON-serializable format.
@@ -174,20 +239,8 @@ class OPUPersistence:
             for mem in memories:
                 serialized_mem = {}
                 for key, value in mem.items():
-                    # Handle all numpy types
-                    if isinstance(value, (np.integer, np.floating, np.float32, np.float64, 
-                                         np.int32, np.int64, np.int_, np.float_)):
-                        serialized_mem[key] = float(value)
-                    elif isinstance(value, np.ndarray):
-                        serialized_mem[key] = [float(x) for x in value.tolist()]
-                    elif isinstance(value, (list, tuple)):
-                        # Recursively handle lists/tuples that might contain numpy types
-                        serialized_mem[key] = [float(x) if isinstance(x, (np.integer, np.floating, 
-                                                                          np.float32, np.float64,
-                                                                          np.int32, np.int64)) 
-                                              else x for x in value]
-                    else:
-                        serialized_mem[key] = value
+                    # Handle all numpy types (NumPy 2.0 compatible)
+                    serialized_mem[key] = self._convert_numpy_types_to_native(value)
                 serialized[str(level)].append(serialized_mem)
         return serialized
     
@@ -219,21 +272,8 @@ class OPUPersistence:
         Returns:
             list
         """
-        if isinstance(arr, np.ndarray):
-            return [float(x) for x in arr.tolist()]
-        elif isinstance(arr, list):
-            # Convert any numpy types in list (handle all numpy scalar types)
-            result = []
-            for x in arr:
-                if isinstance(x, (np.integer, np.floating, np.float32, np.float64, 
-                                 np.int32, np.int64, np.int_, np.float_)):
-                    result.append(float(x))
-                elif isinstance(x, np.ndarray):
-                    result.append([float(y) for y in x.tolist()])
-                else:
-                    result.append(x)
-            return result
-        return arr
+        # Use the robust conversion function
+        return self._convert_numpy_types_to_native(arr)
     
     def _deserialize_array(self, data):
         """

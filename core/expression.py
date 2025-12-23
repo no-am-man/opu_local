@@ -10,7 +10,8 @@ from config import BASE_FREQUENCY, SAMPLE_RATE
 
 class AestheticFeedbackLoop:
     """
-    Continuous Phase Oscillator with Syllabic Articulation.
+    Continuous Phase Oscillator with Syllabic Articulation AND Respiratory Cycle.
+    The breath cycle makes the OPU feel truly "biological" rather than robotic.
     """
     
     def __init__(self, base_pitch=440.0):
@@ -26,6 +27,11 @@ class AestheticFeedbackLoop:
         self.current_amp = 0.0
         self.target_amp = 0.0
         
+        # THE LUNGS - Respiratory Cycle
+        self.breath_phase = 0.0
+        self.breath_rate = 0.2  # Hz (Slow breath = ~0.2Hz = 12 breaths/min)
+        self.current_breath_rate = 0.2
+        
         # Articulation (The "Talking" Rhythm)
         self.syllable_phase = 0.0
         self.is_speaking = False
@@ -37,25 +43,44 @@ class AestheticFeedbackLoop:
         self.start()
     
     def callback(self, outdata, frames, time_info, status):
-        """Audio callback - generates continuous waveform with phase continuity."""
+        """Audio callback - generates continuous waveform with phase continuity and breathing."""
         if status:
             print(f"[AFL] Audio output status: {status}")
         
         # Time array for this buffer chunk
         t = np.arange(frames) / self.sample_rate
         
-        # 1. SMOOTH PITCH GLIDE (Portamento)
+        # 1. UPDATE BREATH RATE (Based on Stress/Attention)
+        # Calm (low s_score): Slow, deep breaths (~0.2Hz = 12 breaths/min)
+        # Panic (high s_score): Rapid, shallow hyperventilation (~2.2Hz)
+        # We smooth this transition (Portamento for lungs)
+        target_breath_rate = 0.2 + (self.target_amp * 2.0)  # 0.2Hz (Rest) to 2.2Hz (Panic)
+        self.current_breath_rate += (target_breath_rate - self.current_breath_rate) * 0.05
+        
+        # 2. GENERATE BREATH WAVE (The Respiratory Cycle)
+        # A slow sine wave that modulates amplitude (inhale = louder, exhale = quieter)
+        # Never goes to pure zero (maintains base level 0.4 to 1.0)
+        breath_inc = 2 * np.pi * self.current_breath_rate / self.sample_rate
+        breath_phases = self.breath_phase + np.arange(frames) * breath_inc
+        self.breath_phase = breath_phases[-1] % (2 * np.pi)
+        
+        # The Breath Envelope:
+        # Inhale (Rising) -> Exhale (Falling)
+        # Offset so it's always positive: 0.4 (Base) + 0.6 (Lung capacity)
+        breath_envelope = 0.4 + (0.6 * (0.5 + 0.5 * np.sin(breath_phases)))
+        
+        # 3. SMOOTH PITCH GLIDE (Portamento)
         self.current_frequency += (self.target_frequency - self.current_frequency) * 0.1
         self.current_amp += (self.target_amp - self.current_amp) * 0.1
         
-        # 2. GENERATE CARRIER WAVE
+        # 4. GENERATE CARRIER WAVE (The Voice)
         phase_increment = 2 * np.pi * self.current_frequency / self.sample_rate
         phases = self.phase + np.arange(frames) * phase_increment
         self.phase = phases[-1] % (2 * np.pi) 
         
         carrier = np.sin(phases)
         
-        # 3. APPLY SYLLABIC RHYTHM (The "Words")
+        # 5. APPLY SYLLABIC RHYTHM (The "Words")
         # If we are "speaking" (High S_Score), we modulate volume at 8Hz
         if self.is_speaking:
             # 8Hz LFO for syllable rate
@@ -66,12 +91,12 @@ class AestheticFeedbackLoop:
             # Create a "wah-wah" envelope (0.6 to 1.0 amplitude)
             articulation = 0.6 + (0.4 * np.sin(syllable_phases))
         else:
-            articulation = 1.0 # Flat drone if just humming
+            articulation = 1.0  # Flat drone if just humming
         
-        # 4. OUTPUT
-        # Signal = Wave * Volume * Rhythm * MasterGain (0.5)
-        # We removed the decay (*= 0.98) because it killed the sound too fast
-        signal = carrier * self.current_amp * articulation * 0.5
+        # 6. FINAL MIX
+        # Signal = Voice * Volume * Syllables * BREATH * MasterGain
+        # The breath envelope creates the "living" texture
+        signal = carrier * self.current_amp * articulation * breath_envelope * 0.5
         
         outdata[:] = signal.reshape(-1, 1).astype(np.float32)
     

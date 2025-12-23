@@ -297,10 +297,11 @@ class OPUEventLoop:
                     print(f"  Memory Distribution: " + 
                           " | ".join([f"L{i}={len(self.cortex.memory_levels[i])}" 
                                      for i in range(6)]))
-                    
-                    # Save state after any abstraction cycle (all levels)
-                    # This ensures state is saved regularly
-                    self._save_state()
+                
+                # Save state after ANY abstraction cycle trigger (even if no memories)
+                # This ensures state is saved regularly regardless of memory state
+                # State includes character profile, history, phonemes, etc. - not just memories
+                self._save_state()
                 
                 # Increment day counter only for Level 2 (1 day)
                 if level == 2:
