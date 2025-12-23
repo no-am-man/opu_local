@@ -58,3 +58,10 @@ WINDOW_SIZE = (12, 8)  # inches
 # Persistence Configuration
 STATE_FILE = "opu_state.json"  # Path to save/load OPU state
 
+# Sense Labels (for extensible input system)
+# Each input source is labeled with a sense identifier
+# This allows the OPU to track and learn from different input modalities
+# Future senses can be added: TOUCH_V1, TEMPERATURE_V1, etc.
+AUDIO_SENSE = "AUDIO_V1"
+VIDEO_SENSE = "VIDEO_V1"
+

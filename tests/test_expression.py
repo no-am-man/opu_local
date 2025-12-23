@@ -36,7 +36,7 @@ class TestAestheticFeedbackLoop:
         mock_output_stream.return_value = mock_stream
         
         afl = AestheticFeedbackLoop()
-        afl.play_tone(0.1, duration=None)  # Below 0.2 threshold
+        afl.play_tone(0.05, duration=None)  # Below 0.1 threshold (updated for higher sensitivity)
         assert afl.target_amp == 0.0
         assert afl.is_speaking is False
     
@@ -48,8 +48,8 @@ class TestAestheticFeedbackLoop:
         
         afl = AestheticFeedbackLoop()
         afl.play_tone(3.0, duration=None)
-        # Volume should map to s_score / 3.0, capped at 1.0
-        assert afl.target_amp == 1.0  # min(1.0, 3.0 / 3.0)
+        # Volume should map to s_score / 2.0, capped at 1.0 (updated for higher sensitivity)
+        assert afl.target_amp == 1.0  # min(1.0, 3.0 / 2.0) = 1.0
     
     @patch('core.expression.sd.OutputStream')
     def test_play_tone_pitch_mapping(self, mock_output_stream):
@@ -59,8 +59,8 @@ class TestAestheticFeedbackLoop:
         
         afl = AestheticFeedbackLoop(base_pitch=440.0)
         afl.play_tone(5.0, duration=None)
-        # Pitch should be base_pitch * (1.0 + s_score / 10.0)
-        expected_freq = 440.0 * (1.0 + 5.0 / 10.0)
+        # Pitch should be base_pitch * (1.0 + s_score / 5.0) (updated for higher sensitivity)
+        expected_freq = 440.0 * (1.0 + 5.0 / 5.0)
         assert afl.target_frequency == expected_freq
     
     @patch('core.expression.sd.OutputStream')
@@ -70,12 +70,12 @@ class TestAestheticFeedbackLoop:
         mock_output_stream.return_value = mock_stream
         
         afl = AestheticFeedbackLoop()
-        # Below threshold
-        afl.play_tone(1.0, duration=None)
+        # Below threshold (0.6, updated for higher sensitivity)
+        afl.play_tone(0.5, duration=None)
         assert afl.is_speaking is False
         
         # Above threshold
-        afl.play_tone(2.0, duration=None)
+        afl.play_tone(1.0, duration=None)
         assert afl.is_speaking is True
     
     @patch('core.expression.sd.OutputStream')

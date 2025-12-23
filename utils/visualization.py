@@ -1,15 +1,28 @@
 """
 The Face: Matplotlib HUD for Cognitive Map visualization.
 Shows pulse size (s_score), color (Tension), and shape integrity (Coherence).
+
+Now implements Observer Pattern to react to OPU state changes.
 """
+
+# CRITICAL: Set matplotlib backend BEFORE importing pyplot to avoid tkinter conflicts
+# This must be done before any matplotlib imports
+import os
+import platform
+if platform.system() == 'Darwin':
+    os.environ['TK_SILENCE_DEPRECATION'] = '1'
+    # Use a non-tkinter backend on macOS to avoid conflicts
+    import matplotlib
+    matplotlib.use('TkAgg')  # TkAgg is fine if TK_SILENCE_DEPRECATION is set
 
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
 from config import VISUALIZATION_UPDATE_RATE, WINDOW_SIZE
+from core.patterns.observer import OPUObserver
 
 
-class CognitiveMapVisualizer:
+class CognitiveMapVisualizer(OPUObserver):
     """
     Real-time visualization of the OPU's cognitive state.
     """
@@ -91,96 +104,104 @@ class CognitiveMapVisualizer:
         - Color = Tension (red = high, blue = low)
         - Shape integrity = Coherence
         """
-        # Clear previous frame
-        self.ax.clear()
-        self.ax.set_xlim(-2, 2)
-        self.ax.set_ylim(-2, 2)
-        self.ax.set_aspect('equal')
-        self.ax.axis('off')
-        self.ax.set_title('OPU Cognitive Map', fontsize=16, fontweight='bold')
-        
-        # Calculate pulse size from s_score
-        # Normalize s_score to reasonable radius (0.1 to 1.5)
-        pulse_radius = 0.1 + min(self.current_s_score / 5.0, 1.4)
-        
-        # Calculate color based on tension (s_score)
-        # High tension = red, low tension = blue
-        tension = min(self.current_s_score / 10.0, 1.0)
-        color_r = tension
-        color_b = 1.0 - tension
-        color_g = 0.3
-        pulse_color = (color_r, color_g, color_b)
-        
-        # Draw pulse circle
-        self.pulse_circle = plt.Circle(
-            (0, 0),
-            pulse_radius,
-            facecolor=pulse_color,
-            alpha=0.6,
-            edgecolor='black',
-            linewidth=2
-        )
-        self.ax.add_patch(self.pulse_circle)
-        
-        # Draw coherence shape (polygon with integrity based on coherence)
-        # Higher coherence = more regular shape
-        coherence_points = self._generate_coherence_shape(self.current_coherence)
-        self.coherence_shape = plt.Polygon(
-            coherence_points,
-            facecolor='green',
-            alpha=0.4 * self.current_coherence,
-            edgecolor='darkgreen',
-            linewidth=2
-        )
-        self.ax.add_patch(self.coherence_shape)
-        
-        # Draw maturity indicator (outer ring)
-        maturity_radius = 1.5 + (self.current_maturity * 0.3)
-        maturity_circle = plt.Circle(
-            (0, 0),
-            maturity_radius,
-            fill=False,
-            edgecolor='gold',
-            linewidth=2 + (self.current_maturity * 3),
-            alpha=0.5
-        )
-        self.ax.add_patch(maturity_circle)
-        
-        # Get time scale name for current maturity level
-        time_scales = {
-            0: "1 minute",
-            1: "1 hour",
-            2: "1 day",
-            3: "1 week",
-            4: "1 month",
-            5: "1 year"
-        }
-        time_scale = time_scales.get(self.current_maturity_level, "unknown")
-        
-        # Draw text info
-        info_text = (
-            f"s_score: {self.current_s_score:.2f}\n"
-            f"Coherence: {self.current_coherence:.2f}\n"
-            f"Maturity Level: {self.current_maturity_level} ({time_scale})\n"
-            f"Maturity Index: {self.current_maturity:.2f}\n"
-            f"Pitch: {440.0 - (self.current_maturity * 330.0):.0f}Hz"
-        )
-        self.text_info = self.ax.text(
-            0, -1.8,
-            info_text,
-            ha='center',
-            fontsize=10,
-            family='monospace',
-            bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-        )
-        
-        # Draw history trace
-        if len(self.s_score_history) > 1:
-            history_array = np.array(list(self.s_score_history))
-            normalized_history = (history_array - history_array.min()) / (history_array.max() - history_array.min() + 1e-6)
-            x_trace = np.linspace(-1.5, 1.5, len(normalized_history))
-            y_trace = normalized_history * 0.5 - 1.0
-            self.ax.plot(x_trace, y_trace, 'b-', alpha=0.3, linewidth=1)
+        try:
+            # Clear previous frame
+            self.ax.clear()
+            self.ax.set_xlim(-2, 2)
+            self.ax.set_ylim(-2, 2)
+            self.ax.set_aspect('equal')
+            self.ax.axis('off')
+            self.ax.set_title('OPU Cognitive Map', fontsize=16, fontweight='bold')
+            
+            # Calculate pulse size from s_score
+            # Normalize s_score to reasonable radius (0.1 to 1.5)
+            pulse_radius = 0.1 + min(self.current_s_score / 5.0, 1.4)
+            
+            # Calculate color based on tension (s_score)
+            # High tension = red, low tension = blue
+            tension = min(self.current_s_score / 10.0, 1.0)
+            color_r = tension
+            color_b = 1.0 - tension
+            color_g = 0.3
+            pulse_color = (color_r, color_g, color_b)
+            
+            # Draw pulse circle
+            self.pulse_circle = plt.Circle(
+                (0, 0),
+                pulse_radius,
+                facecolor=pulse_color,
+                alpha=0.6,
+                edgecolor='black',
+                linewidth=2
+            )
+            self.ax.add_patch(self.pulse_circle)
+            
+            # Draw coherence shape (polygon with integrity based on coherence)
+            # Higher coherence = more regular shape
+            coherence_points = self._generate_coherence_shape(self.current_coherence)
+            self.coherence_shape = plt.Polygon(
+                coherence_points,
+                facecolor='green',
+                alpha=0.4 * self.current_coherence,
+                edgecolor='darkgreen',
+                linewidth=2
+            )
+            self.ax.add_patch(self.coherence_shape)
+            
+            # Draw maturity indicator (outer ring)
+            maturity_radius = 1.5 + (self.current_maturity * 0.3)
+            maturity_circle = plt.Circle(
+                (0, 0),
+                maturity_radius,
+                fill=False,
+                edgecolor='gold',
+                linewidth=2 + (self.current_maturity * 3),
+                alpha=0.5
+            )
+            self.ax.add_patch(maturity_circle)
+            
+            # Get time scale name for current maturity level
+            time_scales = {
+                0: "1 minute",
+                1: "1 hour",
+                2: "1 day",
+                3: "1 week",
+                4: "1 month",
+                5: "1 year"
+            }
+            time_scale = time_scales.get(self.current_maturity_level, "unknown")
+            
+            # Draw text info
+            info_text = (
+                f"s_score: {self.current_s_score:.2f}\n"
+                f"Coherence: {self.current_coherence:.2f}\n"
+                f"Maturity Level: {self.current_maturity_level} ({time_scale})\n"
+                f"Maturity Index: {self.current_maturity:.2f}\n"
+                f"Pitch: {440.0 - (self.current_maturity * 330.0):.0f}Hz"
+            )
+            self.text_info = self.ax.text(
+                0, -1.8,
+                info_text,
+                ha='center',
+                fontsize=10,
+                family='monospace',
+                bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+            )
+            
+            # Draw history trace
+            if len(self.s_score_history) > 1:
+                history_array = np.array(list(self.s_score_history))
+                normalized_history = (history_array - history_array.min()) / (history_array.max() - history_array.min() + 1e-6)
+                x_trace = np.linspace(-1.5, 1.5, len(normalized_history))
+                y_trace = normalized_history * 0.5 - 1.0
+                self.ax.plot(x_trace, y_trace, 'b-', alpha=0.3, linewidth=1)
+        except (KeyboardInterrupt, SystemExit):
+            # Re-raise to allow proper shutdown
+            raise
+        except Exception:
+            # Silently ignore matplotlib errors (e.g., window closed, threading issues)
+            # This prevents crashes when matplotlib operations are interrupted
+            pass
     
     def _generate_coherence_shape(self, coherence):
         """
@@ -219,6 +240,34 @@ class CognitiveMapVisualizer:
     
     def refresh(self):
         """Refresh the display (call after draw_cognitive_map)."""
-        plt.draw()
-        plt.pause(0.001)  # Small pause to allow GUI to update
+        try:
+            plt.draw()
+            plt.pause(0.001)  # Small pause to allow GUI to update
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except Exception:
+            # Silently ignore matplotlib errors (e.g., window closed, threading issues)
+            pass
+    
+    def on_state_changed(self, state):
+        """
+        Observer callback: React to OPU state changes.
+        
+        Args:
+            state: Dictionary containing OPU state
+        """
+        s_score = state.get('s_score', 0.0)
+        coherence = state.get('coherence', 0.0)
+        maturity = state.get('maturity', 0.0)
+        
+        # Update visualization state
+        self.update_state(s_score, coherence, maturity)
+        
+        # Redraw (if visualization is active)
+        try:
+            self.draw_cognitive_map()
+            self.refresh()
+        except Exception:
+            # Silently fail if visualization window is closed
+            pass
 

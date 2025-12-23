@@ -19,7 +19,7 @@ class TestVisualCortex:
         assert 'R' in vc.visual_memory
         assert 'G' in vc.visual_memory
         assert 'B' in vc.visual_memory
-        assert vc.max_visual_history == 100
+        assert vc.max_visual_history == 50  # Updated default for higher sensitivity
     
     def test_introspect_visual_initialization(self):
         """Test that visual memory is initialized correctly in OPU."""
@@ -28,7 +28,7 @@ class TestVisualCortex:
         assert 'R' in cortex.visual_memory
         assert 'G' in cortex.visual_memory
         assert 'B' in cortex.visual_memory
-        assert cortex.max_visual_history == 100
+        assert cortex.max_visual_history == 50  # Updated default for higher sensitivity
     
     def test_introspect_insufficient_history(self):
         """Test visual introspection with insufficient history."""

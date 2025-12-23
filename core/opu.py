@@ -8,15 +8,18 @@ This module provides the OrthogonalProcessingUnit class which combines:
 
 This is the main entry point for the OPU. For direct access to subsystems,
 use the individual modules (brain.py, audio_cortex.py, vision_cortex.py).
+
+Now supports Observer Pattern for state change notifications.
 """
 
 import numpy as np
 from core.brain import Brain
 from core.audio_cortex import AudioCortex
 from core.vision_cortex import VisualCortex
+from core.patterns.observer import ObservableOPU
 
 
-class OrthogonalProcessingUnit:
+class OrthogonalProcessingUnit(ObservableOPU):
     """
     The core processing unit with introspection and memory abstraction.
     Evolves from a noisy child to a deep-voiced sage through memory consolidation.
@@ -33,6 +36,9 @@ class OrthogonalProcessingUnit:
     """
     
     def __init__(self):
+        # Initialize observer functionality
+        super().__init__()
+        
         # Initialize subsystems
         self.brain = Brain()
         self.audio_cortex = AudioCortex()
@@ -63,7 +69,10 @@ class OrthogonalProcessingUnit:
         Returns:
             s_score: surprise score (higher = more surprising)
         """
-        return self.audio_cortex.introspect(genomic_bit)
+        s_score = self.audio_cortex.introspect(genomic_bit)
+        # Notify observers of state change
+        self._notify_state_change()
+        return s_score
     
     def introspect_visual(self, visual_vector):
         """
@@ -76,20 +85,24 @@ class OrthogonalProcessingUnit:
             s_visual: The highest surprise score found across the 3 channels
             channel_surprises: dict with individual channel scores
         """
-        return self.vision_cortex.introspect(visual_vector)
+        result = self.vision_cortex.introspect(visual_vector)
+        # Notify observers of state change
+        self._notify_state_change()
+        return result
     
-    def store_memory(self, genomic_bit, s_score):
+    def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN"):
         """
         Store memory (delegates to Brain).
         
         Args:
             genomic_bit: the genomic bit to store
             s_score: the surprise score (determines level)
+            sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1")
         """
         # Calculate timestamp based on genomic bits history length
         # This matches the original behavior where timestamp reflected processing count
         timestamp = len(self.genomic_bits_history)
-        self.brain.store_memory(genomic_bit, s_score, timestamp=timestamp)
+        self.brain.store_memory(genomic_bit, s_score, sense_label=sense_label, timestamp=timestamp)
     
     def consolidate_memory(self, level):
         """
@@ -132,6 +145,11 @@ class OrthogonalProcessingUnit:
             'g_now': audio_state['g_now'],
             'maturity': self.brain.character_profile['maturity_index']
         }
+    
+    def _notify_state_change(self):
+        """Notify all observers of state change."""
+        state = self.get_current_state()
+        self.notify_observers(state)
     
     # Expose properties for backward compatibility
     @property

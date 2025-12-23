@@ -26,10 +26,25 @@ The OPU Cognitive Map visualization shows the real-time state of the system, inc
 The OPU consists of several interconnected subsystems:
 
 - **Genesis Kernel** (`core/genesis.py`): The Safety Kernel implementing the 0-th Law with ethical veto
-- **Perception** (`core/perception.py`): Scale-invariant audio perception using genomic bits
-- **Cortex** (`core/cortex.py`): The brain with introspection, memory abstraction, and character evolution
+- **Perception** (`core/mic.py`, `core/camera.py`): Scale-invariant audio/visual perception using genomic bits
+- **Cortex** (`core/brain.py`, `core/audio_cortex.py`, `core/vision_cortex.py`): The brain with introspection, memory abstraction, and character evolution
 - **Expression** (`core/expression.py`): Aesthetic feedback loop and phoneme analysis
 - **Visualization** (`utils/visualization.py`): Real-time cognitive map visualization
+
+### Design Patterns
+
+The OPU architecture implements **8 Gang of Four (GOF) design patterns** for improved extensibility and maintainability:
+
+1. **Strategy Pattern** - Introspection strategies (audio, visual, extensible)
+2. **Observer Pattern** - State change notifications (decoupled visualization/expression)
+3. **Factory Pattern** - Sense creation (AUDIO_V1, VIDEO_V1, extensible)
+4. **State Pattern** - Maturity levels (6 states from child to sage)
+5. **Template Method Pattern** - Processing pipeline with customizable hooks
+6. **Command Pattern** - Action encapsulation (undo/redo, logging)
+7. **Decorator Pattern** - Sense preprocessing (noise gates, filters, normalization)
+8. **Builder Pattern** - Flexible OPU configuration
+
+See [PATTERNS.md](PATTERNS.md) for detailed documentation and [examples/pattern_usage.py](examples/pattern_usage.py) for usage examples.
 
 ## Installation
 
@@ -47,9 +62,21 @@ pip install -r requirements.txt
 ```
 
 3. Run the OPU:
+
+**On macOS (especially iMac with Python 3.13+):** 
+**You MUST use the launcher script to prevent tkinter crashes:**
 ```bash
-python main.py
+./run_opu.sh
 ```
+
+This sets the `TK_SILENCE_DEPRECATION` environment variable **before Python starts**, which is required to prevent the NSApplication crash on macOS.
+
+**On Linux/Windows:**
+```bash
+python3 main.py
+```
+
+**Note:** The launcher script works on all platforms, so you can use it everywhere for consistency.
 
 ### As a Package (Future)
 
@@ -60,13 +87,56 @@ pip install opu
 ## How It Works
 
 1. **Audio Input**: Captures audio from microphone (or uses simulated input)
-2. **Perception**: Normalizes input to create scale-invariant signatures
-3. **Introspection**: Calculates surprise score (s_score) by comparing current state to history
-4. **Ethical Veto**: Applies Genesis Constant to ensure actions maintain Order
-5. **Memory Storage**: Stores experiences at appropriate abstraction levels
-6. **Expression**: Generates audio feedback and analyzes phonemes
-7. **Visualization**: Displays real-time cognitive map
-8. **Abstraction Cycle**: Every 10 seconds triggers memory consolidation and character evolution
+2. **Visual Input**: Captures video from webcam with object and emotion detection
+3. **Perception**: Normalizes input to create scale-invariant signatures
+4. **Introspection**: Calculates surprise score (s_score) by comparing current state to history
+5. **Ethical Veto**: Applies Genesis Constant to ensure actions maintain Order
+6. **Memory Storage**: Stores experiences at appropriate abstraction levels
+7. **Expression**: Generates audio feedback and analyzes phonemes
+8. **Visualization**: Displays real-time cognitive map
+9. **Abstraction Cycle**: Every 10 seconds triggers memory consolidation and character evolution
+
+## Emotion Detection
+
+The OPU can detect emotions in faces it sees! This enables the OPU to react to human emotions, creating a more interactive and empathetic experience.
+
+### Features
+
+- **Real-time emotion recognition** on detected faces
+- **7 basic emotions**: angry, disgust, fear, happy, neutral, sad, surprise
+- **Color-coded visualization**: Different colors for different emotions in the webcam preview
+- **Multiple detection methods**: Supports multiple emotion detection libraries
+
+### Setup
+
+Emotion detection is **optional** and works with or without additional libraries:
+
+1. **Basic mode (default)**: Works out of the box with simple heuristic detection
+2. **FER library** (recommended for better accuracy):
+   ```bash
+   pip install fer
+   ```
+3. **DeepFace library** (highest accuracy, slower):
+   ```bash
+   pip install deepface
+   ```
+
+The OPU will automatically use the best available method. If no library is installed, it falls back to basic detection.
+
+### How It Works
+
+1. **Face Detection**: Uses OpenCV Haar cascades to detect faces
+2. **Emotion Analysis**: Analyzes facial expressions in detected face regions
+3. **Visual Feedback**: Displays emotions with color-coded bounding boxes:
+   - 🟢 Green = Happy
+   - 🔵 Blue = Sad
+   - 🔴 Red = Angry
+   - 🟡 Yellow = Surprise
+   - 🟣 Purple = Fear
+   - 🟦 Teal = Disgust
+   - 🟨 Yellow = Neutral
+
+The OPU can react to emotions it sees - for example, it might produce a more somber tone when it detects sadness, or a higher-pitched response to surprise!
 
 ## Character Evolution
 

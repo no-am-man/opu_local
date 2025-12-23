@@ -31,13 +31,14 @@ class Brain:
             "stability_threshold": 3.0  # Easily surprised initially
         }
     
-    def store_memory(self, genomic_bit, s_score, timestamp=None):
+    def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN", timestamp=None):
         """
         Stores a memory at the appropriate abstraction level.
         
         Args:
             genomic_bit: the genomic bit to store
             s_score: the surprise score (determines level)
+            sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1")
             timestamp: optional timestamp (if None, uses total memories count)
         """
         # Determine abstraction level based on surprise
@@ -60,10 +61,11 @@ class Brain:
         if timestamp is None:
             timestamp = sum(len(level_mem) for level_mem in self.memory_levels.values())
         
-        # Store in appropriate level
+        # Store in appropriate level with sense label
         self.memory_levels[level].append({
             'genomic_bit': genomic_bit,
             's_score': s_score,
+            'sense': sense_label,  # Label the input sense (AUDIO_V1, VIDEO_V1, etc.)
             'timestamp': timestamp
         })
         
@@ -112,11 +114,18 @@ class Brain:
         if len(genomic_bits) == 0:
             return  # No valid genomic bits to consolidate
         
-        # Create abstraction: mean and pattern
+        # Collect sense labels from memories being consolidated
+        sense_labels = []
+        for m in level_memories:
+            if 'sense' in m:
+                sense_labels.append(m['sense'])
+        
+        # Create abstraction: mean and pattern, preserving sense information
         abstraction = {
             'mean_genomic_bit': np.mean(genomic_bits),
             'pattern_strength': np.std(genomic_bits) if len(genomic_bits) > 1 else 0.0,
-            'count': len(genomic_bits)
+            'count': len(genomic_bits),
+            'senses': list(set(sense_labels)) if sense_labels else ['UNKNOWN']  # Unique sense labels
         }
         
         # Store abstraction in next level (if exists)

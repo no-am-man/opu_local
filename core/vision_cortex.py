@@ -22,12 +22,13 @@ class VisualCortex:
     Tracks R, G, B channel history independently and computes visual surprise.
     """
     
-    def __init__(self, max_history=100):
+    def __init__(self, max_history=50):
         """
         Initialize Visual Cortex Introspection.
         
         Args:
             max_history: Maximum number of frames to keep in history per channel
+            (Reduced from 100 to 50 for higher sensitivity - shorter memory = more reactive)
         """
         # Visual memory for each channel independently
         # R, G, B are treated as orthogonal information streams

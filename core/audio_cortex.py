@@ -12,12 +12,13 @@ class AudioCortex:
     Tracks audio history and computes s_score (surprise) through introspection.
     """
     
-    def __init__(self, max_history_size=10000):
+    def __init__(self, max_history_size=50):
         """
         Initialize Audio Cortex.
         
         Args:
             max_history_size: Maximum number of genomic bits to keep in history
+            (Reduced from 10000 to 50 for higher sensitivity - shorter memory = more reactive)
         """
         # History for introspection (capped to prevent unbounded growth)
         self.max_history_size = max_history_size

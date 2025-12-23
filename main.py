@@ -4,6 +4,13 @@ Runs real-time audio processing, cognitive processing, and visualization.
 Simulates the "Abstraction Cycle" by speeding up time.
 """
 
+# CRITICAL: Set environment variable BEFORE any tkinter imports on macOS
+# This must be done at the very top, before any other imports
+import os
+import platform
+if platform.system() == 'Darwin':
+    os.environ['TK_SILENCE_DEPRECATION'] = '1'
+
 import numpy as np
 import sounddevice as sd
 import time
@@ -20,7 +27,8 @@ except ImportError:
 
 from config import (
     SAMPLE_RATE, CHUNK_SIZE, ABSTRACTION_CYCLE_SECONDS,
-    BASE_FREQUENCY, STATE_FILE, MATURITY_LEVEL_TIMES, TIME_SCALE_MULTIPLIER
+    BASE_FREQUENCY, STATE_FILE, MATURITY_LEVEL_TIMES, TIME_SCALE_MULTIPLIER,
+    AUDIO_SENSE, VIDEO_SENSE
 )
 from core.genesis import GenesisKernel
 from core.mic import perceive
@@ -30,6 +38,16 @@ from core.camera import VisualPerception
 from core.object_detection import ObjectDetector
 from utils.visualization import CognitiveMapVisualizer
 from utils.persistence import OPUPersistence
+
+# Optional log window - may not work on all systems (e.g., macOS with Python 3.13+)
+# NOTE: On macOS, you MUST use ./run_opu.sh launcher script to set TK_SILENCE_DEPRECATION
+# before Python starts. This prevents the NSApplication crash.
+try:
+    from utils.log_window import OPULogWindow
+    LOG_WINDOW_AVAILABLE = True
+except Exception:
+    OPULogWindow = None
+    LOG_WINDOW_AVAILABLE = False
 
 
 class OPUEventLoop:
@@ -54,6 +72,31 @@ class OPUEventLoop:
         
         # Initialize persistence
         self.persistence = OPUPersistence(state_file=state_file or STATE_FILE)
+        
+        # Initialize log window (must be after other initializations)
+        # This will redirect stdout/stderr to the log window
+        # NOTE: On macOS, the environment variable TK_SILENCE_DEPRECATION must be set
+        # BEFORE Python starts (use ./run_opu.sh launcher script)
+        self.log_window = None
+        if LOG_WINDOW_AVAILABLE:
+            # Try to create the log window
+            try:
+                self.log_window = OPULogWindow(title="OPU Log - Real-time Output")
+                self.log_window.start()
+                print("[OPU] Log window enabled - all output will appear in the log window")
+            except Exception as e:
+                # If log window fails, continue without it
+                error_msg = str(e)
+                if platform.system() == 'Darwin' and 'NSApplication' in error_msg:
+                    print("[OPU] ERROR: Log window crashed due to macOS tkinter issue.")
+                    print("[OPU] SOLUTION: Use the launcher script instead:")
+                    print("[OPU]   ./run_opu.sh")
+                    print("[OPU] This sets the required environment variable before Python starts.")
+                else:
+                    print(f"[OPU] Note: Log window unavailable (using terminal output): {type(e).__name__}: {error_msg}")
+                self.log_window = None
+        else:
+            print("[OPU] Note: Log window module unavailable (using terminal output)")
         
         # Timing for abstraction cycles (6 maturity levels)
         self.start_time = time.time()
@@ -94,39 +137,107 @@ class OPUEventLoop:
     def setup_audio_input(self):
         """Setup audio input (microphone or simulation)."""
         try:
-            # Try to open microphone with larger buffer to prevent overflow
-            # Use even larger blocksize and buffer to handle processing delays
+            # Use low latency and explicit blocksize to minimize buffer buildup
+            # Low latency = smaller internal buffer = less overflow risk
             self.audio_stream = sd.InputStream(
                 samplerate=SAMPLE_RATE,
                 channels=1,
-                blocksize=CHUNK_SIZE * 4,  # Much larger buffer
                 dtype=np.float32,
-                latency='high'  # Higher latency for stability
+                blocksize=CHUNK_SIZE,
+                latency='low'  # Low latency = smaller buffer
             )
             self.audio_stream.start()
             self.use_microphone = True
-            print("[OPU] Microphone input enabled.")
-        except Exception as e:
-            print(f"[OPU] Microphone not available: {e}")
-            print("[OPU] Using simulated audio input.")
-            self.use_microphone = False
+            print("[OPU] Microphone input enabled (low latency mode).")
+        except Exception as e1:
+            # If that fails, try without latency setting
+            try:
+                self.audio_stream = sd.InputStream(
+                    samplerate=SAMPLE_RATE,
+                    channels=1,
+                    blocksize=CHUNK_SIZE,
+                    dtype=np.float32
+                )
+                self.audio_stream.start()
+                self.use_microphone = True
+                print("[OPU] Microphone input enabled.")
+            except Exception as e2:
+                # If both fail, fall back to simulated input
+                print(f"[OPU] Microphone not available: {e1}")
+                print("[OPU] Using simulated audio input.")
+                self.use_microphone = False
     
     def get_audio_input(self):
         """
         Get audio input from microphone or generate simulated input.
         Reads ALL available data aggressively to prevent buffer overflow.
+        Uses non-blocking read to avoid delays.
+        
+        FEEDBACK PREVENTION: When OPU is actively speaking (outputting audio),
+        we mute the microphone input to prevent acoustic feedback loops.
+        The microphone picks up the speaker output, which causes a feedback loop.
         
         Returns:
             numpy array of audio samples
         """
         if self.use_microphone and self.audio_stream is not None:
+            # FEEDBACK PREVENTION: If OPU is speaking, mute microphone input
+            # This prevents the microphone from picking up the speaker output
+            if self.afl.is_active():
+                # OPU is speaking - mute microphone to prevent feedback
+                # Aggressively drain buffer to prevent overflow
+                try:
+                    available = self.audio_stream.read_available
+                    if available > 0:
+                        # Read and discard ALL available data to prevent overflow
+                        # Read in large chunks to drain quickly
+                        while available > 0:
+                            read_size = min(available, CHUNK_SIZE * 8)
+                            try:
+                                self.audio_stream.read(read_size, blocking=False)
+                            except:
+                                break
+                            available = self.audio_stream.read_available
+                            if available <= 0:
+                                break
+                    return np.zeros(CHUNK_SIZE, dtype=np.float32)
+                except Exception:
+                    return np.zeros(CHUNK_SIZE, dtype=np.float32)
+            
             try:
-                # Read ALL available data to prevent overflow
+                # AGGRESSIVE BUFFER DRAINING: Read ALL available data to prevent overflow
                 available = self.audio_stream.read_available
+                
+                # If buffer is getting full, drain it aggressively
+                if available > CHUNK_SIZE * 8:  # Buffer getting full
+                    # Emergency: drain everything to prevent overflow
+                    if not hasattr(self, '_last_overflow_warn') or \
+                       time.time() - self._last_overflow_warn > 2.0:
+                        print(f"[OPU] Audio buffer draining (available: {available})")
+                        self._last_overflow_warn = time.time()
+                    
+                    # Drain buffer completely
+                    while self.audio_stream.read_available > CHUNK_SIZE:
+                        try:
+                            drain_size = min(self.audio_stream.read_available, CHUNK_SIZE * 8)
+                            self.audio_stream.read(drain_size, blocking=False)
+                        except:
+                            break
+                    available = self.audio_stream.read_available
+                
                 if available > 0:
-                    # Always read everything available to clear the buffer
-                    read_size = available
-                    data, overflowed = self.audio_stream.read(read_size)
+                    # Read available data (non-blocking)
+                    # Read more than we need to keep buffer from filling up
+                    read_size = min(available, CHUNK_SIZE * 2)
+                    try:
+                        data, overflowed = self.audio_stream.read(read_size, blocking=False)
+                    except:
+                        # Fallback: try smaller read
+                        try:
+                            data, overflowed = self.audio_stream.read(CHUNK_SIZE, blocking=False)
+                        except:
+                            # Last resort: return zeros
+                            return np.zeros(CHUNK_SIZE, dtype=np.float32)
                     
                     if overflowed:
                         # Only print occasionally to avoid spam
@@ -149,7 +260,7 @@ class OPUEventLoop:
                     # No data available, return zeros
                     return np.zeros(CHUNK_SIZE, dtype=np.float32)
             except Exception as e:
-                print(f"[OPU] Error reading audio: {e}")
+                # Silently fall back to simulated input on errors
                 return self.generate_simulated_input()
         else:
             return self.generate_simulated_input()
@@ -231,14 +342,37 @@ class OPUEventLoop:
         genomic_bit_audio = perception_a['genomic_bit']
         s_audio = self.cortex.introspect(genomic_bit_audio)
         
-        # --- 2. VISUAL PERCEPTION (NEW: Multi-Modal) ---
-        visual_vector, frame = self.visual_perception.get_visual_input()
+        # --- 2. VISUAL PERCEPTION (RECURSIVE: OPU sees its own thoughts) ---
+        # Step 2a: Capture raw frame
+        raw_frame = self.visual_perception.capture_frame()
+        
+        # Step 2b: Generate graphics FIRST (before OPU perceives)
+        # This creates the "Cybernetic Frame" - video + OpenCV annotations
+        # The OPU will analyze this annotated frame, seeing its own bounding boxes
+        # as part of visual reality. This enables recursive feedback loops.
+        processed_frame = None
+        detections = []
+        
+        if raw_frame is not None:
+            # Run object detection on raw frame
+            detections = self.object_detector.detect_objects(raw_frame)
+            
+            # Draw detections (bounding boxes, labels) onto the frame
+            # This annotated frame is what the OPU will "see"
+            processed_frame = self.object_detector.draw_detections(raw_frame.copy(), detections)
+        
+        # Step 2c: OPU analyzes the PROCESSED frame (with graphics)
+        # The yellow bounding boxes, text labels, etc. become part of visual entropy
+        # This is Recursive Perception: The OPU sees its own thoughts as reality
+        visual_vector = self.visual_perception.analyze_frame(processed_frame)
         s_visual, channel_scores = self.cortex.introspect_visual(visual_vector)
         
         # --- 3. SENSORY FUSION (Synesthesia) ---
         # The OPU reacts to the most intense reality, whether light or sound.
         # If you wave a red flag (High S_visual), the OPU will "Scream".
         # If you scream (High S_audio), the OPU will also "Scream".
+        # Now: If the OPU draws a red bounding box (High Red Entropy),
+        # it will perceive that red as "danger" and potentially react to it.
         s_global = max(s_audio, s_visual)
         
         # --- 4. APPLY ETHICAL VETO ---
@@ -247,9 +381,20 @@ class OPUEventLoop:
         safe_action = self.genesis.ethical_veto(action_vector)
         safe_s_score = safe_action[0] if len(safe_action) > 0 else s_global
         
-        # --- 5. STORE MEMORY ---
-        # Store using global score (represents overall surprise)
-        self.cortex.store_memory(genomic_bit_audio, safe_s_score)
+        # --- 5. STORE MEMORY (with sense labels) ---
+        # Store memories with sense labels (AUDIO_V1, VIDEO_V1, etc.)
+        # This makes the OPU extensible - future senses can be plugged in
+        # Each sense is tracked independently, allowing the OPU to learn from multiple modalities
+        
+        # Store audio memory (primary sense)
+        self.cortex.store_memory(genomic_bit_audio, safe_s_score, sense_label=AUDIO_SENSE)
+        
+        # Store visual memory if significant (multi-modal learning)
+        # Visual contributes to s_global, and we store it separately with VIDEO_SENSE label
+        if s_visual > 0.5:  # Only store if visual surprise is meaningful
+            # Use the maximum channel entropy as the visual genomic bit
+            visual_genomic_bit = max(visual_vector) if len(visual_vector) > 0 else 0.0
+            self.cortex.store_memory(visual_genomic_bit, s_visual, sense_label=VIDEO_SENSE)
         
         # --- 6. GET CHARACTER STATE ---
         character = self.cortex.get_character_state()
@@ -258,6 +403,8 @@ class OPUEventLoop:
         # --- 7. GENERATE EXPRESSION (Synesthesia) ---
         # The voice pitch is now driven by the Global Score.
         # Visual chaos creates audio response (true synesthesia).
+        # Now: If graphics turn red (panic), the OPU sees red entropy,
+        # which confirms the danger and amplifies the response (adrenaline loop).
         try:
             self.afl.play_tone(safe_s_score, duration=0.05)
         except:
@@ -271,11 +418,12 @@ class OPUEventLoop:
         if phoneme:
             print(f"[PHONEME] {phoneme} (s_score: {s_audio:.2f}, pitch: {current_pitch:.0f}Hz)")
         
-        # --- 9. OBJECT DETECTION & DISPLAY (Visual Recognition) ---
-        if frame is not None:
-            # Run object detection
-            detections = self.object_detector.detect_objects(frame)
-            self.display_visual_cortex(frame, s_global, s_visual, s_audio, channel_scores, detections)
+        # --- 9. FINAL DISPLAY (HUD for human user) ---
+        # Overlay cognitive state HUD on top of the processed frame
+        # Note: We could feed this back into the loop, but that might create
+        # infinite feedback. For now, HUD is display-only (not analyzed by OPU).
+        if processed_frame is not None:
+            self.display_visual_cortex(processed_frame, s_global, s_visual, s_audio, channel_scores, detections)
         
         # --- 10. UPDATE COGNITIVE MAP ---
         state = self.cortex.get_current_state()
@@ -286,8 +434,15 @@ class OPUEventLoop:
             state['maturity'],
             character.get('maturity_level', 0)
         )
-        self.visualizer.draw_cognitive_map()
-        self.visualizer.refresh()
+        # Draw visualization (with error handling for matplotlib threading issues)
+        try:
+            self.visualizer.draw_cognitive_map()
+            self.visualizer.refresh()
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except Exception:
+            # Silently ignore visualization errors (e.g., window closed, threading issues)
+            pass
         
         return {
             's_score': safe_s_score,
@@ -302,27 +457,33 @@ class OPUEventLoop:
     
     def display_visual_cortex(self, frame, s_global, s_visual, s_audio, channel_scores, detections=None):
         """
-        Overlays OPU cognitive state onto the camera feed.
-        Creates a HUD showing R, G, B channel entropy, global surprise, and object detections.
+        Displays a dedicated webcam preview window with object detection graphics.
+        
+        The window shows:
+        - Live webcam feed
+        - Object detection bounding boxes (faces, etc.) - drawn in yellow
+        - OPU cognitive state HUD (R, G, B entropy bars, surprise scores)
+        
+        Window is resized to 75% of capture resolution for a compact preview.
+        
+        NOTE: This HUD is for human display only. It is NOT fed back into
+        the OPU's perception loop to avoid infinite feedback where drawing
+        the score changes the score. The object detections (bounding boxes)
+        ARE analyzed by the OPU (see process_cycle), but the HUD stats are not.
         
         Args:
-            frame: Raw BGR frame from camera
+            frame: Processed BGR frame (already has object detection graphics drawn)
             s_global: Global surprise score (max of audio/visual)
             s_visual: Visual surprise score
             s_audio: Audio surprise score
             channel_scores: dict with {'R': float, 'G': float, 'B': float}
-            detections: List of detected objects (optional)
+            detections: List of detected objects (already drawn on frame, passed for reference)
         """
         if not CV2_AVAILABLE or frame is None:
             return
         
-        # Create a HUD overlay
+        # Create a HUD overlay (frame already has detections drawn)
         display = frame.copy()
-        
-        # Draw object detections first (so HUD overlays on top)
-        if detections:
-            display = self.object_detector.draw_detections(display, detections)
-        
         h, w, _ = display.shape
         
         # Color map for channels
@@ -359,8 +520,14 @@ class OPUEventLoop:
         cv2.putText(display, f"A: {s_audio:.2f} | V: {s_visual:.2f}", (10, h - 50),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
 
-        # Show Window
-        cv2.imshow('OPU Visual Cortex', display)
+        # Show Window - Small preview with object detection
+        # Resize to a smaller, more compact preview window
+        preview_scale = 0.75  # Make it 75% of original size for compact preview
+        preview_h = int(h * preview_scale)
+        preview_w = int(w * preview_scale)
+        preview_display = cv2.resize(display, (preview_w, preview_h))
+        
+        cv2.imshow('OPU WebCam Preview', preview_display)
         cv2.waitKey(1)  # Non-blocking, allows other processing
     
     def check_abstraction_cycle(self):
@@ -410,6 +577,31 @@ class OPUEventLoop:
                 if level == 2:
                     self.day_counter += 1
     
+    def _drain_audio_buffer(self):
+        """
+        Aggressively drain audio buffer to prevent overflow.
+        Called frequently to keep buffer from filling up.
+        """
+        if not self.use_microphone or self.audio_stream is None:
+            return
+        
+        try:
+            available = self.audio_stream.read_available
+            # If buffer is getting full, drain it
+            if available > CHUNK_SIZE * 4:
+                # Drain aggressively
+                while available > CHUNK_SIZE:
+                    try:
+                        drain_size = min(available, CHUNK_SIZE * 8)
+                        self.audio_stream.read(drain_size, blocking=False)
+                        available = self.audio_stream.read_available
+                        if available <= 0:
+                            break
+                    except:
+                        break
+        except Exception:
+            pass  # Silently ignore errors
+    
     def run(self):
         """Main event loop."""
         # Setup
@@ -421,9 +613,20 @@ class OPUEventLoop:
             last_cycle_time = time.time()
             
             while True:
+                # Drain audio buffer frequently to prevent overflow
+                # Do this BEFORE process_cycle to keep buffer clear
+                self._drain_audio_buffer()
+                
                 # Process one cycle
                 result = self.process_cycle()
                 cycle_count += 1
+                
+                # Update log window (if enabled) - call periodically to process messages
+                if hasattr(self, 'log_window') and self.log_window is not None:
+                    try:
+                        self.log_window.update()
+                    except Exception:
+                        pass  # Silently continue if log window has issues
                 
                 # Check for abstraction cycle
                 self.check_abstraction_cycle()
@@ -434,10 +637,11 @@ class OPUEventLoop:
                 current_time = time.time()
                 elapsed = current_time - last_cycle_time
                 
-                # Only sleep if we're processing too fast
-                # But don't sleep if we're already behind (to prevent buffer overflow)
-                if elapsed < chunk_duration * 0.5:  # Only sleep if we're way ahead
-                    time.sleep(max(0, chunk_duration * 0.5 - elapsed))
+                # Don't sleep if we're behind - prioritize clearing audio buffer
+                # With visual processing, we need to be more aggressive about timing
+                # Only sleep if we're significantly ahead (reduced threshold)
+                if elapsed < chunk_duration * 0.3:  # Only sleep if we're way ahead
+                    time.sleep(max(0, chunk_duration * 0.2 - elapsed))
                 
                 last_cycle_time = time.time()
                 
@@ -455,7 +659,12 @@ class OPUEventLoop:
                     print(f"  Memory: " + " | ".join([f"L{i}={mem_dist[i]}" for i in range(6)]))
         
         except KeyboardInterrupt:
-            print("\n[OPU] Shutting down...")
+            print("\n[OPU] Shutting down gracefully...")
+        except Exception as e:
+            # Catch any other exceptions to ensure cleanup
+            print(f"\n[OPU] Error in main loop: {e}")
+            import traceback
+            traceback.print_exc()
         finally:
             self.cleanup()
     
@@ -482,6 +691,13 @@ class OPUEventLoop:
         
         if CV2_AVAILABLE:
             cv2.destroyAllWindows()
+        
+        # Cleanup log window (restore stdout/stderr)
+        if hasattr(self, 'log_window') and self.log_window is not None:
+            try:
+                self.log_window.stop()
+            except Exception:
+                pass
         
         print("[OPU] Cleanup complete.")
 

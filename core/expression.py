@@ -123,28 +123,42 @@ class AestheticFeedbackLoop:
     def play_tone(self, s_score, duration=None):
         """
         Updates the continuous oscillator based on surprise.
+        
+        Tuned for higher sensitivity - makes OPU more "chatty" and responsive
+        to small changes in the environment.
         """
-        # NOISE GATE: If bored, go silent
-        if s_score < 0.2:
+        # NOISE GATE: Lower threshold so it doesn't cut off too early
+        if s_score < 0.1:  # Was 0.2 - now more sensitive
             self.target_amp = 0.0
             self.is_speaking = False
             return
         
-        # 1. SET VOLUME (Attention)
-        self.target_amp = min(1.0, s_score / 3.0)
+        # 1. SET VOLUME (Attention) - Boost gain for low scores
+        # Changed from s_score / 3.0 to s_score / 2.0 for more volume
+        self.target_amp = min(1.0, s_score / 2.0)
         
-        # 2. SET PITCH (Surprise)
-        # Base * (1 + score/10)
-        new_freq = self.base_pitch * (1.0 + s_score / 10.0)
+        # 2. SET PITCH (Surprise) - Make it more melodramatic
+        # Changed from s_score / 10.0 to s_score / 5.0 for more pitch variation
+        new_freq = self.base_pitch * (1.0 + s_score / 5.0)
         self.target_frequency = np.clip(new_freq, 50.0, 2000.0)
         
-        # 3. TRIGGER ARTICULATION
-        # If surprise is high, turn on the "Syllable LFO"
-        if s_score > 1.5:
+        # 3. TRIGGER ARTICULATION (The "Chatter" Fix)
+        # Lower threshold so it "talks" even when mildly interested
+        # Changed from 1.5 to 0.6 - now triggers on smaller surprises
+        if s_score > 0.6:  # Was 1.5 - now much more chatty
             self.is_speaking = True
         else:
             self.is_speaking = False
 
+    def is_active(self):
+        """
+        Returns True if the OPU is currently generating audio output.
+        Used for feedback prevention - mute microphone when OPU is speaking.
+        
+        Lower threshold (0.05) to catch more cases and prevent feedback more aggressively.
+        """
+        return self.target_amp > 0.05 or self.current_amp > 0.05
+    
     def cleanup(self):
         if self.stream:
             self.stream.stop()

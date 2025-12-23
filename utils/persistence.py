@@ -259,6 +259,11 @@ class OPUPersistence:
         for level_str, memories in serialized.items():
             level = int(level_str)
             if level in memory_levels:
+                # Add backward compatibility: if memories don't have 'sense' field,
+                # add default 'UNKNOWN' sense label for old state files
+                for mem in memories:
+                    if isinstance(mem, dict) and 'sense' not in mem:
+                        mem['sense'] = 'UNKNOWN'
                 memory_levels[level] = memories
         return memory_levels
     
