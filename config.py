@@ -26,3 +26,6 @@ MATURITY_INCREMENT = 0.05
 VISUALIZATION_UPDATE_RATE = 30  # FPS
 WINDOW_SIZE = (12, 8)  # inches
 
+# Persistence Configuration
+STATE_FILE = "opu_state.json"  # Path to save/load OPU state
+

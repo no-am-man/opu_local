@@ -84,11 +84,12 @@ class OrthogonalProcessingUnit:
             s_score: the surprise score (determines level)
         """
         # Determine abstraction level based on surprise
-        if s_score < 1.0:
+        # Slightly lower thresholds to allow more progression
+        if s_score < 0.8:
             level = 0  # Routine/background
-        elif s_score < 2.0:
+        elif s_score < 1.5:
             level = 1  # Notable
-        elif s_score < 4.0:
+        elif s_score < 3.0:
             level = 2  # Significant
         else:
             level = 3  # Exceptional/Wisdom
@@ -101,8 +102,12 @@ class OrthogonalProcessingUnit:
         })
         
         # Check if we should consolidate (trigger evolution)
+        # Level 2+ triggers immediate consolidation every 5 items
         if level >= 2 and len(self.memory_levels[level]) % 5 == 0:
             self.consolidate_memory(level)
+        # Level 1 can also trigger consolidation if we have enough (every 20 items)
+        elif level == 1 and len(self.memory_levels[1]) % 20 == 0 and len(self.memory_levels[1]) > 0:
+            self.consolidate_memory(1)
     
     def consolidate_memory(self, level):
         """
@@ -117,12 +122,27 @@ class OrthogonalProcessingUnit:
         
         # Abstract: extract patterns from this level
         level_memories = self.memory_levels[level]
-        genomic_bits = [m['genomic_bit'] for m in level_memories]
+        
+        # Handle both raw memories (with 'genomic_bit') and abstractions (with 'mean_genomic_bit')
+        genomic_bits = []
+        for m in level_memories:
+            if 'genomic_bit' in m:
+                # Raw memory
+                genomic_bits.append(m['genomic_bit'])
+            elif 'mean_genomic_bit' in m:
+                # Abstraction - use mean_genomic_bit as the representative value
+                genomic_bits.append(m['mean_genomic_bit'])
+            else:
+                # Skip if neither key exists
+                continue
+        
+        if len(genomic_bits) == 0:
+            return  # No valid genomic bits to consolidate
         
         # Create abstraction: mean and pattern
         abstraction = {
             'mean_genomic_bit': np.mean(genomic_bits),
-            'pattern_strength': np.std(genomic_bits),
+            'pattern_strength': np.std(genomic_bits) if len(genomic_bits) > 1 else 0.0,
             'count': len(genomic_bits)
         }
         

@@ -56,27 +56,38 @@ class AestheticFeedbackLoop:
         
         return tone.astype(np.float32)
     
-    def play_tone(self, s_score, duration=0.1):
+    def play_tone(self, s_score, duration=0.05):
         """
         Plays a tone based on surprise score.
-        For very short durations, blocking is minimal and acceptable.
+        Uses very short duration to minimize blocking.
         
         Args:
             s_score: surprise score
-            duration: duration in seconds
+            duration: duration in seconds (default 0.05 for quick feedback)
         """
-        if self.is_playing:
-            return  # Don't overlap sounds
+        # Only play if s_score is significant (reduce audio spam)
+        if s_score < 0.8:
+            return  # Skip very low surprise events
+        
+        # Check if previous playback is done
+        try:
+            # Try to get active streams - if none, we're not playing
+            active_streams = sd.get_stream().active if hasattr(sd, 'get_stream') else False
+            if self.is_playing and active_streams:
+                return  # Still playing previous tone
+        except:
+            pass  # If check fails, proceed anyway
         
         try:
             tone = self.generate_tone(s_score, duration)
             self.is_playing = True
-            # For very short tones, blocking is acceptable
+            # Play with very short duration - blocking is minimal
             sd.play(tone, samplerate=self.sample_rate)
-            sd.wait()  # Wait for playback to complete
+            # For 0.05s, blocking is acceptable and ensures clean playback
+            sd.wait()
             self.is_playing = False
         except Exception as e:
-            print(f"[AFL] Error playing tone: {e}")
+            # Silently fail to avoid spam
             self.is_playing = False
 
 

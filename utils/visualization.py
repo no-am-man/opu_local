@@ -111,7 +111,7 @@ class CognitiveMapVisualizer:
         self.pulse_circle = plt.Circle(
             (0, 0),
             pulse_radius,
-            color=pulse_color,
+            facecolor=pulse_color,
             alpha=0.6,
             edgecolor='black',
             linewidth=2
@@ -123,7 +123,7 @@ class CognitiveMapVisualizer:
         coherence_points = self._generate_coherence_shape(self.current_coherence)
         self.coherence_shape = plt.Polygon(
             coherence_points,
-            color='green',
+            facecolor='green',
             alpha=0.4 * self.current_coherence,
             edgecolor='darkgreen',
             linewidth=2

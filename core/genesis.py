@@ -47,7 +47,12 @@ class GenesisKernel:
             if magnitude > 0:
                 action_vector = action_vector * (clamped_magnitude / magnitude)
             
-            print(f"[GENESIS] Veto applied: Dissonance {dissonance:.3f} > {self.max_dissonance}")
+            # Only log occasionally to reduce verbosity (every ~50th veto)
+            if not hasattr(self, '_veto_count'):
+                self._veto_count = 0
+            self._veto_count += 1
+            if self._veto_count % 50 == 0:
+                print(f"[GENESIS] Veto applied {self._veto_count} times (Dissonance {dissonance:.3f} > {self.max_dissonance})")
         
         return action_vector
     

@@ -49,6 +49,22 @@ The OPU evolves over time:
 - **3.0-6.0**: Fricatives (Flowing tension) - "s"
 - **6.0+**: Plosives (High Tension) - "k"
 
+## Persistence
+
+The OPU automatically saves its learned state to disk (`opu_state.json` by default) so it can resume learning from where it left off. The state includes:
+
+- **Character Profile**: Maturity index, base pitch, stability threshold
+- **Memory Levels**: All abstraction layers (L0-L3)
+- **History**: Genomic bits, mu/sigma history for introspection
+- **Phonemes**: Learned phoneme history and statistics
+- **Day Counter**: Current abstraction cycle count
+
+State is saved:
+- After each abstraction cycle (every 10 seconds)
+- On graceful shutdown (Ctrl+C)
+
+To start fresh, simply delete `opu_state.json`.
+
 ## Configuration
 
 Edit `config.py` to adjust:
@@ -56,4 +72,5 @@ Edit `config.py` to adjust:
 - Audio sample rate and chunk size
 - Abstraction cycle timing
 - Visualization parameters
+- State file path (`STATE_FILE`)
 
