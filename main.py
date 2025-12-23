@@ -12,7 +12,7 @@ from datetime import datetime
 
 from config import (
     SAMPLE_RATE, CHUNK_SIZE, ABSTRACTION_CYCLE_SECONDS,
-    BASE_FREQUENCY, STATE_FILE
+    BASE_FREQUENCY, STATE_FILE, MATURITY_LEVEL_TIMES, TIME_SCALE_MULTIPLIER
 )
 from core.genesis import GenesisKernel
 from core.perception import perceive
@@ -39,10 +39,11 @@ class OPUEventLoop:
         # Initialize persistence
         self.persistence = OPUPersistence(state_file=state_file or STATE_FILE)
         
-        # Timing for abstraction cycle
+        # Timing for abstraction cycles (6 maturity levels)
         self.start_time = time.time()
-        self.last_abstraction_time = time.time()
+        self.last_abstraction_times = {level: time.time() for level in range(6)}  # Track each level separately
         self.day_counter = 0
+        self.maturity_level_times = MATURITY_LEVEL_TIMES
         
         # Audio input
         self.use_microphone = False
@@ -249,10 +250,12 @@ class OPUEventLoop:
         
         # 9. Update visualization
         state = self.cortex.get_current_state()
+        character = self.cortex.get_character_state()
         self.visualizer.update_state(
             state['s_score'],
             state['coherence'],
-            state['maturity']
+            state['maturity'],
+            character.get('maturity_level', 0)
         )
         self.visualizer.draw_cognitive_map()
         self.visualizer.refresh()
@@ -266,57 +269,49 @@ class OPUEventLoop:
     
     def check_abstraction_cycle(self):
         """
-        Check if it's time for an abstraction cycle (simulated "Day").
-        Every ABSTRACTION_CYCLE_SECONDS = 1 "Day" of maturity.
+        Check if it's time for abstraction cycles at any maturity level.
+        Each level has its own time scale (1 minute to 1 year).
         """
         current_time = time.time()
-        elapsed = current_time - self.last_abstraction_time
+        time_scales = {
+            0: "1 minute",
+            1: "1 hour",
+            2: "1 day",
+            3: "1 week",
+            4: "1 month",
+            5: "1 year"
+        }
         
-        if elapsed >= ABSTRACTION_CYCLE_SECONDS:
-            self.day_counter += 1
-            self.last_abstraction_time = current_time
+        # Check each maturity level for its abstraction cycle
+        for level in range(6):
+            elapsed = current_time - self.last_abstraction_times[level]
+            level_time = self.maturity_level_times[level]
             
-            # Trigger memory consolidation at all levels
-            # Start from highest level and work down
-            consolidated = False
-            for level in [3, 2, 1]:
-                if len(self.cortex.memory_levels[level]) >= 3:  # Need at least 3 items
+            if elapsed >= level_time:
+                self.last_abstraction_times[level] = current_time
+                
+                # Only consolidate if we have memories at this level
+                if len(self.cortex.memory_levels[level]) > 0:
                     self.cortex.consolidate_memory(level)
-                    consolidated = True
-                    break
-            
-            # If no higher levels, try consolidating level 0 if we have enough
-            if not consolidated and len(self.cortex.memory_levels[0]) >= 50:
-                # Abstract level 0 into level 1
-                level0_memories = self.cortex.memory_levels[0][-50:]  # Last 50
-                genomic_bits = [m['genomic_bit'] for m in level0_memories]
-                abstraction = {
-                    'mean_genomic_bit': np.mean(genomic_bits),
-                    'pattern_strength': np.std(genomic_bits),
-                    'count': len(genomic_bits)
-                }
-                self.cortex.memory_levels[1].append(abstraction)
-                # Clear some old level 0 memories to prevent unbounded growth
-                self.cortex.memory_levels[0] = self.cortex.memory_levels[0][:-50]
-            
-            # Print day summary
-            state = self.cortex.get_current_state()
-            phoneme_stats = self.phoneme_analyzer.get_phoneme_statistics()
-            
-            print(f"\n[DAY {self.day_counter}] Abstraction Cycle Complete")
-            print(f"  Maturity: {state['maturity']:.2f}")
-            print(f"  Phonemes Learned: {phoneme_stats['total']}")
-            print(f"    Vowels: {phoneme_stats['vowels']}, "
-                  f"Fricatives: {phoneme_stats['fricatives']}, "
-                  f"Plosives: {phoneme_stats['plosives']}")
-            print(f"  Memory Levels: "
-                  f"L0={len(self.cortex.memory_levels[0])}, "
-                  f"L1={len(self.cortex.memory_levels[1])}, "
-                  f"L2={len(self.cortex.memory_levels[2])}, "
-                  f"L3={len(self.cortex.memory_levels[3])}\n")
-            
-            # Save state after each abstraction cycle
-            self._save_state()
+                    
+                    # Print level-specific summary
+                    state = self.cortex.get_current_state()
+                    character = self.cortex.get_character_state()
+                    time_scale = time_scales[level]
+                    
+                    print(f"\n[MATURITY LEVEL {level} - {time_scale.upper()}] Abstraction Cycle")
+                    print(f"  Maturity Level: {character['maturity_level']} | Index: {state['maturity']:.2f}")
+                    print(f"  Memory Distribution: " + 
+                          " | ".join([f"L{i}={len(self.cortex.memory_levels[i])}" 
+                                     for i in range(6)]))
+                    
+                    # Save state after significant abstraction cycles (Level 2+)
+                    if level >= 2:
+                        self._save_state()
+                
+                # Increment day counter only for Level 2 (1 day)
+                if level == 2:
+                    self.day_counter += 1
     
     def run(self):
         """Main event loop."""
@@ -357,9 +352,9 @@ class OPUEventLoop:
                           f"maturity: {state['maturity']:.2f}, "
                           f"genomic_bit: {state.get('g_now', 0):.4f}")
                     
-                    # Show memory distribution
+                    # Show memory distribution (all 6 levels)
                     mem_dist = {k: len(v) for k, v in self.cortex.memory_levels.items()}
-                    print(f"  Memory: L0={mem_dist[0]}, L1={mem_dist[1]}, L2={mem_dist[2]}, L3={mem_dist[3]}")
+                    print(f"  Memory: " + " | ".join([f"L{i}={mem_dist[i]}" for i in range(6)]))
         
         except KeyboardInterrupt:
             print("\n[OPU] Shutting down...")
@@ -372,10 +367,14 @@ class OPUEventLoop:
         print("[OPU] Saving state...")
         self._save_state()
         
-        # Cleanup audio
+        # Cleanup audio input
         if self.audio_stream is not None:
             self.audio_stream.stop()
             self.audio_stream.close()
+        
+        # Cleanup audio output
+        self.afl.cleanup()
+        
         print("[OPU] Cleanup complete.")
 
 

@@ -135,11 +135,8 @@ class OPUPersistence:
             day_counter = state.get('day_counter', 0)
             
             print(f"[PERSISTENCE] State loaded from {self.state_file}")
-            print(f"  Maturity: {cortex.character_profile['maturity_index']:.2f}")
-            print(f"  Memory: L0={len(cortex.memory_levels[0])}, "
-                  f"L1={len(cortex.memory_levels[1])}, "
-                  f"L2={len(cortex.memory_levels[2])}, "
-                  f"L3={len(cortex.memory_levels[3])}")
+            print(f"  Maturity Level: {cortex.character_profile.get('maturity_level', 0)} | Index: {cortex.character_profile['maturity_index']:.2f}")
+            print(f"  Memory: " + " | ".join([f"L{i}={len(cortex.memory_levels.get(i, []))}" for i in range(6)]))
             print(f"  Phonemes: {len(phoneme_analyzer.phoneme_history)}")
             print(f"  Day: {day_counter}")
             
@@ -184,7 +181,8 @@ class OPUPersistence:
         Returns:
             dict with deserialized memory levels
         """
-        memory_levels = {0: [], 1: [], 2: [], 3: []}
+        # Support both old format (4 levels) and new format (6 levels)
+        memory_levels = {0: [], 1: [], 2: [], 3: [], 4: [], 5: []}
         for level_str, memories in serialized.items():
             level = int(level_str)
             if level in memory_levels:

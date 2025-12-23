@@ -31,6 +31,7 @@ class CognitiveMapVisualizer:
         self.current_s_score = 0.0
         self.current_coherence = 0.0
         self.current_maturity = 0.0
+        self.current_maturity_level = 0
         
         # Visualization elements
         self.pulse_circle = None
@@ -62,7 +63,7 @@ class CognitiveMapVisualizer:
             family='monospace'
         )
     
-    def update_state(self, s_score, coherence, maturity):
+    def update_state(self, s_score, coherence, maturity, maturity_level=None):
         """
         Update the visualization with new cognitive state.
         
@@ -70,10 +71,13 @@ class CognitiveMapVisualizer:
             s_score: surprise score (pulse size)
             coherence: coherence value (shape integrity)
             maturity: maturity index (0.0 to 1.0)
+            maturity_level: maturity level (0-5) representing time scale
         """
         self.current_s_score = s_score
         self.current_coherence = coherence
         self.current_maturity = maturity
+        if maturity_level is not None:
+            self.current_maturity_level = maturity_level
         
         # Add to history
         self.s_score_history.append(s_score)
@@ -142,11 +146,23 @@ class CognitiveMapVisualizer:
         )
         self.ax.add_patch(maturity_circle)
         
+        # Get time scale name for current maturity level
+        time_scales = {
+            0: "1 minute",
+            1: "1 hour",
+            2: "1 day",
+            3: "1 week",
+            4: "1 month",
+            5: "1 year"
+        }
+        time_scale = time_scales.get(self.current_maturity_level, "unknown")
+        
         # Draw text info
         info_text = (
             f"s_score: {self.current_s_score:.2f}\n"
             f"Coherence: {self.current_coherence:.2f}\n"
-            f"Maturity: {self.current_maturity:.2f}\n"
+            f"Maturity Level: {self.current_maturity_level} ({time_scale})\n"
+            f"Maturity Index: {self.current_maturity:.2f}\n"
             f"Pitch: {440.0 - (self.current_maturity * 330.0):.0f}Hz"
         )
         self.text_info = self.ax.text(

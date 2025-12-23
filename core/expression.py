@@ -11,14 +11,13 @@ from config import BASE_FREQUENCY, SAMPLE_RATE
 class AestheticFeedbackLoop:
     """
     Maps surprise score (s_score) to audio frequency.
-    Uses sounddevice for real-time audio playback.
+    Uses sounddevice for real-time audio playback with non-blocking output.
     """
     
     def __init__(self, base_pitch=440.0):
         self.base_pitch = base_pitch
         self.sample_rate = SAMPLE_RATE
         self.current_frequency = base_pitch
-        self.is_playing = False
     
     def update_pitch(self, base_pitch):
         """Update the base pitch (called when character evolves)."""
@@ -59,7 +58,7 @@ class AestheticFeedbackLoop:
     def play_tone(self, s_score, duration=0.05):
         """
         Plays a tone based on surprise score.
-        Uses very short duration to minimize blocking.
+        Uses non-blocking playback to prevent input buffer overflow.
         
         Args:
             s_score: surprise score
@@ -69,26 +68,19 @@ class AestheticFeedbackLoop:
         if s_score < 0.8:
             return  # Skip very low surprise events
         
-        # Check if previous playback is done
-        try:
-            # Try to get active streams - if none, we're not playing
-            active_streams = sd.get_stream().active if hasattr(sd, 'get_stream') else False
-            if self.is_playing and active_streams:
-                return  # Still playing previous tone
-        except:
-            pass  # If check fails, proceed anyway
-        
         try:
             tone = self.generate_tone(s_score, duration)
-            self.is_playing = True
-            # Play with very short duration - blocking is minimal
-            sd.play(tone, samplerate=self.sample_rate)
-            # For 0.05s, blocking is acceptable and ensures clean playback
-            sd.wait()
-            self.is_playing = False
-        except Exception as e:
+            # Use non-blocking play to prevent blocking the main loop
+            # This prevents input buffer overflow when OPU is "talking"
+            sd.play(tone, samplerate=self.sample_rate, blocking=False)
+        except Exception:
             # Silently fail to avoid spam
-            self.is_playing = False
+            pass
+    
+    def cleanup(self):
+        """Clean up any audio resources."""
+        # No persistent resources to clean up with blocking=False approach
+        pass
 
 
 class PhonemeAnalyzer:

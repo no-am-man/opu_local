@@ -15,13 +15,20 @@ class OrthogonalProcessingUnit:
     """
     
     def __init__(self):
-        # Memory abstraction layers (Level 0 = Raw, Level 3 = Wisdom)
-        self.memory_levels = {0: [], 1: [], 2: [], 3: []}
+        # Memory abstraction layers (6 levels: 0 = 1 minute, 5 = 1 year)
+        # Level 0: 1 minute - Immediate/short-term memory
+        # Level 1: 1 hour - Short-term patterns
+        # Level 2: 1 day - Daily patterns
+        # Level 3: 1 week - Weekly patterns
+        # Level 4: 1 month - Monthly patterns
+        # Level 5: 1 year - Yearly patterns/wisdom
+        self.memory_levels = {0: [], 1: [], 2: [], 3: [], 4: [], 5: []}
         
         # Character profile that evolves over time
         self.character_profile = {
             "maturity_index": 0.0,  # 0.0 = Child, 1.0 = Sage
-            "base_pitch": 440.0,    # Starts high (Child), drops to 110Hz (Sage)
+            "maturity_level": 0,    # Current maturity level (0-5)
+            "base_pitch": 440.0,     # Starts high (Child), drops to 110Hz (Sage)
             "stability_threshold": 3.0  # Easily surprised initially
         }
         
@@ -84,15 +91,19 @@ class OrthogonalProcessingUnit:
             s_score: the surprise score (determines level)
         """
         # Determine abstraction level based on surprise
-        # Slightly lower thresholds to allow more progression
-        if s_score < 0.8:
-            level = 0  # Routine/background
-        elif s_score < 1.5:
-            level = 1  # Notable
-        elif s_score < 3.0:
-            level = 2  # Significant
+        # Maps to 6 maturity levels (0-5)
+        if s_score < 0.5:
+            level = 0  # 1 minute - Routine/background
+        elif s_score < 1.0:
+            level = 1  # 1 hour - Notable
+        elif s_score < 2.0:
+            level = 2  # 1 day - Significant
+        elif s_score < 3.5:
+            level = 3  # 1 week - Important
+        elif s_score < 5.0:
+            level = 4  # 1 month - Exceptional
         else:
-            level = 3  # Exceptional/Wisdom
+            level = 5  # 1 year - Wisdom/Transcendent
         
         # Store in appropriate level
         self.memory_levels[level].append({
@@ -102,12 +113,19 @@ class OrthogonalProcessingUnit:
         })
         
         # Check if we should consolidate (trigger evolution)
-        # Level 2+ triggers immediate consolidation every 5 items
-        if level >= 2 and len(self.memory_levels[level]) % 5 == 0:
+        # Higher levels trigger consolidation more frequently
+        consolidation_thresholds = {
+            0: 100,  # Level 0: every 100 items (1 minute scale)
+            1: 50,   # Level 1: every 50 items (1 hour scale)
+            2: 20,   # Level 2: every 20 items (1 day scale)
+            3: 10,   # Level 3: every 10 items (1 week scale)
+            4: 5,    # Level 4: every 5 items (1 month scale)
+            5: 3     # Level 5: every 3 items (1 year scale - wisdom)
+        }
+        
+        threshold = consolidation_thresholds.get(level, 10)
+        if len(self.memory_levels[level]) % threshold == 0 and len(self.memory_levels[level]) > 0:
             self.consolidate_memory(level)
-        # Level 1 can also trigger consolidation if we have enough (every 20 items)
-        elif level == 1 and len(self.memory_levels[1]) % 20 == 0 and len(self.memory_levels[1]) > 0:
-            self.consolidate_memory(1)
     
     def consolidate_memory(self, level):
         """
@@ -147,35 +165,61 @@ class OrthogonalProcessingUnit:
         }
         
         # Store abstraction in next level (if exists)
-        if level < 3:
+        if level < 5:  # Now we have 6 levels (0-5)
             self.memory_levels[level + 1].append(abstraction)
         
-        # Trigger character evolution
-        self.evolve_character()
+        # Trigger character evolution (only for higher levels)
+        if level >= 2:  # Level 2+ (1 day and above) triggers evolution
+            self.evolve_character(level)
     
-    def evolve_character(self):
+    def evolve_character(self, level=None):
         """
         Reflects on deep memory to mature the personality.
         Call this every time a higher abstraction level (Level 2+) is filled.
         
         Implements the "Aging" process: evolves from noisy child to deep-voiced sage.
+        Now supports 6 maturity levels (1 minute to 1 year).
+        
+        Args:
+            level: The abstraction level that triggered evolution (0-5)
         """
-        # 1. Increase Maturity
-        self.character_profile["maturity_index"] = min(
-            1.0, 
-            self.character_profile["maturity_index"] + MATURITY_INCREMENT
-        )
+        # Update maturity level based on highest level with consolidated memories
+        highest_level = 0
+        for lvl in range(5, -1, -1):
+            if len(self.memory_levels[lvl]) > 0:
+                highest_level = lvl
+                break
+        
+        # Maturity level is the highest level reached (0-5)
+        self.character_profile["maturity_level"] = highest_level
+        
+        # Maturity index is a continuous value from 0.0 to 1.0
+        # Based on both the level reached and how much of that level is filled
+        level_progress = min(1.0, len(self.memory_levels[highest_level]) / 10.0) if highest_level > 0 else 0.0
+        base_maturity = highest_level / 5.0  # 0.0, 0.2, 0.4, 0.6, 0.8, 1.0
+        self.character_profile["maturity_index"] = min(1.0, base_maturity + (level_progress * 0.2))
         
         # 2. Voice Deepens with Wisdom
-        # Drops from 440Hz (A4) to 110Hz (A2)
+        # Drops from 440Hz (A4) to 110Hz (A2) as maturity increases
         maturity = self.character_profile["maturity_index"]
         self.character_profile["base_pitch"] = 440.0 - (maturity * 330.0)
         
         # 3. Stoicism Increases (Harder to Surprise)
-        # Threshold moves from 3.0 to 8.0
+        # Threshold moves from 3.0 to 8.0 as maturity increases
         self.character_profile["stability_threshold"] = 3.0 + (maturity * 5.0)
         
-        print(f"[EVOLUTION] Maturity: {maturity:.2f} | Pitch: {self.character_profile['base_pitch']:.0f}Hz | Threshold: {self.character_profile['stability_threshold']:.1f}")
+        # Get time scale name for the current maturity level
+        time_scales = {
+            0: "1 minute",
+            1: "1 hour",
+            2: "1 day",
+            3: "1 week",
+            4: "1 month",
+            5: "1 year"
+        }
+        time_scale = time_scales.get(highest_level, "unknown")
+        
+        print(f"[EVOLUTION] Level {highest_level} ({time_scale}) | Maturity: {maturity:.2f} | Pitch: {self.character_profile['base_pitch']:.0f}Hz | Threshold: {self.character_profile['stability_threshold']:.1f}")
     
     def get_character_state(self):
         """

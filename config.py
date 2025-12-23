@@ -24,8 +24,32 @@ CHUNK_SIZE = 1024
 SCALE_INVARIANCE_ENABLED = True
 
 # Abstraction Cycle Configuration
-ABSTRACTION_CYCLE_SECONDS = 10.0  # Every 10 seconds = 1 "Day" of maturity
-MATURITY_INCREMENT = 0.05
+# 6 Maturity Levels with time-scaled abstraction cycles:
+# Level 0: 1 minute (60 seconds) - Immediate/short-term memory
+# Level 1: 1 hour (3600 seconds) - Short-term patterns
+# Level 2: 1 day (86400 seconds) - Daily patterns
+# Level 3: 1 week (604800 seconds) - Weekly patterns
+# Level 4: 1 month (2592000 seconds) - Monthly patterns
+# Level 5: 1 year (31536000 seconds) - Yearly patterns/wisdom
+
+# Time scale multipliers (for simulation - can be adjusted for faster/slower progression)
+TIME_SCALE_MULTIPLIER = 1.0  # 1.0 = real time, 10.0 = 10x faster, etc.
+
+MATURITY_LEVEL_TIMES = {
+    0: 60.0,           # 1 minute
+    1: 3600.0,         # 1 hour
+    2: 86400.0,        # 1 day
+    3: 604800.0,       # 1 week
+    4: 2592000.0,      # 1 month
+    5: 31536000.0      # 1 year
+}
+
+# Apply time scale multiplier
+MATURITY_LEVEL_TIMES = {k: v / TIME_SCALE_MULTIPLIER for k, v in MATURITY_LEVEL_TIMES.items()}
+
+# Legacy support (for backward compatibility)
+ABSTRACTION_CYCLE_SECONDS = MATURITY_LEVEL_TIMES[2]  # 1 day
+MATURITY_INCREMENT = 0.0167  # Smaller increment for 6 levels (1.0 / 60 steps to reach full maturity)
 
 # Visualization Configuration
 VISUALIZATION_UPDATE_RATE = 30  # FPS
