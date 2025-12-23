@@ -12,6 +12,10 @@ env/
 venv/
 ENV/
 .venv
+*.egg-info/
+dist/
+build/
+*.egg
 
 # IDE
 .vscode/
@@ -23,4 +27,9 @@ ENV/
 # OS
 .DS_Store
 Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
 

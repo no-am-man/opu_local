@@ -1,7 +1,12 @@
 """
 Configuration parameters for the OPU (Orthogonal Processing Unit).
 Contains the Genesis Constant and safety limits.
+
+OPU v3.0.0 - MIT License
 """
+
+# Version
+OPU_VERSION = "3.0.0"
 
 # Genesis Constant: The Order of the Empty Set
 G_EMPTY_SET = 1.0

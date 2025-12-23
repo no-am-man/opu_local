@@ -1,6 +1,17 @@
-# Orthogonal Processing Unit (OPU)
+# Orthogonal Processing Unit (OPU) v3.0.0
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
 A Process-Centric AI architecture that processes audio in real-time, evolving from a noisy child to a deep-voiced sage through memory abstraction and character evolution.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Version
+
+**Current Version: 3.0.0**
 
 ## Architecture
 
@@ -14,14 +25,28 @@ The OPU consists of several interconnected subsystems:
 
 ## Installation
 
-1. Install dependencies:
+### From Source
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/opu.git
+cd opu
+```
+
+2. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Run the OPU:
+3. Run the OPU:
 ```bash
 python main.py
+```
+
+### As a Package (Future)
+
+```bash
+pip install opu
 ```
 
 ## How It Works
@@ -73,4 +98,45 @@ Edit `config.py` to adjust:
 - Abstraction cycle timing
 - Visualization parameters
 - State file path (`STATE_FILE`)
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## Citation
+
+If you use OPU in your research, please cite:
+
+```bibtex
+@software{opu2024,
+  title = {Orthogonal Processing Unit (OPU) v3.0.0},
+  author = {OPU Contributors},
+  year = {2024},
+  license = {MIT},
+  url = {https://github.com/yourusername/opu}
+}
+```
+
+## Acknowledgments
+
+- Built with Python, NumPy, Matplotlib, and sounddevice
+- Inspired by Process-Centric AI architectures
+- Designed for real-time audio processing and cognitive modeling
+
+## Changelog
+
+### v3.0.0 (2024)
+- Initial open source release
+- Complete OPU architecture implementation
+- Real-time audio processing
+- Memory abstraction and character evolution
+- Phoneme learning system
+- State persistence
+- Cognitive map visualization
 

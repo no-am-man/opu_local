@@ -78,10 +78,11 @@ class OPUEventLoop:
         """Setup audio input (microphone or simulation)."""
         try:
             # Try to open microphone with larger buffer to prevent overflow
+            # Use even larger blocksize and buffer to handle processing delays
             self.audio_stream = sd.InputStream(
                 samplerate=SAMPLE_RATE,
                 channels=1,
-                blocksize=CHUNK_SIZE * 2,  # Larger buffer
+                blocksize=CHUNK_SIZE * 4,  # Much larger buffer
                 dtype=np.float32,
                 latency='high'  # Higher latency for stability
             )
@@ -102,18 +103,38 @@ class OPUEventLoop:
         """
         if self.use_microphone and self.audio_stream is not None:
             try:
-                # Read available data (may be less than CHUNK_SIZE)
+                # Read available data - read more aggressively to prevent overflow
                 available = self.audio_stream.read_available
                 if available > 0:
-                    read_size = min(available, CHUNK_SIZE)
+                    # If buffer is getting full, read more to clear it
+                    # Otherwise read standard chunk size
+                    if available > CHUNK_SIZE * 2:
+                        # Buffer is filling up - read larger chunk to clear it
+                        read_size = min(available, CHUNK_SIZE * 4)
+                    else:
+                        read_size = min(available, CHUNK_SIZE)
+                    
                     data, overflowed = self.audio_stream.read(read_size)
+                    
                     if overflowed:
                         # Only print occasionally to avoid spam
                         if not hasattr(self, '_last_overflow_warn') or \
                            time.time() - self._last_overflow_warn > 5.0:
-                            print(f"[OPU] Audio buffer overflow! (available: {available})")
+                            print(f"[OPU] Audio buffer overflow! (available: {available}, read: {read_size})")
                             self._last_overflow_warn = time.time()
-                    return data.flatten()
+                    
+                    # If we read more than CHUNK_SIZE, take the most recent CHUNK_SIZE samples
+                    # (this gives us the latest audio, discarding older buffered data)
+                    if len(data) > CHUNK_SIZE:
+                        data = data[-CHUNK_SIZE:]
+                    
+                    # Pad or truncate to exactly CHUNK_SIZE for consistent processing
+                    if len(data) < CHUNK_SIZE:
+                        padded = np.zeros(CHUNK_SIZE, dtype=np.float32)
+                        padded[:len(data)] = data.flatten()
+                        return padded
+                    else:
+                        return data.flatten()[:CHUNK_SIZE]
                 else:
                     # No data available, return zeros
                     return np.zeros(CHUNK_SIZE, dtype=np.float32)
@@ -360,8 +381,11 @@ class OPUEventLoop:
 
 def main():
     """Entry point."""
+    from config import OPU_VERSION
+    
     print("=" * 60)
     print("Orthogonal Processing Unit (OPU)")
+    print(f"Version {OPU_VERSION} - MIT License")
     print("Process-Centric AI Architecture")
     print("=" * 60)
     print()
