@@ -200,10 +200,10 @@ class OPUPersistence:
             list
         """
         if isinstance(arr, np.ndarray):
-            return arr.tolist()
+            return [float(x) for x in arr.tolist()]
         elif isinstance(arr, list):
             # Convert any numpy types in list
-            return [float(x) if isinstance(x, (np.integer, np.floating)) else x for x in arr]
+            return [float(x) if isinstance(x, (np.integer, np.floating, np.float32, np.float64)) else x for x in arr]
         return arr
     
     def _deserialize_array(self, data):

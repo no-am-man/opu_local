@@ -5,19 +5,78 @@ Maps surprise scores to audio frequencies and phonemes.
 
 import numpy as np
 import sounddevice as sd
+import time
+from collections import deque
+from threading import Lock
 from config import BASE_FREQUENCY, SAMPLE_RATE
 
 
 class AestheticFeedbackLoop:
     """
     Maps surprise score (s_score) to audio frequency.
-    Uses sounddevice for real-time audio playback with non-blocking output.
+    Uses sounddevice OutputStream with queue for reliable non-blocking audio playback.
     """
     
     def __init__(self, base_pitch=440.0):
         self.base_pitch = base_pitch
         self.sample_rate = SAMPLE_RATE
         self.current_frequency = base_pitch
+        
+        # Audio output queue and stream
+        self.audio_queue = deque(maxlen=1)  # Only one tone at a time
+        self.queue_lock = Lock()
+        self.output_stream = None
+        self.is_playing = False  # Track if currently playing
+        
+        # Throttle to prevent too many tones too quickly
+        self.last_tone_time = 0.0
+        self.min_tone_interval = 0.15  # Minimum 150ms between tones
+        
+        self._init_output_stream()
+    
+    def _init_output_stream(self):
+        """Initialize a non-blocking audio output stream with callback."""
+        try:
+            def audio_callback(outdata, frames, time_info, status):
+                """Callback to fill output buffer from queue."""
+                if status:
+                    print(f"[AFL] Audio output status: {status}")
+                
+                # Always start with silence
+                outdata.fill(0.0)
+                
+                with self.queue_lock:
+                    if len(self.audio_queue) > 0:
+                        # Get next audio chunk from queue
+                        audio_data = self.audio_queue.popleft()
+                        self.is_playing = True
+                        
+                        # Copy as much as we can
+                        copy_len = min(len(audio_data), frames)
+                        if copy_len > 0:
+                            outdata[:copy_len, 0] = audio_data[:copy_len]
+                        
+                        # If we used all the audio data, mark as not playing
+                        if copy_len >= len(audio_data):
+                            self.is_playing = False
+                    else:
+                        # No audio in queue, mark as not playing
+                        self.is_playing = False
+            
+            self.output_stream = sd.OutputStream(
+                samplerate=self.sample_rate,
+                channels=1,
+                dtype=np.float32,
+                blocksize=0,  # Let sounddevice choose optimal blocksize
+                latency='low',  # Low latency for responsive feedback
+                callback=audio_callback
+            )
+            self.output_stream.start()
+            print("[AFL] Audio output stream initialized.")
+        except Exception as e:
+            print(f"[AFL] Warning: Could not initialize audio output stream: {e}")
+            print("[AFL] Audio feedback will be disabled.")
+            self.output_stream = None
     
     def update_pitch(self, base_pitch):
         """Update the base pitch (called when character evolves)."""
@@ -45,42 +104,86 @@ class AestheticFeedbackLoop:
         
         self.current_frequency = frequency
         
-        # Generate sine wave
-        t = np.linspace(0, duration, int(self.sample_rate * duration))
+        # Generate sine wave with reduced amplitude to prevent clipping
+        num_samples = int(self.sample_rate * duration)
+        t = np.linspace(0, duration, num_samples)
         tone = np.sin(2 * np.pi * frequency * t)
         
-        # Apply envelope to avoid clicks
-        envelope = np.exp(-t * 5)  # Exponential decay
-        tone = tone * envelope
+        # Apply smooth envelope: attack, sustain, release
+        # Attack: 10% of duration
+        # Release: 30% of duration
+        attack_samples = int(num_samples * 0.1)
+        release_samples = int(num_samples * 0.3)
+        sustain_samples = num_samples - attack_samples - release_samples
         
-        return tone.astype(np.float32)
+        envelope = np.ones(num_samples)
+        
+        # Attack (fade in)
+        if attack_samples > 0:
+            envelope[:attack_samples] = np.linspace(0, 1, attack_samples)
+        
+        # Sustain (full volume)
+        # Already 1.0, no change needed
+        
+        # Release (fade out)
+        if release_samples > 0:
+            envelope[-release_samples:] = np.linspace(1, 0, release_samples)
+        
+        # Apply envelope and reduce amplitude significantly to prevent clipping
+        # Use 0.05 amplitude (5% of max) to leave plenty of headroom
+        tone = tone * envelope * 0.05
+        
+        # Add longer silence padding at the end to prevent overlap
+        silence_padding = int(self.sample_rate * 0.05)  # 50ms silence between tones
+        tone_with_padding = np.concatenate([tone, np.zeros(silence_padding, dtype=np.float32)])
+        
+        return tone_with_padding.astype(np.float32)
     
-    def play_tone(self, s_score, duration=0.05):
+    def play_tone(self, s_score, duration=0.1):
         """
         Plays a tone based on surprise score.
-        Uses non-blocking playback to prevent input buffer overflow.
+        Queues audio for non-blocking playback via OutputStream callback.
+        Includes throttling to prevent too many tones too quickly.
+        Only one tone plays at a time to prevent clipping.
         
         Args:
             s_score: surprise score
-            duration: duration in seconds (default 0.05 for quick feedback)
+            duration: duration in seconds (default 0.1 for clearer tones)
         """
         # Only play if s_score is significant (reduce audio spam)
         if s_score < 0.8:
             return  # Skip very low surprise events
         
+        # If output stream is not available, skip
+        if self.output_stream is None:
+            return
+        
+        # Throttle: don't play if we just played a tone recently
+        current_time = time.time()
+        if current_time - self.last_tone_time < self.min_tone_interval:
+            return  # Skip this tone, too soon after last one
+        
         try:
-            tone = self.generate_tone(s_score, duration)
-            # Use non-blocking play to prevent blocking the main loop
-            # This prevents input buffer overflow when OPU is "talking"
-            sd.play(tone, samplerate=self.sample_rate, blocking=False)
-        except Exception:
+            with self.queue_lock:
+                # Only play if not currently playing and queue is empty
+                if not self.is_playing and len(self.audio_queue) == 0:
+                    tone = self.generate_tone(s_score, duration)
+                    self.audio_queue.append(tone)
+                    self.last_tone_time = current_time
+                # If already playing, skip this tone to prevent overlap/clipping
+        except Exception as e:
             # Silently fail to avoid spam
             pass
     
     def cleanup(self):
-        """Clean up any audio resources."""
-        # No persistent resources to clean up with blocking=False approach
-        pass
+        """Clean up audio output stream."""
+        if self.output_stream is not None:
+            try:
+                self.output_stream.stop()
+                self.output_stream.close()
+                self.output_stream = None
+            except:
+                pass
 
 
 class PhonemeAnalyzer:

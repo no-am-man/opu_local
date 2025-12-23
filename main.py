@@ -98,44 +98,37 @@ class OPUEventLoop:
     def get_audio_input(self):
         """
         Get audio input from microphone or generate simulated input.
+        Reads ALL available data aggressively to prevent buffer overflow.
         
         Returns:
             numpy array of audio samples
         """
         if self.use_microphone and self.audio_stream is not None:
             try:
-                # Read available data - read more aggressively to prevent overflow
+                # Read ALL available data to prevent overflow
                 available = self.audio_stream.read_available
                 if available > 0:
-                    # If buffer is getting full, read more to clear it
-                    # Otherwise read standard chunk size
-                    if available > CHUNK_SIZE * 2:
-                        # Buffer is filling up - read larger chunk to clear it
-                        read_size = min(available, CHUNK_SIZE * 4)
-                    else:
-                        read_size = min(available, CHUNK_SIZE)
-                    
+                    # Always read everything available to clear the buffer
+                    read_size = available
                     data, overflowed = self.audio_stream.read(read_size)
                     
                     if overflowed:
                         # Only print occasionally to avoid spam
                         if not hasattr(self, '_last_overflow_warn') or \
                            time.time() - self._last_overflow_warn > 5.0:
-                            print(f"[OPU] Audio buffer overflow! (available: {available}, read: {read_size})")
+                            print(f"[OPU] Audio buffer overflow detected! (available: {available})")
                             self._last_overflow_warn = time.time()
                     
-                    # If we read more than CHUNK_SIZE, take the most recent CHUNK_SIZE samples
-                    # (this gives us the latest audio, discarding older buffered data)
-                    if len(data) > CHUNK_SIZE:
-                        data = data[-CHUNK_SIZE:]
-                    
-                    # Pad or truncate to exactly CHUNK_SIZE for consistent processing
-                    if len(data) < CHUNK_SIZE:
-                        padded = np.zeros(CHUNK_SIZE, dtype=np.float32)
-                        padded[:len(data)] = data.flatten()
-                        return padded
+                    # Take the most recent CHUNK_SIZE samples for processing
+                    # This ensures we always process the latest audio
+                    data_flat = data.flatten()
+                    if len(data_flat) >= CHUNK_SIZE:
+                        return data_flat[-CHUNK_SIZE:]
                     else:
-                        return data.flatten()[:CHUNK_SIZE]
+                        # Pad if we got less than CHUNK_SIZE
+                        padded = np.zeros(CHUNK_SIZE, dtype=np.float32)
+                        padded[:len(data_flat)] = data_flat
+                        return padded
                 else:
                     # No data available, return zeros
                     return np.zeros(CHUNK_SIZE, dtype=np.float32)
@@ -337,9 +330,10 @@ class OPUEventLoop:
                 current_time = time.time()
                 elapsed = current_time - last_cycle_time
                 
-                # Sleep to maintain proper audio timing (prevent buffer overflow)
-                if elapsed < chunk_duration:
-                    time.sleep(chunk_duration - elapsed)
+                # Only sleep if we're processing too fast
+                # But don't sleep if we're already behind (to prevent buffer overflow)
+                if elapsed < chunk_duration * 0.5:  # Only sleep if we're way ahead
+                    time.sleep(max(0, chunk_duration * 0.5 - elapsed))
                 
                 last_cycle_time = time.time()
                 
