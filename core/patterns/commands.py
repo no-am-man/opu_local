@@ -7,6 +7,7 @@ Encapsulates OPU actions as commands, enabling undo/redo, queuing, and logging.
 from abc import ABC, abstractmethod
 from typing import Any, Optional
 import numpy as np
+from config import COMMAND_MAX_HISTORY_DEFAULT, COMMAND_UNDO_SEARCH_MAX_LEVEL
 
 
 class Command(ABC):
@@ -66,7 +67,7 @@ class StoreMemoryCommand(Command):
             return
         
         # Find and remove the most recent memory with matching characteristics
-        for level in range(5, -1, -1):
+        for level in range(COMMAND_UNDO_SEARCH_MAX_LEVEL, -1, -1):
             memories = self.brain.memory_levels[level]
             for i in range(len(memories) - 1, -1, -1):
                 mem = memories[i]
@@ -152,7 +153,7 @@ class ConsolidateMemoryCommand(Command):
 class CommandInvoker:
     """Invokes commands and maintains history."""
     
-    def __init__(self, max_history: int = 100):
+    def __init__(self, max_history: int = COMMAND_MAX_HISTORY_DEFAULT):
         """
         Initialize command invoker.
         

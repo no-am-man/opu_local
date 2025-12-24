@@ -33,7 +33,7 @@ class TestAudioIntrospectionStrategy:
         assert strategy.max_history_size == 1000
         assert len(strategy.genomic_bits_history) == 0
         assert strategy.s_score == 0.0
-        assert strategy.coherence == 0.0
+        assert strategy.coherence == 1.0  # Perfect coherence when no history
         assert strategy.g_now is None
     
     def test_introspect_single_value(self):

@@ -7,6 +7,13 @@ Allows easy extension to new introspection types (tactile, temperature, etc.).
 
 from abc import ABC, abstractmethod
 import numpy as np
+from config import (
+    INTROSPECTION_AUDIO_MAX_HISTORY, INTROSPECTION_VISUAL_MAX_HISTORY,
+    INTROSPECTION_MIN_DATA_POINTS, INTROSPECTION_VISUAL_MIN_FRAMES,
+    INTROSPECTION_NOISE_FLOOR, INTROSPECTION_SIGMA_DEFAULT,
+    INTROSPECTION_DEFAULT_S_SCORE, INTROSPECTION_DEFAULT_COHERENCE,
+    INTROSPECTION_DEFAULT_G_NOW
+)
 
 
 class IntrospectionStrategy(ABC):
@@ -39,7 +46,7 @@ class IntrospectionStrategy(ABC):
 class AudioIntrospectionStrategy(IntrospectionStrategy):
     """Strategy for audio introspection."""
     
-    def __init__(self, max_history_size=50):
+    def __init__(self, max_history_size=INTROSPECTION_AUDIO_MAX_HISTORY):
         """Initialize audio introspection strategy.
         
         Default reduced from 10000 to 50 for higher sensitivity.
@@ -49,8 +56,8 @@ class AudioIntrospectionStrategy(IntrospectionStrategy):
         self.sigma_history = []
         self.genomic_bits_history = []
         self.g_now = None
-        self.s_score = 0.0
-        self.coherence = 0.0
+        self.s_score = INTROSPECTION_DEFAULT_S_SCORE
+        self.coherence = INTROSPECTION_DEFAULT_COHERENCE
     
     def introspect(self, genomic_bit):
         """
@@ -59,7 +66,7 @@ class AudioIntrospectionStrategy(IntrospectionStrategy):
         Matches AudioCortex implementation exactly for backward compatibility.
         """
         # Update current genomic bit immediately
-        self.g_now = float(genomic_bit) if genomic_bit is not None else 0.0
+        self.g_now = float(genomic_bit) if genomic_bit is not None else INTROSPECTION_DEFAULT_G_NOW
         
         # Cap histories BEFORE appending to ensure we never exceed max_history_size
         if len(self.genomic_bits_history) >= self.max_history_size:
@@ -74,9 +81,9 @@ class AudioIntrospectionStrategy(IntrospectionStrategy):
         self.genomic_bits_history.append(self.g_now)
         
         # Need at least 2 data points for meaningful introspection
-        if len(self.genomic_bits_history) < 2:
-            self.s_score = 0.0
-            self.coherence = 1.0  # Perfect coherence when no history
+        if len(self.genomic_bits_history) < INTROSPECTION_MIN_DATA_POINTS:
+            self.s_score = INTROSPECTION_DEFAULT_S_SCORE
+            self.coherence = INTROSPECTION_DEFAULT_COHERENCE  # Perfect coherence when no history
             return self.s_score
         
         # Calculate historical statistics from ALL history (not just mu/sigma history)
@@ -88,16 +95,16 @@ class AudioIntrospectionStrategy(IntrospectionStrategy):
         # A perfectly silent room has sigma=0. We enforce a minimum noise floor.
         # 0.0001 was too sensitive - it caused tiny glitches to generate s_score > 5.0,
         # which triggered "Trauma Evolution" (jumping directly to Level 5).
-        # 0.01 prevents false high scores from silence while still allowing real surprises.
-        if sigma_history < 0.01:
-            sigma_history = 0.01
+        # INTROSPECTION_NOISE_FLOOR prevents false high scores from silence while still allowing real surprises.
+        if sigma_history < INTROSPECTION_NOISE_FLOOR:
+            sigma_history = INTROSPECTION_NOISE_FLOOR
         
         # Store for later use (these are for backward compatibility)
         self.mu_history.append(mu_history)
         self.sigma_history.append(sigma_history)
         
         # Calculate surprise score (Z-score formula)
-        # Now safe because sigma_history is guaranteed >= 0.01
+        # Now safe because sigma_history is guaranteed >= INTROSPECTION_NOISE_FLOOR
         self.s_score = float(abs(self.g_now - mu_history) / sigma_history)
         
         # Calculate coherence (inverse of surprise, normalized)
@@ -105,7 +112,7 @@ class AudioIntrospectionStrategy(IntrospectionStrategy):
         
         # Ensure s_score is never negative (safety check)
         if self.s_score < 0:
-            self.s_score = 0.0
+            self.s_score = INTROSPECTION_DEFAULT_S_SCORE
         
         return self.s_score
     
@@ -121,7 +128,7 @@ class AudioIntrospectionStrategy(IntrospectionStrategy):
 class VisualIntrospectionStrategy(IntrospectionStrategy):
     """Strategy for visual introspection."""
     
-    def __init__(self, max_history=50):
+    def __init__(self, max_history=INTROSPECTION_VISUAL_MAX_HISTORY):
         """Initialize visual introspection strategy.
         
         Default reduced from 100 to 50 for higher sensitivity.
@@ -175,9 +182,9 @@ class VisualIntrospectionStrategy(IntrospectionStrategy):
             if len(mem) > self.max_visual_history:
                 mem.pop(0)
             
-            # Need history to judge surprise (at least 10 frames)
-            if len(mem) < 10:
-                channel_surprises[channel] = 0.0
+            # Need history to judge surprise (at least INTROSPECTION_VISUAL_MIN_FRAMES frames)
+            if len(mem) < INTROSPECTION_VISUAL_MIN_FRAMES:
+                channel_surprises[channel] = INTROSPECTION_DEFAULT_S_SCORE
                 continue
                 
             # 2. Calculate Baseline (Normalcy)
@@ -187,7 +194,7 @@ class VisualIntrospectionStrategy(IntrospectionStrategy):
             
             # Prevent divide by zero
             if sigma_history == 0:
-                sigma_history = 0.1
+                sigma_history = INTROSPECTION_SIGMA_DEFAULT
             
             # 3. Calculate Z-Score (Surprise)
             # Same formula as audio introspection: |g_now - mu| / sigma
@@ -199,7 +206,7 @@ class VisualIntrospectionStrategy(IntrospectionStrategy):
         # If the scene is mostly static (Low G, Low B) but a red laser appears (High R),
         # the OPU should be Surprised.
         if not channel_surprises:
-            return 0.0, {'R': 0.0, 'G': 0.0, 'B': 0.0}
+            return INTROSPECTION_DEFAULT_S_SCORE, {'R': INTROSPECTION_DEFAULT_S_SCORE, 'G': INTROSPECTION_DEFAULT_S_SCORE, 'B': INTROSPECTION_DEFAULT_S_SCORE}
             
         s_visual = max(channel_surprises.values())
         return s_visual, channel_surprises

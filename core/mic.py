@@ -8,7 +8,7 @@ For INTROSPECTION, see audio_cortex.py.
 """
 
 import numpy as np
-from config import SCALE_INVARIANCE_ENABLED
+from config import SCALE_INVARIANCE_ENABLED, MIC_DEFAULT_GENOMIC_BIT, MIC_DEFAULT_MAGNITUDE
 
 
 def perceive(input_vector):
@@ -30,8 +30,8 @@ def perceive(input_vector):
     if input_vector is None or len(input_vector) == 0:
         return {
             'normalized': np.array([]),
-            'genomic_bit': 0.0,
-            'magnitude': 0.0
+            'genomic_bit': MIC_DEFAULT_GENOMIC_BIT,
+            'magnitude': MIC_DEFAULT_MAGNITUDE
         }
     
     input_vector = np.asarray(input_vector)

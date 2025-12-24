@@ -8,6 +8,10 @@ from abc import ABC, abstractmethod
 from typing import Dict, Any
 import numpy as np
 from core.patterns.sense_factory import Sense
+from config import (
+    DECORATOR_NOISE_GATE_THRESHOLD, DECORATOR_HIGHPASS_ALPHA,
+    DECORATOR_AMPLIFICATION_GAIN
+)
 
 
 class SenseDecorator(Sense):
@@ -73,7 +77,7 @@ class SenseDecorator(Sense):
 class NoiseGateDecorator(SenseDecorator):
     """Filters out low-amplitude noise."""
     
-    def __init__(self, wrapped_sense: Sense, threshold: float = 0.1):
+    def __init__(self, wrapped_sense: Sense, threshold: float = DECORATOR_NOISE_GATE_THRESHOLD):
         """
         Initialize noise gate decorator.
         
@@ -108,7 +112,7 @@ class NormalizationDecorator(SenseDecorator):
 class HighPassFilterDecorator(SenseDecorator):
     """Simple high-pass filter to remove DC offset."""
     
-    def __init__(self, wrapped_sense: Sense, alpha: float = 0.95):
+    def __init__(self, wrapped_sense: Sense, alpha: float = DECORATOR_HIGHPASS_ALPHA):
         """
         Initialize high-pass filter.
         
@@ -136,7 +140,7 @@ class HighPassFilterDecorator(SenseDecorator):
 class AmplificationDecorator(SenseDecorator):
     """Amplifies input signal."""
     
-    def __init__(self, wrapped_sense: Sense, gain: float = 1.0):
+    def __init__(self, wrapped_sense: Sense, gain: float = DECORATOR_AMPLIFICATION_GAIN):
         """
         Initialize amplification decorator.
         

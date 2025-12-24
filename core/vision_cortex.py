@@ -10,6 +10,7 @@ Now uses Strategy Pattern internally for better extensibility.
 
 import numpy as np
 from core.patterns.introspection_strategy import VisualIntrospectionStrategy
+from config import INTROSPECTION_VISUAL_MAX_HISTORY
 
 
 class VisualCortex:
@@ -25,7 +26,7 @@ class VisualCortex:
     Tracks R, G, B channel history independently and computes visual surprise.
     """
     
-    def __init__(self, max_history=50):
+    def __init__(self, max_history=INTROSPECTION_VISUAL_MAX_HISTORY):
         """
         Initialize Visual Cortex Introspection.
         

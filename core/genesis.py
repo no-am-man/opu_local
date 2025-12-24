@@ -4,7 +4,7 @@ Implements ethical veto based on the Genesis Constant.
 """
 
 import numpy as np
-from config import G_EMPTY_SET, MAX_DISSONANCE, MAX_ACTION_MAGNITUDE
+from config import G_EMPTY_SET, MAX_DISSONANCE, MAX_ACTION_MAGNITUDE, GENESIS_VETO_LOG_INTERVAL
 
 
 class GenesisKernel:
@@ -31,28 +31,16 @@ class GenesisKernel:
         Returns:
             Clamped action vector that respects the Genesis Constant
         """
-        if action_vector is None or len(action_vector) == 0:
+        if self._is_empty_vector(action_vector):
             return np.array([])
         
         action_vector = np.asarray(action_vector)
         magnitude = np.linalg.norm(action_vector)
         
-        # Calculate Dissonance
-        dissonance = magnitude / self.g_empty_set
+        dissonance = self._calculate_dissonance(magnitude)
         
-        # Apply veto if Dissonance exceeds threshold
         if dissonance > self.max_dissonance:
-            # Clamp the vector to maintain Order
-            clamped_magnitude = self.g_empty_set * self.max_dissonance
-            if magnitude > 0:
-                action_vector = action_vector * (clamped_magnitude / magnitude)
-            
-            # Only log occasionally to reduce verbosity (every ~50th veto)
-            if not hasattr(self, '_veto_count'):
-                self._veto_count = 0
-            self._veto_count += 1
-            if self._veto_count % 50 == 0:
-                print(f"[GENESIS] Veto applied {self._veto_count} times (Dissonance {dissonance:.3f} > {self.max_dissonance})")
+            action_vector = self._apply_veto_clamping(action_vector, magnitude, dissonance)
         
         return action_vector
     
@@ -63,10 +51,35 @@ class GenesisKernel:
         Returns:
             True if vector maintains Order, False otherwise
         """
-        if vector is None or len(vector) == 0:
+        if self._is_empty_vector(vector):
             return True
         
         magnitude = np.linalg.norm(vector)
-        dissonance = magnitude / self.g_empty_set
+        dissonance = self._calculate_dissonance(magnitude)
         return dissonance <= self.max_dissonance
+    
+    def _is_empty_vector(self, vector):
+        """Check if vector is None or empty."""
+        return vector is None or len(vector) == 0
+    
+    def _calculate_dissonance(self, magnitude):
+        """Calculate dissonance from vector magnitude."""
+        return magnitude / self.g_empty_set
+    
+    def _apply_veto_clamping(self, action_vector, magnitude, dissonance):
+        """Apply veto clamping and logging."""
+        clamped_magnitude = self.g_empty_set * self.max_dissonance
+        if magnitude > 0:
+            action_vector = action_vector * (clamped_magnitude / magnitude)
+        
+        self._log_veto_if_needed(dissonance)
+        return action_vector
+    
+    def _log_veto_if_needed(self, dissonance):
+        """Log veto application at specified intervals."""
+        if not hasattr(self, '_veto_count'):
+            self._veto_count = 0
+        self._veto_count += 1
+        if self._veto_count % GENESIS_VETO_LOG_INTERVAL == 0:
+            print(f"[GENESIS] Veto applied {self._veto_count} times (Dissonance {dissonance:.3f} > {self.max_dissonance})")
 

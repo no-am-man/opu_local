@@ -15,6 +15,7 @@ from core.patterns.introspection_strategy import (
 )
 from core.patterns.maturity_state import MaturityContext
 from core.patterns.sense_factory import SenseFactory, Sense
+from config import OPU_BUILDER_DEFAULT_AUDIO_HISTORY, OPU_BUILDER_DEFAULT_VISUAL_HISTORY
 # Note: OrthogonalProcessingUnit import is lazy to avoid circular dependency
 
 
@@ -24,8 +25,8 @@ class OPUBuilder:
     def __init__(self):
         """Initialize builder with default configuration."""
         self._brain_config: Dict[str, Any] = {}
-        self._audio_config: Dict[str, Any] = {'max_history_size': 50}  # Reduced for higher sensitivity
-        self._visual_config: Dict[str, Any] = {'max_history': 50}  # Reduced for higher sensitivity
+        self._audio_config: Dict[str, Any] = {'max_history_size': OPU_BUILDER_DEFAULT_AUDIO_HISTORY}  # Reduced for higher sensitivity
+        self._visual_config: Dict[str, Any] = {'max_history': OPU_BUILDER_DEFAULT_VISUAL_HISTORY}  # Reduced for higher sensitivity
         self._genesis_config: Dict[str, Any] = {}
         self._senses: List[Sense] = []
         self._use_strategies = False
@@ -44,7 +45,7 @@ class OPUBuilder:
         self._brain_config.update(kwargs)
         return self
     
-    def with_audio_cortex(self, max_history: int = 50,
+    def with_audio_cortex(self, max_history: int = OPU_BUILDER_DEFAULT_AUDIO_HISTORY,
                          use_strategy: bool = False) -> 'OPUBuilder':
         """
         Configure audio cortex.
@@ -60,7 +61,7 @@ class OPUBuilder:
         self._use_strategies = use_strategy or self._use_strategies
         return self
     
-    def with_visual_cortex(self, max_history: int = 50,
+    def with_visual_cortex(self, max_history: int = OPU_BUILDER_DEFAULT_VISUAL_HISTORY,
                           use_strategy: bool = False) -> 'OPUBuilder':
         """
         Configure visual cortex.

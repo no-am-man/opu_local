@@ -7,6 +7,7 @@ Now uses Strategy Pattern internally for better extensibility.
 
 import numpy as np
 from core.patterns.introspection_strategy import AudioIntrospectionStrategy
+from config import INTROSPECTION_AUDIO_MAX_HISTORY
 
 
 class AudioCortex:
@@ -15,7 +16,7 @@ class AudioCortex:
     Tracks audio history and computes s_score (surprise) through introspection.
     """
     
-    def __init__(self, max_history_size=50):
+    def __init__(self, max_history_size=INTROSPECTION_AUDIO_MAX_HISTORY):
         """
         Initialize Audio Cortex.
         

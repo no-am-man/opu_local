@@ -74,6 +74,7 @@ STATE_FILE = "opu_state.json"  # Path to save/load OPU state
 # Future senses can be added: TOUCH_V1, TEMPERATURE_V1, etc.
 AUDIO_SENSE = "AUDIO_V1"
 VIDEO_SENSE = "VIDEO_V1"
+BRAIN_DEFAULT_SENSE_LABEL = "UNKNOWN"  # Default sense label for unknown input sources
 
 # Processing Thresholds
 VISUAL_SURPRISE_THRESHOLD = 0.5  # Minimum visual surprise to store memory
@@ -154,4 +155,161 @@ MATURITY_TIME_SCALES = {
     7: "10 years"
 }
 DAY_COUNTER_LEVEL = 3  # Level 3 (1 day) increments day counter
+
+# Aesthetic Feedback Loop Configuration
+AFL_BASE_BREATH_RATE = 0.2  # Hz (Slow breath = ~0.2Hz = 12 breaths/min)
+AFL_BREATH_RATE_MULTIPLIER = 2.0  # Breath rate multiplier for stress response
+AFL_BREATH_SMOOTHING = 0.05  # Smoothing factor for breath rate transitions
+AFL_BREATH_BASE_LEVEL = 0.4  # Base breath envelope level (never goes to zero)
+AFL_BREATH_CAPACITY = 0.6  # Breath envelope capacity (0.4 + 0.6 = 1.0 max)
+AFL_PITCH_SMOOTHING = 0.1  # Smoothing factor for pitch glide (portamento)
+AFL_AMPLITUDE_SMOOTHING = 0.1  # Smoothing factor for amplitude transitions
+AFL_SYLLABLE_RATE = 8.0  # Hz (LFO for syllable rate when speaking)
+AFL_ARTICULATION_MIN = 0.6  # Minimum articulation amplitude (wah-wah envelope)
+AFL_ARTICULATION_RANGE = 0.4  # Articulation range (0.6 to 1.0)
+AFL_MASTER_GAIN = 0.5  # Master gain for final signal mix
+AFL_NOISE_GATE_THRESHOLD = 0.1  # Minimum s_score to generate audio
+AFL_VOLUME_DIVISOR = 2.0  # Divisor for volume calculation (s_score / 2.0)
+AFL_PITCH_DIVISOR = 5.0  # Divisor for pitch calculation (s_score / 5.0)
+AFL_MIN_FREQUENCY = 50.0  # Minimum frequency in Hz
+AFL_MAX_FREQUENCY = 2000.0  # Maximum frequency in Hz
+AFL_SPEAKING_THRESHOLD = 0.6  # Minimum s_score to trigger speaking/articulation
+AFL_ACTIVE_THRESHOLD = 0.05  # Minimum amplitude to consider OPU active
+AFL_AUDIO_BLOCKSIZE = 1024  # Audio buffer blocksize for stability
+
+# Phoneme Analyzer Configuration
+PHONEME_SPEECH_THRESHOLD = 1.5  # Minimum s_score to recognize as speech (not noise)
+PHONEME_VOWEL_BOUNDARY = 3.0  # Boundary between vowels and fricatives
+PHONEME_FRICATIVE_BOUNDARY = 6.0  # Boundary between fricatives and plosives
+PHONEME_PITCH_THRESHOLD = 200.0  # Pitch threshold for vowel selection (a vs o)
+PHONEME_MAX_HISTORY = 10000  # Maximum phoneme history entries (prevents memory leak)
+
+# Brain Configuration
+BRAIN_CHILD_PITCH = 440.0  # Base pitch for child state (Hz)
+BRAIN_SAGE_PITCH = 110.0  # Base pitch for sage state (Hz)
+BRAIN_STABILITY_THRESHOLD = 3.0  # Stability threshold for character profile
+BRAIN_EMOTION_DEFAULT_INTENSITY = 0.0  # Default emotion intensity
+BRAIN_EMOTION_DEFAULT_LABEL = 'neutral'  # Default emotion label
+BRAIN_MAX_MEMORY_LEVEL = 7  # Maximum memory level (0-7 for 8 layers)
+BRAIN_EVOLUTION_MIN_LEVEL = 3  # Minimum level to trigger character evolution (Level 3 = 1 day)
+BRAIN_DEFAULT_CONSOLIDATION_RATIO = 20  # Default consolidation ratio if level not found
+BRAIN_PATTERN_STRENGTH_MIN_SAMPLES = 1  # Minimum samples to calculate pattern strength std dev
+
+# Brain Consolidation Ratios (8-Layer Architecture)
+# How many items of Level N make 1 item of Level N+1
+# Based on roughly converting seconds -> minutes -> hours etc.
+# Assuming input rate of ~20Hz (50ms per cycle)
+BRAIN_CONSOLIDATION_RATIO_L0 = 20  # 20 raw inputs (~1s) -> 1 L1 item
+BRAIN_CONSOLIDATION_RATIO_L1 = 60  # 60 L1 items (1m) -> 1 L2 item
+BRAIN_CONSOLIDATION_RATIO_L2 = 60  # 60 L2 items (1h) -> 1 L3 item
+BRAIN_CONSOLIDATION_RATIO_L3 = 24  # 24 L3 items (1d) -> 1 L4 item
+BRAIN_CONSOLIDATION_RATIO_L4 = 7   # 7  L4 items (1w) -> 1 L5 item
+BRAIN_CONSOLIDATION_RATIO_L5 = 4   # 4  L5 items (1mo)-> 1 L6 item
+BRAIN_CONSOLIDATION_RATIO_L6 = 12  # 12 L6 items (1y) -> 1 L7 item
+BRAIN_CONSOLIDATION_RATIO_L7 = 10  # 10 L7 items -> Full Wisdom
+
+# Visual Perception Configuration
+VISUAL_EPSILON = 0.001  # Epsilon to prevent division by zero in color constancy
+VISUAL_COLOR_CONSTANCY_SCALE = 100.0  # Scale factor for normalized chromaticity (0-1 to 0-255 range)
+VISUAL_CAMERA_WIDTH = 640  # Camera capture width (pixels)
+VISUAL_CAMERA_HEIGHT = 480  # Camera capture height (pixels)
+VISUAL_CAMERA_FPS = 15  # Camera frame rate (frames per second)
+
+# Persistence Configuration
+PERSISTENCE_DEFAULT_DAY_COUNTER = 0  # Default day counter value
+PERSISTENCE_DEFAULT_S_SCORE = 0.0  # Default surprise score
+PERSISTENCE_STATE_VERSION = "1.0"  # State file version
+PERSISTENCE_TEMP_FILE_SUFFIX = ".tmp"  # Temporary file suffix for atomic writes
+
+# Main Event Loop Configuration
+MAIN_DEFAULT_CONFIDENCE_THRESHOLD = 0.5  # Default confidence threshold for object detection
+MAIN_DEFAULT_SURPRISE_SCORE = 0.0  # Default surprise score value
+MAIN_STATE_VIEWER_UPDATE_INTERVAL = 0.1  # State viewer update interval (seconds)
+MAIN_EMPTY_VISUAL_VECTOR = [0.0, 0.0, 0.0]  # Empty visual vector (3 channels)
+
+# OPU Configuration
+OPU_EMOTION_HISTORY_MAX_SIZE = 1000  # Maximum emotion history entries (prevents unbounded growth)
+OPU_EMOTION_DEFAULT_CONFIDENCE = 0.0  # Default emotion confidence value
+OPU_EMOTION_DEFAULT_TOTAL = 0  # Default total emotions count
+OPU_EMOTION_UNKNOWN_LABEL = 'unknown'  # Default unknown emotion label
+
+# Object Detection Emotion Colors (BGR format for OpenCV)
+DETECTION_EMOTION_COLOR_HAPPY = (0, 255, 0)      # Green
+DETECTION_EMOTION_COLOR_SAD = (255, 0, 0)        # Blue
+DETECTION_EMOTION_COLOR_ANGRY = (0, 0, 255)      # Red
+DETECTION_EMOTION_COLOR_SURPRISE = (0, 255, 255) # Yellow
+DETECTION_EMOTION_COLOR_FEAR = (128, 0, 128)     # Purple
+DETECTION_EMOTION_COLOR_DISGUST = (0, 128, 128)  # Teal
+DETECTION_EMOTION_COLOR_NEUTRAL = (128, 128, 128) # Gray
+DETECTION_EMOTION_COLOR_DEFAULT = (128, 128, 128) # Default gray
+DETECTION_FACE_COLOR_NO_EMOTION = (0, 255, 0)    # Green for faces without emotion
+DETECTION_OBJECT_COLOR = (255, 0, 0)             # Blue for other objects
+
+# State Viewer Configuration
+STATE_VIEWER_DEFAULT_MATURITY_INDEX = 0.0  # Default maturity index value
+STATE_VIEWER_DEFAULT_PITCH = 440.0  # Default base pitch (Hz)
+STATE_VIEWER_DEFAULT_STABILITY_THRESHOLD = 3.0  # Default stability threshold
+STATE_VIEWER_DEFAULT_S_SCORE = 0.0  # Default surprise score
+STATE_VIEWER_DEFAULT_COHERENCE = 0.0  # Default coherence value
+STATE_VIEWER_DEFAULT_G_NOW = 0.0  # Default genomic bit value
+STATE_VIEWER_DEFAULT_CONFIDENCE = 0.0  # Default emotion confidence
+STATE_VIEWER_DEFAULT_SPEECH_THRESHOLD = 0.0  # Default speech threshold
+STATE_VIEWER_MEMORY_LEVELS_COUNT = 8  # Number of memory levels (0-7)
+
+# Command Pattern Configuration
+COMMAND_MAX_HISTORY_DEFAULT = 100  # Default maximum command history size
+COMMAND_UNDO_SEARCH_MAX_LEVEL = 7  # Maximum level to search when undoing (0-7 for 8-layer architecture)
+
+# Introspection Strategy Configuration
+INTROSPECTION_AUDIO_MAX_HISTORY = 50  # Maximum history size for audio introspection
+INTROSPECTION_VISUAL_MAX_HISTORY = 50  # Maximum history size for visual introspection
+INTROSPECTION_MIN_DATA_POINTS = 2  # Minimum data points needed for meaningful introspection
+INTROSPECTION_VISUAL_MIN_FRAMES = 10  # Minimum frames needed for visual introspection
+INTROSPECTION_NOISE_FLOOR = 0.01  # Minimum sigma to prevent false high scores from silence
+INTROSPECTION_SIGMA_DEFAULT = 0.1  # Default sigma when history is zero
+INTROSPECTION_DEFAULT_S_SCORE = 0.0  # Default surprise score
+INTROSPECTION_DEFAULT_COHERENCE = 1.0  # Default coherence (perfect when no history)
+INTROSPECTION_DEFAULT_G_NOW = 0.0  # Default genomic bit value
+
+# Maturity State Configuration
+MATURITY_INSTANT_PITCH_MULTIPLIER = 1.0  # Level 0: 440Hz
+MATURITY_INSTANT_STABILITY = 2.5  # Level 0: Very reactive
+MATURITY_CHILD_PITCH_MULTIPLIER = 0.95  # Level 1: ~418Hz
+MATURITY_CHILD_STABILITY = 3.0  # Level 1
+MATURITY_INFANT_PITCH_MULTIPLIER = 0.9  # Level 2: ~396Hz
+MATURITY_INFANT_STABILITY = 3.5  # Level 2
+MATURITY_ADOLESCENT_PITCH_MULTIPLIER = 0.7  # Level 3: ~308Hz
+MATURITY_ADOLESCENT_STABILITY = 4.5  # Level 3
+MATURITY_ADULT_PITCH_MULTIPLIER = 0.5  # Level 4: ~220Hz
+MATURITY_ADULT_STABILITY = 5.5  # Level 4
+MATURITY_ELDER_PITCH_MULTIPLIER = 0.35  # Level 5: ~154Hz
+MATURITY_ELDER_STABILITY = 6.5  # Level 5
+MATURITY_SAGE_PITCH_MULTIPLIER = 0.25  # Level 6: 110Hz
+MATURITY_SAGE_STABILITY = 8.0  # Level 6
+MATURITY_SCIRE_PITCH_MULTIPLIER = 0.2  # Level 7: ~88Hz
+MATURITY_SCIRE_STABILITY = 10.0  # Level 7: Very hard to surprise
+MATURITY_BASE_PITCH = 440.0  # Base pitch in Hz (A4)
+MATURITY_PITCH_RANGE = 330.0  # Pitch range (440 - 110)
+MATURITY_STABILITY_BASE = 3.0  # Base stability threshold for interpolation
+MATURITY_STABILITY_RANGE = 5.0  # Stability range for interpolation (3.0 to 8.0)
+
+# Sense Decorator Configuration
+DECORATOR_NOISE_GATE_THRESHOLD = 0.1  # Default noise gate threshold (amplitude below which input is silenced)
+DECORATOR_HIGHPASS_ALPHA = 0.95  # High-pass filter coefficient (0-1, higher = more filtering)
+DECORATOR_AMPLIFICATION_GAIN = 1.0  # Default amplification gain (>1.0 = amplify, <1.0 = attenuate)
+
+# Sense Factory Configuration
+SENSE_FACTORY_DEFAULT_GENOMIC_BIT = 0.0  # Default genomic bit value for empty visual input
+SENSE_FACTORY_EMPTY_VISUAL_VECTOR = [0.0, 0.0, 0.0]  # Empty visual vector (3 channels)
+
+# Genesis Kernel Configuration
+GENESIS_VETO_LOG_INTERVAL = 50  # Log veto message every N times (reduces verbosity)
+
+# OPU Builder Configuration
+OPU_BUILDER_DEFAULT_AUDIO_HISTORY = 50  # Default audio history size for builder
+OPU_BUILDER_DEFAULT_VISUAL_HISTORY = 50  # Default visual history size for builder
+
+# Mic/Perception Configuration
+MIC_DEFAULT_GENOMIC_BIT = 0.0  # Default genomic bit for empty input
+MIC_DEFAULT_MAGNITUDE = 0.0  # Default magnitude for empty input
 

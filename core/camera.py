@@ -18,6 +18,10 @@ except ImportError:
     print("[VISION] Warning: opencv-python not installed. Vision disabled.")
 
 import numpy as np
+from config import (
+    VISUAL_EPSILON, VISUAL_COLOR_CONSTANCY_SCALE,
+    VISUAL_CAMERA_WIDTH, VISUAL_CAMERA_HEIGHT, VISUAL_CAMERA_FPS
+)
 
 
 class VisualPerception:
@@ -74,13 +78,7 @@ class VisualPerception:
             self.active = False
         else:
             self.active = True
-            # Set resolution for object detection (640x480 is good for detection)
-            # Still efficient enough for real-time processing
-            # This is the capture resolution - display will be resized for preview
-            self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
-            self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-            # Reduce frame rate for performance (we don't need 30fps for entropy)
-            self.cap.set(cv2.CAP_PROP_FPS, 15)
+            self._configure_camera()
             mode = "Color Constancy (Shadow-Invariant)" if use_color_constancy else "Raw RGB (Legacy)"
             print(f"[VISION] Visual Cortex Initialized ({mode} + Object Detection).")
             print("[VISION] WebCam preview window will show object detection overlays.")
@@ -132,10 +130,7 @@ class VisualPerception:
             visual_vector: np.array([sigma_r, sigma_g, sigma_b]) or
                          np.array([sigma_r_norm, sigma_g_norm, sigma_b_norm])
         """
-        if frame is None:
-            return np.array([0.0, 0.0, 0.0])
-        
-        if cv2 is None:
+        if self._cannot_process_frame(frame):
             return np.array([0.0, 0.0, 0.0])
         
         # 1. SPLIT CHANNELS (OpenCV uses BGR format)
@@ -143,38 +138,9 @@ class VisualPerception:
         b, g, r = cv2.split(frame.astype(np.float32))
         
         if self.use_color_constancy:
-            # 2. COLOR CONSTANCY MODE: Normalized Chromaticity (Shadow-Invariant)
-            # Calculate Total Luminance (Energy/Intensity)
-            # Add epsilon to prevent division by zero
-            epsilon = 0.001
-            luminance = r + g + b + epsilon
-            
-            # 3. Calculate Normalized Chromaticity (Color Identity)
-            # This removes shadows/lighting changes from the equation
-            # If a cloud passes: R, G, B all drop proportionally → r_norm, g_norm, b_norm stay constant
-            # If a red ball moves: r_norm changes → OPU detects actual structure change
-            r_norm = r / luminance
-            g_norm = g / luminance
-            b_norm = b / luminance
-            
-            # 4. Calculate Entropy of NORMALIZED channels
-            # This detects "Movement of Color" independent of "Movement of Light"
-            # Scale up small ratios (0-1 range) to match raw RGB scale (0-255 range)
-            scale_factor = 100.0  # Amplify normalized ratios for comparable magnitude
-            sigma_r = np.std(r_norm) * scale_factor
-            sigma_g = np.std(g_norm) * scale_factor
-            sigma_b = np.std(b_norm) * scale_factor
-            
+            sigma_r, sigma_g, sigma_b = self._calculate_color_constancy_vector(r, g, b)
         else:
-            # 2. LEGACY MODE: Raw RGB Channels
-            # Calculate Visual Genomic Bits (Scale Invariant Structure)
-            # We use Standard Deviation because it measures "Texture/Entropy".
-            # A blank wall = Low StdDev. A waving hand = High StdDev.
-            # A yellow bounding box = High StdDev in the Yellow channel (R+G).
-            # This is the Recursive Perception: Graphics become part of reality.
-            sigma_r = np.std(r)
-            sigma_g = np.std(g)
-            sigma_b = np.std(b)
+            sigma_r, sigma_g, sigma_b = self._calculate_raw_rgb_vector(r, g, b)
 
         visual_vector = np.array([sigma_r, sigma_g, sigma_b], dtype=np.float32)
         
@@ -192,6 +158,34 @@ class VisualPerception:
         frame = self.capture_frame()
         visual_vector = self.analyze_frame(frame)
         return visual_vector, frame
+    
+    def _configure_camera(self):
+        """Configure camera resolution and frame rate."""
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, VISUAL_CAMERA_WIDTH)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VISUAL_CAMERA_HEIGHT)
+        self.cap.set(cv2.CAP_PROP_FPS, VISUAL_CAMERA_FPS)
+    
+    def _calculate_color_constancy_vector(self, r, g, b):
+        """Calculate visual vector using color constancy (normalized chromaticity)."""
+        luminance = r + g + b + VISUAL_EPSILON
+        r_norm = r / luminance
+        g_norm = g / luminance
+        b_norm = b / luminance
+        sigma_r = np.std(r_norm) * VISUAL_COLOR_CONSTANCY_SCALE
+        sigma_g = np.std(g_norm) * VISUAL_COLOR_CONSTANCY_SCALE
+        sigma_b = np.std(b_norm) * VISUAL_COLOR_CONSTANCY_SCALE
+        return sigma_r, sigma_g, sigma_b
+    
+    def _calculate_raw_rgb_vector(self, r, g, b):
+        """Calculate visual vector using raw RGB channels (legacy mode)."""
+        sigma_r = np.std(r)
+        sigma_g = np.std(g)
+        sigma_b = np.std(b)
+        return sigma_r, sigma_g, sigma_b
+    
+    def _cannot_process_frame(self, frame):
+        """Check if frame cannot be processed (guard clause helper)."""
+        return frame is None or cv2 is None
     
     def is_active(self):
         """Check if visual cortex is active."""

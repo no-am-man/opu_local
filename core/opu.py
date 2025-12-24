@@ -14,10 +14,24 @@ Now supports Observer Pattern for state change notifications.
 
 import numpy as np
 import time  # For EPOCH timestamps
+from dataclasses import dataclass
 from core.brain import Brain
 from core.audio_cortex import AudioCortex
 from core.vision_cortex import VisualCortex
 from core.patterns.observer import ObservableOPU
+from config import (
+    OPU_EMOTION_HISTORY_MAX_SIZE, OPU_EMOTION_DEFAULT_CONFIDENCE,
+    OPU_EMOTION_DEFAULT_TOTAL, OPU_EMOTION_UNKNOWN_LABEL,
+    BRAIN_DEFAULT_SENSE_LABEL
+)
+
+
+@dataclass
+class EmotionMetrics:
+    """Metrics calculated from emotion history."""
+    emotion_counts: dict
+    total_confidence: float
+    emotion_count: int
 
 
 class OrthogonalProcessingUnit(ObservableOPU):
@@ -86,7 +100,7 @@ class OrthogonalProcessingUnit(ObservableOPU):
         self._notify_state_change()
         return result
     
-    def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN", emotion=None):
+    def store_memory(self, genomic_bit, s_score, sense_label=BRAIN_DEFAULT_SENSE_LABEL, emotion=None):
         """
         Store memory (delegates to Brain).
         Uses EPOCH time for temporal synchronization across all senses.
@@ -108,14 +122,7 @@ class OrthogonalProcessingUnit(ObservableOPU):
         
         # Track emotion in history if available
         if emotion is not None:
-            self.emotion_history.append({
-                'emotion': emotion,
-                'timestamp': timestamp,
-                'sense': sense_label
-            })
-            # Keep only last 1000 emotions to prevent unbounded growth
-            if len(self.emotion_history) > 1000:
-                self.emotion_history = self.emotion_history[-1000:]
+            self._add_emotion_to_history(emotion, timestamp, sense_label)
     
     def consolidate_memory(self, level):
         """
@@ -126,14 +133,11 @@ class OrthogonalProcessingUnit(ObservableOPU):
         """
         self.brain.consolidate_memory(level)
     
-    def evolve_character(self, level=None):
+    def evolve_character(self):
         """
         Evolve character (delegates to Brain).
-        
-        Args:
-            level: The abstraction level that triggered evolution (0-5)
         """
-        self.brain.evolve_character(level)
+        self.brain.evolve_character()
     
     def get_character_state(self):
         """
@@ -152,34 +156,90 @@ class OrthogonalProcessingUnit(ObservableOPU):
             dict with emotion counts, most common emotion, and average confidence
         """
         if not self.emotion_history:
-            return {
-                'total_emotions': 0,
-                'emotion_counts': {},
-                'most_common': None,
-                'average_confidence': 0.0
-            }
+            return self._create_empty_emotion_statistics()
         
-        emotion_counts = {}
-        total_confidence = 0.0
-        emotion_count = 0
-        
-        for entry in self.emotion_history:
-            if isinstance(entry.get('emotion'), dict):
-                em_name = entry['emotion'].get('emotion', 'unknown')
-                em_conf = entry['emotion'].get('confidence', 0.0)
-                emotion_counts[em_name] = emotion_counts.get(em_name, 0) + 1
-                total_confidence += em_conf
-                emotion_count += 1
-        
-        most_common = max(emotion_counts.items(), key=lambda x: x[1])[0] if emotion_counts else None
-        avg_confidence = total_confidence / emotion_count if emotion_count > 0 else 0.0
+        metrics = self._calculate_emotion_metrics()
+        most_common = self._find_most_common_emotion(metrics.emotion_counts)
+        avg_confidence = self._calculate_average_confidence(metrics.total_confidence, metrics.emotion_count)
         
         return {
             'total_emotions': len(self.emotion_history),
-            'emotion_counts': emotion_counts,
+            'emotion_counts': metrics.emotion_counts,
             'most_common': most_common,
             'average_confidence': avg_confidence
         }
+    
+    def _add_emotion_to_history(self, emotion, timestamp, sense_label):
+        """Add emotion to history with size cap."""
+        emotion_entry = self._create_emotion_entry(emotion, timestamp, sense_label)
+        self.emotion_history.append(emotion_entry)
+        self._cap_emotion_history_size()
+    
+    def _create_emotion_entry(self, emotion, timestamp, sense_label):
+        """Create emotion entry dictionary."""
+        return {
+            'emotion': emotion,
+            'timestamp': timestamp,
+            'sense': sense_label
+        }
+    
+    def _cap_emotion_history_size(self):
+        """Cap emotion history size to maximum allowed."""
+        if len(self.emotion_history) > OPU_EMOTION_HISTORY_MAX_SIZE:
+            self.emotion_history = self.emotion_history[-OPU_EMOTION_HISTORY_MAX_SIZE:]
+    
+    def _create_empty_emotion_statistics(self):
+        """Create empty emotion statistics when no history exists."""
+        return {
+            'total_emotions': OPU_EMOTION_DEFAULT_TOTAL,
+            'emotion_counts': {},
+            'most_common': None,
+            'average_confidence': OPU_EMOTION_DEFAULT_CONFIDENCE
+        }
+    
+    def _calculate_emotion_metrics(self):
+        """Calculate emotion counts and total confidence from history."""
+        emotion_counts = {}
+        total_confidence = OPU_EMOTION_DEFAULT_CONFIDENCE
+        emotion_count = 0
+        
+        for entry in self.emotion_history:
+            if self._is_valid_emotion_entry(entry):
+                em_name = self._extract_emotion_name(entry)
+                em_conf = self._extract_emotion_confidence(entry)
+                self._update_emotion_counts(emotion_counts, em_name)
+                total_confidence += em_conf
+                emotion_count += 1
+        
+        return EmotionMetrics(
+            emotion_counts=emotion_counts,
+            total_confidence=total_confidence,
+            emotion_count=emotion_count
+        )
+    
+    def _is_valid_emotion_entry(self, entry):
+        """Check if entry contains a valid emotion dictionary."""
+        return isinstance(entry.get('emotion'), dict)
+    
+    def _extract_emotion_name(self, entry):
+        """Extract emotion name from entry, defaulting to unknown if missing."""
+        return entry['emotion'].get('emotion', OPU_EMOTION_UNKNOWN_LABEL)
+    
+    def _extract_emotion_confidence(self, entry):
+        """Extract emotion confidence from entry, defaulting to default if missing."""
+        return entry['emotion'].get('confidence', OPU_EMOTION_DEFAULT_CONFIDENCE)
+    
+    def _update_emotion_counts(self, emotion_counts, emotion_name):
+        """Update emotion count dictionary with new emotion."""
+        emotion_counts[emotion_name] = emotion_counts.get(emotion_name, 0) + 1
+    
+    def _find_most_common_emotion(self, emotion_counts):
+        """Find the most common emotion from counts."""
+        return max(emotion_counts.items(), key=lambda x: x[1])[0] if emotion_counts else None
+    
+    def _calculate_average_confidence(self, total_confidence, emotion_count):
+        """Calculate average confidence from total and count."""
+        return total_confidence / emotion_count if emotion_count > 0 else OPU_EMOTION_DEFAULT_CONFIDENCE
     
     def get_current_state(self):
         """

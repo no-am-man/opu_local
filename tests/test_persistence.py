@@ -274,11 +274,12 @@ class TestOPUPersistence:
             '5': [{'genomic_bit': 0.7}]
         }
         result = persistence._deserialize_memory_levels(serialized)
-        assert len(result) == 7  # Updated for 7 levels
+        assert len(result) == 8  # 8 levels (0-7)
         assert len(result[0]) == 1
         assert len(result[1]) == 1
         assert len(result[5]) == 1
         assert len(result[6]) == 0  # Level 6 should exist but be empty
+        assert len(result[7]) == 0  # Level 7 should exist but be empty
     
     def test_deserialize_array(self):
         """Test _deserialize_array."""

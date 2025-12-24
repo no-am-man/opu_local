@@ -51,7 +51,9 @@ from config import (
     SIMULATED_SILENCE_PROBABILITY, SIMULATED_SILENCE_START_RATIO,
     SIMULATED_SILENCE_LENGTH_MIN_RATIO, SIMULATED_SILENCE_LENGTH_MAX_RATIO,
     SIMULATED_SILENCE_ATTENUATION,
-    MATURITY_TIME_SCALES, DAY_COUNTER_LEVEL
+    MATURITY_TIME_SCALES, DAY_COUNTER_LEVEL,
+    MAIN_DEFAULT_CONFIDENCE_THRESHOLD, MAIN_DEFAULT_SURPRISE_SCORE,
+    MAIN_STATE_VIEWER_UPDATE_INTERVAL, MAIN_EMPTY_VISUAL_VECTOR
 )
 from core.genesis import GenesisKernel
 from core.mic import perceive
@@ -68,11 +70,11 @@ from utils.file_logger import FileLogger
 # NOTE: On macOS, you MUST use ./run_opu.sh launcher script to set TK_SILENCE_DEPRECATION
 # before Python starts. This prevents the NSApplication crash.
 try:
-    from utils.log_window import OPULogWindow
-    LOG_WINDOW_AVAILABLE = True
+    from utils.state_viewer import OPUStateViewer
+    STATE_VIEWER_AVAILABLE = True
 except Exception:
-    OPULogWindow = None
-    LOG_WINDOW_AVAILABLE = False
+    OPUStateViewer = None
+    STATE_VIEWER_AVAILABLE = False
 
 
 @dataclass
@@ -103,14 +105,14 @@ class OPUEventLoop:
     Coordinates all subsystems and runs the abstraction cycle.
     """
     
-    def __init__(self, state_file=None, log_file=None, enable_log_window=True):
+    def __init__(self, state_file=None, log_file=None, enable_state_viewer=True):
         """
         Initialize the OPU event loop.
         
         Args:
             state_file: Path to state file (defaults to config.STATE_FILE)
             log_file: Path to log file (None to disable file logging)
-            enable_log_window: Whether to enable the GUI log window
+            enable_state_viewer: Whether to enable the GUI state viewer
         """
         self.genesis = GenesisKernel()
         self.cortex = OrthogonalProcessingUnit()
@@ -118,37 +120,44 @@ class OPUEventLoop:
         self.phoneme_analyzer = PhonemeAnalyzer()
         self.visualizer = CognitiveMapVisualizer()
         self.visual_perception = VisualPerception(camera_index=0, use_color_constancy=USE_COLOR_CONSTANCY)
-        self.object_detector = ObjectDetector(use_dnn=False, confidence_threshold=0.5)
+        self.object_detector = ObjectDetector(use_dnn=False, confidence_threshold=MAIN_DEFAULT_CONFIDENCE_THRESHOLD)
         self.persistence = OPUPersistence(state_file=state_file or STATE_FILE)
         
         self.original_stdout = sys.stdout
         self.original_stderr = sys.stderr
         
-        self.log_window = None
-        if enable_log_window and LOG_WINDOW_AVAILABLE:
+        self.state_viewer = None
+        if enable_state_viewer and STATE_VIEWER_AVAILABLE:
             try:
-                self.log_window = OPULogWindow(title="OPU Log - Real-time Output")
-                self.log_window.start()
-                print("[OPU] Log window enabled - all output will appear in the log window")
+                state_file_path = state_file or STATE_FILE
+                self.state_viewer = OPUStateViewer(state_file=state_file_path)
+                # Start viewer in separate thread (tkinter needs its own thread)
+                import threading
+                viewer_thread = threading.Thread(target=self.state_viewer.run, daemon=True)
+                viewer_thread.start()
+                # Give it a moment to initialize
+                import time
+                time.sleep(MAIN_STATE_VIEWER_UPDATE_INTERVAL)
+                print("[OPU] State viewer enabled - visualizing opu_state.json in real-time")
             except Exception as e:
                 error_msg = str(e)
                 if platform.system() == 'Darwin' and 'NSApplication' in error_msg:
-                    print("[OPU] ERROR: Log window crashed due to macOS tkinter issue.")
+                    print("[OPU] ERROR: State viewer crashed due to macOS tkinter issue.")
                     print("[OPU] SOLUTION: Use the launcher script instead:")
                     print("[OPU]   ./run_opu.sh")
                     print("[OPU] This sets the required environment variable before Python starts.")
                 else:
-                    print(f"[OPU] Note: Log window unavailable (using terminal output): {type(e).__name__}: {error_msg}")
-                self.log_window = None
-        elif not enable_log_window:
-            print("[OPU] Log window disabled (use --log-window to enable)")
+                    print(f"[OPU] Note: State viewer unavailable: {type(e).__name__}: {error_msg}")
+                self.state_viewer = None
+        elif not enable_state_viewer:
+            print("[OPU] State viewer disabled (use --state-viewer to enable)")
         else:
-            print("[OPU] Note: Log window module unavailable (using terminal output)")
+            print("[OPU] Note: State viewer module unavailable")
         
         self.file_logger = None
         if log_file:
-            chain_target = sys.stdout if self.log_window else self.original_stdout
-            self.file_logger = FileLogger(log_file, chain_to=chain_target)
+            # Always chain to original stdout (state viewer doesn't capture logs)
+            self.file_logger = FileLogger(log_file, chain_to=self.original_stdout)
             if self.file_logger.enabled:
                 sys.stdout = self.file_logger
                 sys.stderr = self.file_logger
@@ -240,8 +249,8 @@ class OPUEventLoop:
     def _create_empty_visual_result(self):
         """Create empty visual result when no frame is available."""
         return {
-            'surprise': 0.0,
-            'vector': np.array([0.0, 0.0, 0.0]),
+            'surprise': MAIN_DEFAULT_SURPRISE_SCORE,
+            'vector': np.array(MAIN_EMPTY_VISUAL_VECTOR),
             'detections': [],
             'emotion': None,
             'processed_frame': None,
@@ -287,7 +296,7 @@ class OPUEventLoop:
     
     def _extract_visual_genomic_bit(self, visual_vector):
         """Extract genomic bit from visual vector (maximum channel entropy)."""
-        return max(visual_vector) if len(visual_vector) > 0 else 0.0
+        return max(visual_vector) if len(visual_vector) > 0 else MAIN_DEFAULT_SURPRISE_SCORE
     
     def _update_expression(self, safe_score):
         """Update audio expression based on surprise score."""
@@ -346,7 +355,7 @@ class OPUEventLoop:
             processed_frame,
             global_score,
             visual_result['surprise'],
-            audio_result.get('surprise', 0.0) if audio_result else 0.0,
+            audio_result.get('surprise', MAIN_DEFAULT_SURPRISE_SCORE) if audio_result else MAIN_DEFAULT_SURPRISE_SCORE,
             visual_result.get('channel_scores', {}),
             visual_result['detections']
         )
@@ -359,8 +368,8 @@ class OPUEventLoop:
     
     def _calculate_global_score(self, audio_result, visual_result):
         """Calculate global surprise score from audio and visual."""
-        audio_surprise = audio_result.get('surprise', 0.0) if audio_result else 0.0
-        visual_surprise = visual_result.get('surprise', 0.0)
+        audio_surprise = audio_result.get('surprise', MAIN_DEFAULT_SURPRISE_SCORE) if audio_result else MAIN_DEFAULT_SURPRISE_SCORE
+        visual_surprise = visual_result.get('surprise', MAIN_DEFAULT_SURPRISE_SCORE)
         return max(audio_surprise, visual_surprise)
     
     def display_visual_cortex(self, frame, s_global, s_visual, s_audio, channel_scores, detections=None):
@@ -406,7 +415,7 @@ class OPUEventLoop:
         
         y_position = start_y
         for channel in ['R', 'G', 'B']:
-            score = channel_scores.get(channel, 0.0)
+            score = channel_scores.get(channel, MAIN_DEFAULT_SURPRISE_SCORE)
             bar_length = self._calculate_bar_length(score)
             color = channel_colors[channel]
             
@@ -549,11 +558,7 @@ class OPUEventLoop:
                 result = self.process_cycle()
                 cycle_count += 1
                 
-                if hasattr(self, 'log_window') and self.log_window is not None:
-                    try:
-                        self.log_window.update()
-                    except Exception:
-                        pass  # Silently continue if log window has issues
+                # State viewer updates automatically in background thread
                 
                 self.check_abstraction_cycle()
                 
@@ -612,9 +617,9 @@ class OPUEventLoop:
             self.file_logger.close()
         
         # Cleanup log window (restore to original stdout/stderr)
-        if hasattr(self, 'log_window') and self.log_window is not None:
+        if hasattr(self, 'state_viewer') and self.state_viewer is not None:
             try:
-                self.log_window.stop()
+                self.state_viewer.on_closing()
             except Exception:
                 pass
         
@@ -638,8 +643,8 @@ def main():
 Examples:
   python main.py                          # Run with default settings
   python main.py --log-file opu.log       # Enable file logging
-  python main.py --no-log-window          # Disable GUI log window
-  python main.py --log-file debug.log --no-log-window  # File logging only
+  python main.py --no-state-viewer       # Disable GUI state viewer
+  python main.py --log-file debug.log --no-state-viewer  # File logging only
         """
     )
     parser.add_argument(
@@ -649,9 +654,9 @@ Examples:
         help='Path to log file (enables file logging). Default: opu_debug.log'
     )
     parser.add_argument(
-        '--no-log-window',
+        '--no-state-viewer',
         action='store_true',
-        help='Disable the GUI log window'
+        help='Disable the GUI state viewer'
     )
     parser.add_argument(
         '--state-file',
@@ -675,7 +680,7 @@ Examples:
     opu = OPUEventLoop(
         state_file=args.state_file,
         log_file=log_file,
-        enable_log_window=not args.no_log_window
+        enable_state_viewer=not args.no_state_viewer
     )
     opu.run()
 

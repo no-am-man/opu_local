@@ -7,6 +7,18 @@ Models maturity levels as states, encapsulating state-specific behavior
 
 from abc import ABC, abstractmethod
 from typing import Dict
+from config import (
+    MATURITY_INSTANT_PITCH_MULTIPLIER, MATURITY_INSTANT_STABILITY,
+    MATURITY_CHILD_PITCH_MULTIPLIER, MATURITY_CHILD_STABILITY,
+    MATURITY_INFANT_PITCH_MULTIPLIER, MATURITY_INFANT_STABILITY,
+    MATURITY_ADOLESCENT_PITCH_MULTIPLIER, MATURITY_ADOLESCENT_STABILITY,
+    MATURITY_ADULT_PITCH_MULTIPLIER, MATURITY_ADULT_STABILITY,
+    MATURITY_ELDER_PITCH_MULTIPLIER, MATURITY_ELDER_STABILITY,
+    MATURITY_SAGE_PITCH_MULTIPLIER, MATURITY_SAGE_STABILITY,
+    MATURITY_SCIRE_PITCH_MULTIPLIER, MATURITY_SCIRE_STABILITY,
+    MATURITY_BASE_PITCH, MATURITY_PITCH_RANGE,
+    MATURITY_STABILITY_BASE, MATURITY_STABILITY_RANGE
+)
 
 
 class MaturityState(ABC):
@@ -57,10 +69,10 @@ class InstantState(MaturityState):
     """Level 0: Instant state (1 second) - Immediate Sensation (The "Now")."""
     
     def get_pitch_multiplier(self):
-        return 1.0  # 440Hz
+        return MATURITY_INSTANT_PITCH_MULTIPLIER  # 440Hz
     
     def get_stability_threshold(self):
-        return 2.5  # Very reactive
+        return MATURITY_INSTANT_STABILITY  # Very reactive
     
     def get_time_scale(self):
         return "1 second"
@@ -73,10 +85,10 @@ class ChildState(MaturityState):
     """Level 1: Child state (1 minute) - Working Memory."""
     
     def get_pitch_multiplier(self):
-        return 0.95  # ~418Hz
+        return MATURITY_CHILD_PITCH_MULTIPLIER  # ~418Hz
     
     def get_stability_threshold(self):
-        return 3.0
+        return MATURITY_CHILD_STABILITY
     
     def get_time_scale(self):
         return "1 minute"
@@ -89,10 +101,10 @@ class InfantState(MaturityState):
     """Level 2: Infant state (1 hour) - Episode / Situation."""
     
     def get_pitch_multiplier(self):
-        return 0.9  # ~396Hz
+        return MATURITY_INFANT_PITCH_MULTIPLIER  # ~396Hz
     
     def get_stability_threshold(self):
-        return 3.5
+        return MATURITY_INFANT_STABILITY
     
     def get_time_scale(self):
         return "1 hour"
@@ -121,10 +133,10 @@ class AdultState(MaturityState):
     """Level 4: Adult state (1 week) - Trend."""
     
     def get_pitch_multiplier(self):
-        return 0.5  # ~220Hz
+        return MATURITY_ADULT_PITCH_MULTIPLIER  # ~220Hz
     
     def get_stability_threshold(self):
-        return 5.5
+        return MATURITY_ADULT_STABILITY
     
     def get_time_scale(self):
         return "1 week"
@@ -137,10 +149,10 @@ class ElderState(MaturityState):
     """Level 5: Elder state (1 month) - Season."""
     
     def get_pitch_multiplier(self):
-        return 0.35  # ~154Hz
+        return MATURITY_ELDER_PITCH_MULTIPLIER  # ~154Hz
     
     def get_stability_threshold(self):
-        return 6.5
+        return MATURITY_ELDER_STABILITY
     
     def get_time_scale(self):
         return "1 month"
@@ -153,10 +165,10 @@ class SageState(MaturityState):
     """Level 6: Sage state (1 year) - Epoch."""
     
     def get_pitch_multiplier(self):
-        return 0.25  # 110Hz
+        return MATURITY_SAGE_PITCH_MULTIPLIER  # 110Hz
     
     def get_stability_threshold(self):
-        return 8.0
+        return MATURITY_SAGE_STABILITY
     
     def get_time_scale(self):
         return "1 year"
@@ -169,10 +181,10 @@ class ScireState(MaturityState):
     """Level 7: Scire state (10 years) - Core Identity / Deep Wisdom."""
     
     def get_pitch_multiplier(self):
-        return 0.2  # ~88Hz (even deeper, approaching fundamental)
+        return MATURITY_SCIRE_PITCH_MULTIPLIER  # ~88Hz (even deeper, approaching fundamental)
     
     def get_stability_threshold(self):
-        return 10.0  # Very hard to surprise - true wisdom
+        return MATURITY_SCIRE_STABILITY  # Very hard to surprise - true wisdom
     
     def get_time_scale(self):
         return "10 years"
@@ -227,8 +239,8 @@ class MaturityContext:
         """
         if maturity_index is not None:
             # Interpolate between states based on continuous maturity_index
-            # Drops from 440Hz (A4) to 110Hz (A2) as maturity increases
-            return 440.0 - (maturity_index * 330.0)
+            # Drops from MATURITY_BASE_PITCH (A4) to 110Hz (A2) as maturity increases
+            return MATURITY_BASE_PITCH - (maturity_index * MATURITY_PITCH_RANGE)
         return self._base_pitch * self._state.get_pitch_multiplier()
     
     def set_base_pitch(self, base_pitch: float):
@@ -236,7 +248,7 @@ class MaturityContext:
         Set base pitch.
         
         Args:
-            base_pitch: Base pitch in Hz (default: 440.0)
+            base_pitch: Base pitch in Hz (default: MATURITY_BASE_PITCH)
         """
         self._base_pitch = base_pitch
     
@@ -252,8 +264,8 @@ class MaturityContext:
             float: Stability threshold
         """
         if maturity_index is not None:
-            # Interpolate: Threshold moves from 3.0 to 8.0 as maturity increases
-            return 3.0 + (maturity_index * 5.0)
+            # Interpolate: Threshold moves from MATURITY_STABILITY_BASE to MATURITY_STABILITY_BASE + MATURITY_STABILITY_RANGE as maturity increases
+            return MATURITY_STABILITY_BASE + (maturity_index * MATURITY_STABILITY_RANGE)
         return self._state.get_stability_threshold()
     
     def get_time_scale(self) -> str:

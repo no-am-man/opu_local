@@ -5,7 +5,17 @@ Maps surprise scores to audio frequencies and phonemes.
 
 import numpy as np
 import sounddevice as sd
-from config import BASE_FREQUENCY, SAMPLE_RATE
+from config import (
+    BASE_FREQUENCY, SAMPLE_RATE,
+    AFL_BASE_BREATH_RATE, AFL_BREATH_RATE_MULTIPLIER, AFL_BREATH_SMOOTHING,
+    AFL_BREATH_BASE_LEVEL, AFL_BREATH_CAPACITY, AFL_PITCH_SMOOTHING,
+    AFL_AMPLITUDE_SMOOTHING, AFL_SYLLABLE_RATE, AFL_ARTICULATION_MIN,
+    AFL_ARTICULATION_RANGE, AFL_MASTER_GAIN, AFL_NOISE_GATE_THRESHOLD,
+    AFL_VOLUME_DIVISOR, AFL_PITCH_DIVISOR, AFL_MIN_FREQUENCY, AFL_MAX_FREQUENCY,
+    AFL_SPEAKING_THRESHOLD, AFL_ACTIVE_THRESHOLD, AFL_AUDIO_BLOCKSIZE,
+    PHONEME_SPEECH_THRESHOLD, PHONEME_VOWEL_BOUNDARY, PHONEME_FRICATIVE_BOUNDARY,
+    PHONEME_PITCH_THRESHOLD, PHONEME_MAX_HISTORY
+)
 
 
 class AestheticFeedbackLoop:
@@ -29,8 +39,8 @@ class AestheticFeedbackLoop:
         
         # THE LUNGS - Respiratory Cycle
         self.breath_phase = 0.0
-        self.breath_rate = 0.2  # Hz (Slow breath = ~0.2Hz = 12 breaths/min)
-        self.current_breath_rate = 0.2
+        self.breath_rate = AFL_BASE_BREATH_RATE
+        self.current_breath_rate = AFL_BASE_BREATH_RATE
         
         # Articulation (The "Talking" Rhythm)
         self.syllable_phase = 0.0
@@ -47,58 +57,51 @@ class AestheticFeedbackLoop:
         if status:
             print(f"[AFL] Audio output status: {status}")
         
-        # Time array for this buffer chunk
-        t = np.arange(frames) / self.sample_rate
+        self._update_breath_rate()
+        breath_envelope = self._generate_breath_envelope(frames)
+        self._smooth_pitch_and_amplitude()
+        carrier = self._generate_carrier_wave(frames)
+        articulation = self._apply_syllabic_rhythm(frames)
+        signal = self._mix_final_signal(carrier, articulation, breath_envelope)
         
-        # 1. UPDATE BREATH RATE (Based on Stress/Attention)
-        # Calm (low s_score): Slow, deep breaths (~0.2Hz = 12 breaths/min)
-        # Panic (high s_score): Rapid, shallow hyperventilation (~2.2Hz)
-        # We smooth this transition (Portamento for lungs)
-        target_breath_rate = 0.2 + (self.target_amp * 2.0)  # 0.2Hz (Rest) to 2.2Hz (Panic)
-        self.current_breath_rate += (target_breath_rate - self.current_breath_rate) * 0.05
-        
-        # 2. GENERATE BREATH WAVE (The Respiratory Cycle)
-        # A slow sine wave that modulates amplitude (inhale = louder, exhale = quieter)
-        # Never goes to pure zero (maintains base level 0.4 to 1.0)
+        outdata[:] = signal.reshape(-1, 1).astype(np.float32)
+    
+    def _update_breath_rate(self):
+        """Update breath rate based on stress/attention level."""
+        target_breath_rate = AFL_BASE_BREATH_RATE + (self.target_amp * AFL_BREATH_RATE_MULTIPLIER)
+        self.current_breath_rate += (target_breath_rate - self.current_breath_rate) * AFL_BREATH_SMOOTHING
+    
+    def _generate_breath_envelope(self, frames):
+        """Generate breath envelope (respiratory cycle modulation)."""
         breath_inc = 2 * np.pi * self.current_breath_rate / self.sample_rate
         breath_phases = self.breath_phase + np.arange(frames) * breath_inc
         self.breath_phase = breath_phases[-1] % (2 * np.pi)
-        
-        # The Breath Envelope:
-        # Inhale (Rising) -> Exhale (Falling)
-        # Offset so it's always positive: 0.4 (Base) + 0.6 (Lung capacity)
-        breath_envelope = 0.4 + (0.6 * (0.5 + 0.5 * np.sin(breath_phases)))
-        
-        # 3. SMOOTH PITCH GLIDE (Portamento)
-        self.current_frequency += (self.target_frequency - self.current_frequency) * 0.1
-        self.current_amp += (self.target_amp - self.current_amp) * 0.1
-        
-        # 4. GENERATE CARRIER WAVE (The Voice)
+        return AFL_BREATH_BASE_LEVEL + (AFL_BREATH_CAPACITY * (0.5 + 0.5 * np.sin(breath_phases)))
+    
+    def _smooth_pitch_and_amplitude(self):
+        """Apply smoothing (portamento) to pitch and amplitude transitions."""
+        self.current_frequency += (self.target_frequency - self.current_frequency) * AFL_PITCH_SMOOTHING
+        self.current_amp += (self.target_amp - self.current_amp) * AFL_AMPLITUDE_SMOOTHING
+    
+    def _generate_carrier_wave(self, frames):
+        """Generate carrier wave (the voice)."""
         phase_increment = 2 * np.pi * self.current_frequency / self.sample_rate
         phases = self.phase + np.arange(frames) * phase_increment
-        self.phase = phases[-1] % (2 * np.pi) 
-        
-        carrier = np.sin(phases)
-        
-        # 5. APPLY SYLLABIC RHYTHM (The "Words")
-        # If we are "speaking" (High S_Score), we modulate volume at 8Hz
+        self.phase = phases[-1] % (2 * np.pi)
+        return np.sin(phases)
+    
+    def _apply_syllabic_rhythm(self, frames):
+        """Apply syllabic rhythm (articulation) when speaking."""
         if self.is_speaking:
-            # 8Hz LFO for syllable rate
-            syllable_inc = 2 * np.pi * 8.0 / self.sample_rate
+            syllable_inc = 2 * np.pi * AFL_SYLLABLE_RATE / self.sample_rate
             syllable_phases = self.syllable_phase + np.arange(frames) * syllable_inc
             self.syllable_phase = syllable_phases[-1] % (2 * np.pi)
-            
-            # Create a "wah-wah" envelope (0.6 to 1.0 amplitude)
-            articulation = 0.6 + (0.4 * np.sin(syllable_phases))
-        else:
-            articulation = 1.0  # Flat drone if just humming
-        
-        # 6. FINAL MIX
-        # Signal = Voice * Volume * Syllables * BREATH * MasterGain
-        # The breath envelope creates the "living" texture
-        signal = carrier * self.current_amp * articulation * breath_envelope * 0.5
-        
-        outdata[:] = signal.reshape(-1, 1).astype(np.float32)
+            return AFL_ARTICULATION_MIN + (AFL_ARTICULATION_RANGE * np.sin(syllable_phases))
+        return 1.0
+    
+    def _mix_final_signal(self, carrier, articulation, breath_envelope):
+        """Mix all components into final audio signal."""
+        return carrier * self.current_amp * articulation * breath_envelope * AFL_MASTER_GAIN
     
     def start(self):
         try:
@@ -108,7 +111,7 @@ class AestheticFeedbackLoop:
                 samplerate=self.sample_rate,
                 dtype=np.float32,
                 latency='low',
-                blocksize=1024 # Slightly larger buffer for stability
+                blocksize=AFL_AUDIO_BLOCKSIZE
             )
             self.stream.start()
             self.running = True
@@ -127,37 +130,48 @@ class AestheticFeedbackLoop:
         Tuned for higher sensitivity - makes OPU more "chatty" and responsive
         to small changes in the environment.
         """
-        # NOISE GATE: Lower threshold so it doesn't cut off too early
-        if s_score < 0.1:  # Was 0.2 - now more sensitive
-            self.target_amp = 0.0
-            self.is_speaking = False
+        if self._apply_noise_gate(s_score):
             return
         
-        # 1. SET VOLUME (Attention) - Boost gain for low scores
-        # Changed from s_score / 3.0 to s_score / 2.0 for more volume
-        self.target_amp = min(1.0, s_score / 2.0)
-        
-        # 2. SET PITCH (Surprise) - Make it more melodramatic
-        # Changed from s_score / 10.0 to s_score / 5.0 for more pitch variation
-        new_freq = self.base_pitch * (1.0 + s_score / 5.0)
-        self.target_frequency = np.clip(new_freq, 50.0, 2000.0)
-        
-        # 3. TRIGGER ARTICULATION (The "Chatter" Fix)
-        # Lower threshold so it "talks" even when mildly interested
-        # Changed from 1.5 to 0.6 - now triggers on smaller surprises
-        if s_score > 0.6:  # Was 1.5 - now much more chatty
-            self.is_speaking = True
-        else:
+        self._calculate_volume(s_score)
+        self._calculate_pitch(s_score)
+        self._determine_speaking_state(s_score)
+    
+    def _apply_noise_gate(self, s_score):
+        """Apply noise gate - silence output if below threshold."""
+        if s_score < AFL_NOISE_GATE_THRESHOLD:
+            self.target_amp = 0.0
             self.is_speaking = False
+            return True
+        return False
+    
+    def _calculate_volume(self, s_score):
+        """Calculate target amplitude based on surprise score."""
+        self.target_amp = min(1.0, s_score / AFL_VOLUME_DIVISOR)
+    
+    def _calculate_pitch(self, s_score):
+        """Calculate target frequency based on surprise score."""
+        new_freq = self.base_pitch * (1.0 + s_score / AFL_PITCH_DIVISOR)
+        self.target_frequency = np.clip(new_freq, AFL_MIN_FREQUENCY, AFL_MAX_FREQUENCY)
+    
+    def _determine_speaking_state(self, s_score):
+        """Determine if OPU should be speaking (articulating)."""
+        self.is_speaking = s_score > AFL_SPEAKING_THRESHOLD
 
     def is_active(self):
         """
         Returns True if the OPU is currently generating audio output.
         Used for feedback prevention - mute microphone when OPU is speaking.
-        
-        Lower threshold (0.05) to catch more cases and prevent feedback more aggressively.
         """
-        return self.target_amp > 0.05 or self.current_amp > 0.05
+        return self._is_target_amplitude_active() or self._is_current_amplitude_active()
+    
+    def _is_target_amplitude_active(self):
+        """Check if target amplitude exceeds active threshold."""
+        return self.target_amp > AFL_ACTIVE_THRESHOLD
+    
+    def _is_current_amplitude_active(self):
+        """Check if current amplitude exceeds active threshold."""
+        return self.current_amp > AFL_ACTIVE_THRESHOLD
     
     def cleanup(self):
         if self.stream:
@@ -171,18 +185,18 @@ class PhonemeAnalyzer:
     Filters out noise and only recognizes "Spoken" sounds with Structural Intent.
     """
     
-    def __init__(self, speech_threshold=1.5, max_history=10000):
-        self.speech_threshold = speech_threshold
+    def __init__(self, speech_threshold=None, max_history=None):
+        self.speech_threshold = speech_threshold or PHONEME_SPEECH_THRESHOLD
         self.phoneme_history = []
-        self.max_history = max_history 
+        self.max_history = max_history or PHONEME_MAX_HISTORY 
     
     def analyze(self, s_score, pitch):
         """
         Returns a phoneme only if the sound has Structural Intent.
         
         Phoneme Map:
-        - 0.0-1.5: Ignored (Noise)
-        - 1.5-3.0: Vowels (Low Tension)
+        - Below threshold: Ignored (Noise)
+        - Threshold-3.0: Vowels (Low Tension)
         - 3.0-6.0: Fricatives (Flowing tension)
         - 6.0+: Plosives (High Tension)
         
@@ -193,33 +207,35 @@ class PhonemeAnalyzer:
         Returns:
             phoneme string or None if below speech threshold
         """
-        # INTENT FILTER: Ignore "Background Hum"
-        if s_score < self.speech_threshold:
+        if not self._is_speech(s_score):
             return None
         
-        # TENSION MAPPING
-        if s_score < 3.0:
-            # Vowels (Low Tension)
-            phoneme = "a" if pitch > 200 else "o"
-        elif s_score < 6.0:
-            # Fricatives (Flowing tension)
-            phoneme = "s"
+        phoneme = self._map_tension_to_phoneme(s_score, pitch)
+        self._store_phoneme(phoneme, s_score, pitch)
+        return phoneme
+    
+    def _is_speech(self, s_score):
+        """Check if s_score indicates speech (not noise)."""
+        return s_score >= self.speech_threshold
+    
+    def _map_tension_to_phoneme(self, s_score, pitch):
+        """Map tension level (s_score) to phoneme type."""
+        if s_score < PHONEME_VOWEL_BOUNDARY:
+            return "a" if pitch > PHONEME_PITCH_THRESHOLD else "o"
+        elif s_score < PHONEME_FRICATIVE_BOUNDARY:
+            return "s"
         else:
-            # Plosives (Hard break)
-            phoneme = "k"
-        
-        # Store in history (with cap to prevent unbounded growth)
+            return "k"
+    
+    def _store_phoneme(self, phoneme, s_score, pitch):
+        """Store phoneme in history with memory cap."""
         self.phoneme_history.append({
             'phoneme': phoneme,
             's_score': s_score,
             'pitch': pitch
         })
-        
-        # Cap history to prevent memory leak over very long runtimes (years)
         if len(self.phoneme_history) > self.max_history:
             self.phoneme_history = self.phoneme_history[-self.max_history:]
-        
-        return phoneme
     
     def get_recent_phonemes(self, count=10):
         """
@@ -241,28 +257,68 @@ class PhonemeAnalyzer:
         Returns:
             dict with counts and distribution
         """
-        phonemes = [p['phoneme'] for p in self.phoneme_history if p['phoneme'] is not None]
+        phonemes = self._extract_valid_phonemes()
         
-        if len(phonemes) == 0:
-            return {
-                'total': 0,
+        if not phonemes:
+            return self._create_empty_phoneme_statistics()
+        
+        return self._calculate_phoneme_statistics(phonemes)
+    
+    def _extract_valid_phonemes(self):
+        """Extract valid phonemes from history."""
+        return [p['phoneme'] for p in self.phoneme_history if p['phoneme'] is not None]
+    
+    def _create_empty_phoneme_statistics(self):
+        """Create empty phoneme statistics."""
+        return {
+            'total': 0,
+            'vowels': 0,
+            'fricatives': 0,
+            'plosives': 0,
+            'distribution': {
                 'vowels': 0,
                 'fricatives': 0,
                 'plosives': 0
             }
-        
-        vowels = sum(1 for p in phonemes if p in ['a', 'o', 'e', 'i', 'u'])
-        fricatives = sum(1 for p in phonemes if p in ['s', 'f', 'h'])
-        plosives = sum(1 for p in phonemes if p in ['k', 'p', 't', 'b', 'd', 'g'])
+        }
+    
+    def _calculate_phoneme_statistics(self, phonemes):
+        """Calculate statistics from phoneme list."""
+        vowels = self._count_vowels(phonemes)
+        fricatives = self._count_fricatives(phonemes)
+        plosives = self._count_plosives(phonemes)
+        distribution = self._calculate_distribution(phonemes, vowels, fricatives, plosives)
         
         return {
             'total': len(phonemes),
             'vowels': vowels,
             'fricatives': fricatives,
             'plosives': plosives,
-            'distribution': {
-                'vowels': vowels / len(phonemes) if len(phonemes) > 0 else 0,
-                'fricatives': fricatives / len(phonemes) if len(phonemes) > 0 else 0,
-                'plosives': plosives / len(phonemes) if len(phonemes) > 0 else 0
-            }
+            'distribution': distribution
+        }
+    
+    def _count_vowels(self, phonemes):
+        """Count vowel phonemes."""
+        vowel_set = {'a', 'o', 'e', 'i', 'u'}
+        return sum(1 for p in phonemes if p in vowel_set)
+    
+    def _count_fricatives(self, phonemes):
+        """Count fricative phonemes."""
+        fricative_set = {'s', 'f', 'h'}
+        return sum(1 for p in phonemes if p in fricative_set)
+    
+    def _count_plosives(self, phonemes):
+        """Count plosive phonemes."""
+        plosive_set = {'k', 'p', 't', 'b', 'd', 'g'}
+        return sum(1 for p in phonemes if p in plosive_set)
+    
+    def _calculate_distribution(self, phonemes, vowels, fricatives, plosives):
+        """Calculate phoneme distribution percentages."""
+        total = len(phonemes)
+        if total == 0:
+            return {'vowels': 0, 'fricatives': 0, 'plosives': 0}
+        return {
+            'vowels': vowels / total,
+            'fricatives': fricatives / total,
+            'plosives': plosives / total
         }

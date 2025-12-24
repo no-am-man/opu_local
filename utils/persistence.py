@@ -7,6 +7,11 @@ import json
 import os
 import numpy as np
 from pathlib import Path
+from config import (
+    PERSISTENCE_DEFAULT_DAY_COUNTER, PERSISTENCE_DEFAULT_S_SCORE,
+    PERSISTENCE_STATE_VERSION, PERSISTENCE_TEMP_FILE_SUFFIX,
+    BRAIN_MAX_MEMORY_LEVEL
+)
 
 
 class OPUPersistence:
@@ -26,7 +31,7 @@ class OPUPersistence:
         # Ensure directory exists
         self.state_dir.mkdir(parents=True, exist_ok=True)
     
-    def save_state(self, cortex, phoneme_analyzer, day_counter=0, last_abstraction_times=None):
+    def save_state(self, cortex, phoneme_analyzer, day_counter=None, last_abstraction_times=None):
         """
         Save OPU state to disk.
         
@@ -37,54 +42,62 @@ class OPUPersistence:
             last_abstraction_times: Dict of last abstraction times per level (optional)
         """
         try:
-            # Serialize character profile (handle numpy types)
-            # Use robust conversion function (NumPy 2.0 compatible)
-            character_profile = self._convert_numpy_types_to_native(cortex.character_profile)
-            
-            state = {
-                'version': '1.0',
-                'day_counter': day_counter,
-                
-                # Cortex state
-                'cortex': {
-                    'character_profile': character_profile,
-                    'memory_levels': self._serialize_memory_levels(cortex.memory_levels),
-                    'genomic_bits_history': self._serialize_array(cortex.genomic_bits_history),
-                    'mu_history': self._serialize_array(cortex.mu_history),
-                    'sigma_history': self._serialize_array(cortex.sigma_history),
-                    'current_state': self._convert_numpy_types_to_native({
-                        'g_now': cortex.g_now,
-                        's_score': cortex.s_score,
-                        'coherence': cortex.coherence
-                    }),
-                    # Emotion history (NEW: persist detected emotions)
-                    'emotion_history': self._convert_numpy_types_to_native(getattr(cortex, 'emotion_history', []))
-                },
-                
-                # Phoneme analyzer state
-                'phonemes': self._serialize_phoneme_history(phoneme_analyzer),
-                
-                # Abstraction cycle timers (NEW: persist timing state)
-                'abstraction_timers': self._convert_numpy_types_to_native(last_abstraction_times) if last_abstraction_times else None
-            }
-            
-            # Write to file atomically
-            temp_file = self.state_file.with_suffix('.tmp')
-            with open(temp_file, 'w') as f:
-                json.dump(state, f, indent=2)
-            
-            # Atomic replace
-            temp_file.replace(self.state_file)
-            
+            state = self._build_state_dict(cortex, phoneme_analyzer, day_counter, last_abstraction_times)
+            self._write_state_to_file(state)
             print(f"[PERSISTENCE] State saved to {self.state_file}")
             return True
             
         except Exception as e:
-            import traceback
-            print(f"[PERSISTENCE] Error saving state: {e}")
-            print(f"[PERSISTENCE] Traceback:")
-            traceback.print_exc()
+            self._handle_save_error(e)
             return False
+    
+    def _build_state_dict(self, cortex, phoneme_analyzer, day_counter, last_abstraction_times):
+        """Build the state dictionary to save."""
+        return {
+            'version': PERSISTENCE_STATE_VERSION,
+            'day_counter': day_counter if day_counter is not None else PERSISTENCE_DEFAULT_DAY_COUNTER,
+            'cortex': self._serialize_cortex_state(cortex),
+            'phonemes': self._serialize_phoneme_history(phoneme_analyzer),
+            'abstraction_timers': self._serialize_abstraction_timers(last_abstraction_times)
+        }
+    
+    def _serialize_cortex_state(self, cortex):
+        """Serialize cortex state."""
+        return {
+            'character_profile': self._convert_numpy_types_to_native(cortex.character_profile),
+            'memory_levels': self._serialize_memory_levels(cortex.memory_levels),
+            'genomic_bits_history': self._serialize_array(cortex.genomic_bits_history),
+            'mu_history': self._serialize_array(cortex.mu_history),
+            'sigma_history': self._serialize_array(cortex.sigma_history),
+            'current_state': self._serialize_current_state(cortex),
+            'emotion_history': self._convert_numpy_types_to_native(getattr(cortex, 'emotion_history', []))
+        }
+    
+    def _serialize_current_state(self, cortex):
+        """Serialize current cognitive state."""
+        return self._convert_numpy_types_to_native({
+            'g_now': cortex.g_now,
+            's_score': cortex.s_score,
+            'coherence': cortex.coherence
+        })
+    
+    def _serialize_abstraction_timers(self, last_abstraction_times):
+        """Serialize abstraction timers."""
+        return self._convert_numpy_types_to_native(last_abstraction_times) if last_abstraction_times else None
+    
+    def _write_state_to_file(self, state):
+        """Write state to file atomically."""
+        temp_file = self.state_file.with_suffix(PERSISTENCE_TEMP_FILE_SUFFIX)
+        with open(temp_file, 'w') as f:
+            json.dump(state, f, indent=2)
+        temp_file.replace(self.state_file)
+    
+    def _handle_save_error(self, error):
+        """Handle save error with traceback."""
+        import traceback
+        print(f"[PERSISTENCE] Error saving state: {error}")
+        print(f"[PERSISTENCE] Traceback:")
+        traceback.print_exc()
     
     def load_state(self, cortex, phoneme_analyzer):
         """
@@ -99,83 +112,105 @@ class OPUPersistence:
         """
         if not self.state_file.exists():
             print(f"[PERSISTENCE] No saved state found at {self.state_file}")
-            return False, 0, None
+            return False, PERSISTENCE_DEFAULT_DAY_COUNTER, None
         
         try:
-            with open(self.state_file, 'r') as f:
-                state = json.load(f)
-            
-            # Load cortex state
-            if 'cortex' in state:
-                cortex_data = state['cortex']
-                
-                # Restore character profile
-                if 'character_profile' in cortex_data:
-                    cortex.character_profile.update(cortex_data['character_profile'])
-                
-                # Restore memory levels
-                # FIX: Set on brain.memory_levels since memory_levels is now a property
-                if 'memory_levels' in cortex_data:
-                    cortex.brain.memory_levels = self._deserialize_memory_levels(cortex_data['memory_levels'])
-                
-                # Restore history
-                # FIX: Set on audio_cortex since these are now properties
-                if 'genomic_bits_history' in cortex_data:
-                    cortex.audio_cortex.genomic_bits_history = self._deserialize_array(cortex_data['genomic_bits_history'])
-                
-                if 'mu_history' in cortex_data:
-                    cortex.audio_cortex.mu_history = self._deserialize_array(cortex_data['mu_history'])
-                
-                if 'sigma_history' in cortex_data:
-                    cortex.audio_cortex.sigma_history = self._deserialize_array(cortex_data['sigma_history'])
-                
-                # Restore current state
-                if 'current_state' in cortex_data:
-                    cs = cortex_data['current_state']
-                    cortex.g_now = cs.get('g_now')
-                    cortex.s_score = cs.get('s_score', 0.0)
-                    cortex.coherence = cs.get('coherence', 0.0)
-                
-                # Restore emotion history (NEW: load persisted emotions)
-                if 'emotion_history' in cortex_data:
-                    cortex.emotion_history = cortex_data['emotion_history']
-                else:
-                    # Initialize empty emotion history if not present (backward compatibility)
-                    cortex.emotion_history = []
-            
-            # Load phoneme analyzer state
-            if 'phonemes' in state:
-                phoneme_data = state['phonemes']
-                if 'history' in phoneme_data:
-                    phoneme_analyzer.phoneme_history = phoneme_data['history']
-                if 'speech_threshold' in phoneme_data:
-                    phoneme_analyzer.speech_threshold = phoneme_data['speech_threshold']
-            
-            day_counter = state.get('day_counter', 0)
-            
-            # Load abstraction cycle timers (NEW: restore timing state)
-            last_abstraction_times = None
-            if 'abstraction_timers' in state and state['abstraction_timers']:
-                last_abstraction_times = {}
-                for level_str, timestamp in state['abstraction_timers'].items():
-                    level = int(level_str)
-                    if 0 <= level <= 7:  # Support all 8 levels
-                        last_abstraction_times[level] = float(timestamp)
-            
-            print(f"[PERSISTENCE] State loaded from {self.state_file}")
-            print(f"  Maturity Level: {cortex.character_profile.get('maturity_level', 0)} | Index: {cortex.character_profile['maturity_index']:.2f}")
-            print(f"  Memory: " + " | ".join([f"L{i}={len(cortex.memory_levels.get(i, []))}" for i in range(8)]))
-            print(f"  Phonemes: {len(phoneme_analyzer.phoneme_history)}")
-            print(f"  Emotions: {len(getattr(cortex, 'emotion_history', []))} detected emotions")
-            print(f"  Day: {day_counter}")
-            if last_abstraction_times:
-                print(f"  Abstraction Timers: Restored for {len(last_abstraction_times)} levels")
-            
+            state = self._read_state_from_file()
+            self._load_cortex_state(state, cortex)
+            self._load_phoneme_state(state, phoneme_analyzer)
+            day_counter = state.get('day_counter', PERSISTENCE_DEFAULT_DAY_COUNTER)
+            last_abstraction_times = self._deserialize_abstraction_timers(state)
+            self._print_load_summary(cortex, phoneme_analyzer, day_counter, last_abstraction_times)
             return True, day_counter, last_abstraction_times
             
         except Exception as e:
             print(f"[PERSISTENCE] Error loading state: {e}")
-            return False, 0, None
+            return False, PERSISTENCE_DEFAULT_DAY_COUNTER, None
+    
+    def _read_state_from_file(self):
+        """Read state from JSON file."""
+        with open(self.state_file, 'r') as f:
+            return json.load(f)
+    
+    def _load_cortex_state(self, state, cortex):
+        """Load cortex state from state dictionary."""
+        if 'cortex' not in state:
+            return
+        
+        cortex_data = state['cortex']
+        self._restore_character_profile(cortex_data, cortex)
+        self._restore_memory_levels(cortex_data, cortex)
+        self._restore_history(cortex_data, cortex)
+        self._restore_current_state(cortex_data, cortex)
+        self._restore_emotion_history(cortex_data, cortex)
+    
+    def _restore_character_profile(self, cortex_data, cortex):
+        """Restore character profile."""
+        if 'character_profile' in cortex_data:
+            cortex.character_profile.update(cortex_data['character_profile'])
+    
+    def _restore_memory_levels(self, cortex_data, cortex):
+        """Restore memory levels."""
+        if 'memory_levels' in cortex_data:
+            cortex.brain.memory_levels = self._deserialize_memory_levels(cortex_data['memory_levels'])
+    
+    def _restore_history(self, cortex_data, cortex):
+        """Restore introspection history."""
+        if 'genomic_bits_history' in cortex_data:
+            cortex.audio_cortex.genomic_bits_history = self._deserialize_array(cortex_data['genomic_bits_history'])
+        if 'mu_history' in cortex_data:
+            cortex.audio_cortex.mu_history = self._deserialize_array(cortex_data['mu_history'])
+        if 'sigma_history' in cortex_data:
+            cortex.audio_cortex.sigma_history = self._deserialize_array(cortex_data['sigma_history'])
+    
+    def _restore_current_state(self, cortex_data, cortex):
+        """Restore current cognitive state."""
+        if 'current_state' in cortex_data:
+            cs = cortex_data['current_state']
+            cortex.g_now = cs.get('g_now')
+            cortex.s_score = cs.get('s_score', PERSISTENCE_DEFAULT_S_SCORE)
+            cortex.coherence = cs.get('coherence', PERSISTENCE_DEFAULT_S_SCORE)
+    
+    def _restore_emotion_history(self, cortex_data, cortex):
+        """Restore emotion history."""
+        if 'emotion_history' in cortex_data:
+            cortex.emotion_history = cortex_data['emotion_history']
+        else:
+            cortex.emotion_history = []
+    
+    def _load_phoneme_state(self, state, phoneme_analyzer):
+        """Load phoneme analyzer state."""
+        if 'phonemes' not in state:
+            return
+        
+        phoneme_data = state['phonemes']
+        if 'history' in phoneme_data:
+            phoneme_analyzer.phoneme_history = phoneme_data['history']
+        if 'speech_threshold' in phoneme_data:
+            phoneme_analyzer.speech_threshold = phoneme_data['speech_threshold']
+    
+    def _deserialize_abstraction_timers(self, state):
+        """Deserialize abstraction timers."""
+        if 'abstraction_timers' not in state or not state['abstraction_timers']:
+            return None
+        
+        last_abstraction_times = {}
+        for level_str, timestamp in state['abstraction_timers'].items():
+            level = int(level_str)
+            if 0 <= level <= BRAIN_MAX_MEMORY_LEVEL:
+                last_abstraction_times[level] = float(timestamp)
+        return last_abstraction_times
+    
+    def _print_load_summary(self, cortex, phoneme_analyzer, day_counter, last_abstraction_times):
+        """Print summary of loaded state."""
+        print(f"[PERSISTENCE] State loaded from {self.state_file}")
+        print(f"  Maturity Level: {cortex.character_profile.get('maturity_level', 0)} | Index: {cortex.character_profile['maturity_index']:.2f}")
+        print(f"  Memory: " + " | ".join([f"L{i}={len(cortex.memory_levels.get(i, []))}" for i in range(BRAIN_MAX_MEMORY_LEVEL + 1)]))
+        print(f"  Phonemes: {len(phoneme_analyzer.phoneme_history)}")
+        print(f"  Emotions: {len(getattr(cortex, 'emotion_history', []))} detected emotions")
+        print(f"  Day: {day_counter}")
+        if last_abstraction_times:
+            print(f"  Abstraction Timers: Restored for {len(last_abstraction_times)} levels")
     
     def _serialize_phoneme_history(self, phoneme_analyzer):
         """

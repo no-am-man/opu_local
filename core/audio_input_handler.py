@@ -110,18 +110,30 @@ class AudioInputHandler:
     def _read_audio_from_microphone(self):
         """Read audio data from microphone with buffer management."""
         try:
-            available = self.audio_stream.read_available
+            available = self._get_available_audio()
             
             if self._is_buffer_full(available):
                 self._handle_buffer_overflow(available)
-                available = self.audio_stream.read_available
+                available = self._get_available_audio()
             
-            if available > 0:
-                return self._read_and_process_audio_data(available)
-            else:
-                return self._generate_dithering_noise()
+            return self._read_audio_or_generate_noise(available)
         except Exception:
-            return self.generate_simulated_input()
+            return self._handle_audio_read_error()
+    
+    def _get_available_audio(self):
+        """Get available audio from stream."""
+        return self.audio_stream.read_available
+    
+    def _read_audio_or_generate_noise(self, available):
+        """Read audio if available, otherwise generate dithering noise."""
+        if available > 0:
+            return self._read_and_process_audio_data(available)
+        else:
+            return self._generate_dithering_noise()
+    
+    def _handle_audio_read_error(self):
+        """Handle audio read errors by falling back to simulated input."""
+        return self.generate_simulated_input()
     
     def _is_buffer_full(self, available):
         """Check if audio buffer is getting full."""
@@ -134,10 +146,18 @@ class AudioInputHandler:
     
     def _warn_buffer_draining(self, available):
         """Print buffer draining warning if enough time has passed."""
-        if self._last_overflow_warn is None or \
-           time.time() - self._last_overflow_warn > BUFFER_DRAIN_WARNING_INTERVAL_SECONDS:
+        if self._should_warn_about_buffer_draining():
             print(f"[OPU] Audio buffer draining (available: {available})")
             self._last_overflow_warn = time.time()
+    
+    def _should_warn_about_buffer_draining(self):
+        """Check if enough time has passed to warn about buffer draining."""
+        return self._last_overflow_warn is None or \
+               self._has_warning_interval_elapsed(BUFFER_DRAIN_WARNING_INTERVAL_SECONDS)
+    
+    def _has_warning_interval_elapsed(self, interval):
+        """Check if warning interval has elapsed since last warning."""
+        return time.time() - self._last_overflow_warn > interval
     
     def _drain_audio_buffer_aggressively(self):
         """Drain audio buffer aggressively to prevent overflow."""
@@ -161,21 +181,37 @@ class AudioInputHandler:
     
     def _read_audio_with_fallback(self, read_size):
         """Read audio data with fallback to smaller chunk size."""
+        result = self._try_read_audio(read_size)
+        if result is not None:
+            return result
+        
+        return self._try_read_audio_fallback()
+    
+    def _try_read_audio(self, read_size):
+        """Try to read audio with specified size."""
         try:
             return self.audio_stream.read(read_size, blocking=False)
         except Exception:
-            try:
-                return self.audio_stream.read(CHUNK_SIZE, blocking=False)
-            except Exception:
-                return None
+            return None
+    
+    def _try_read_audio_fallback(self):
+        """Try to read audio with default chunk size as fallback."""
+        try:
+            return self.audio_stream.read(CHUNK_SIZE, blocking=False)
+        except Exception:
+            return None
     
     def _warn_if_overflowed(self, overflowed, available):
         """Warn about buffer overflow if it occurred."""
         if overflowed:
-            if self._last_overflow_warn is None or \
-               time.time() - self._last_overflow_warn > OVERFLOW_WARNING_INTERVAL_SECONDS:
+            if self._should_warn_about_overflow():
                 print(f"[OPU] Audio buffer overflow detected! (available: {available})")
                 self._last_overflow_warn = time.time()
+    
+    def _should_warn_about_overflow(self):
+        """Check if enough time has passed to warn about overflow."""
+        return self._last_overflow_warn is None or \
+               self._has_warning_interval_elapsed(OVERFLOW_WARNING_INTERVAL_SECONDS)
     
     def _extract_latest_samples(self, data):
         """Extract the latest CHUNK_SIZE samples from audio data."""
@@ -251,13 +287,14 @@ class AudioInputHandler:
     
     def _combine_signals(self, time_vector, frequencies, amplitude, noise):
         """Combine multiple frequency components with noise."""
-        signal = (
-            amplitude * SIMULATED_SIGNAL_AMP_1 * np.sin(2 * np.pi * frequencies['f1'] * time_vector) +
-            SIMULATED_SIGNAL_AMP_2 * np.sin(2 * np.pi * frequencies['f2'] * time_vector) +
-            SIMULATED_SIGNAL_AMP_3 * np.sin(2 * np.pi * frequencies['f3'] * time_vector) +
-            noise
-        )
-        return signal
+        f1_component = self._generate_frequency_component(time_vector, frequencies['f1'], amplitude, SIMULATED_SIGNAL_AMP_1)
+        f2_component = self._generate_frequency_component(time_vector, frequencies['f2'], 1.0, SIMULATED_SIGNAL_AMP_2)
+        f3_component = self._generate_frequency_component(time_vector, frequencies['f3'], 1.0, SIMULATED_SIGNAL_AMP_3)
+        return f1_component + f2_component + f3_component + noise
+    
+    def _generate_frequency_component(self, time_vector, frequency, amplitude, signal_amp):
+        """Generate a single frequency component."""
+        return amplitude * signal_amp * np.sin(2 * np.pi * frequency * time_vector)
     
     def _add_spike_events(self, signal):
         """Add random spike events to create high surprise."""
@@ -294,7 +331,7 @@ class AudioInputHandler:
         Aggressively drain audio buffer to prevent overflow.
         Called frequently to keep buffer from filling up.
         """
-        if not self.use_microphone or self.audio_stream is None:
+        if self._cannot_drain_buffer():
             return
         
         try:
@@ -311,4 +348,8 @@ class AudioInputHandler:
                         break
         except Exception:
             pass
+    
+    def _cannot_drain_buffer(self):
+        """Check if buffer cannot be drained (no microphone or no stream)."""
+        return not self.use_microphone or self.audio_stream is None
 

@@ -7,7 +7,10 @@ Centralizes sense creation and allows easy extension to new input modalities.
 from abc import ABC, abstractmethod
 from typing import Dict, Any, List
 import numpy as np
-from config import AUDIO_SENSE, VIDEO_SENSE
+from config import (
+    AUDIO_SENSE, VIDEO_SENSE,
+    SENSE_FACTORY_DEFAULT_GENOMIC_BIT, SENSE_FACTORY_EMPTY_VISUAL_VECTOR
+)
 
 
 class Sense(ABC):
@@ -78,14 +81,14 @@ class VisualSense(Sense):
         
         if raw_input is None:
             return {
-                'visual_vector': np.array([0.0, 0.0, 0.0]),
-                'genomic_bit': 0.0
+                'visual_vector': np.array(SENSE_FACTORY_EMPTY_VISUAL_VECTOR),
+                'genomic_bit': SENSE_FACTORY_DEFAULT_GENOMIC_BIT
             }
         
         visual_vector = self.visual_perception.analyze_frame(raw_input)
         return {
             'visual_vector': visual_vector,
-            'genomic_bit': np.max(visual_vector) if len(visual_vector) > 0 else 0.0
+            'genomic_bit': np.max(visual_vector) if len(visual_vector) > 0 else SENSE_FACTORY_DEFAULT_GENOMIC_BIT
         }
     
     def get_label(self):
