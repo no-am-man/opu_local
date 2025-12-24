@@ -327,8 +327,7 @@ class OPUEventLoop:
             state['s_score'],
             state['coherence'],
             character['maturity_index'],
-            character.get('maturity_level', 0),
-            self.afl.current_frequency
+            character.get('maturity_level', 0)
         )
         self._draw_visualization()
     

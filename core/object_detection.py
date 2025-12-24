@@ -469,3 +469,10 @@ class ObjectDetector:
             'name': str(emotion),
             'confidence': 0.0
         }
+    
+    def cleanup(self):
+        """Clean up resources (release OpenCV windows if needed)."""
+        if self.active and cv2 is not None:
+            # ObjectDetector doesn't hold persistent resources that need cleanup
+            # OpenCV windows are managed by the main event loop
+            pass
