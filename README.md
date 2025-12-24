@@ -1,4 +1,4 @@
-# Orthogonal Processing Unit (OPU) v3.4.0
+# Orthogonal Processing Unit (OPU) v3.4.1
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -11,7 +11,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version
 
-**Current Version: 3.4.0**
+**Current Version: 3.4.1**
 
 ### ⚠️ Breaking Change in v3.2.0
 
@@ -335,7 +335,7 @@ If you use OPU in your research, please cite:
 
 ```bibtex
 @software{opu2024,
-  title = {Orthogonal Processing Unit (OPU) v3.4.0},
+  title = {Orthogonal Processing Unit (OPU) v3.4.1},
   author = {NoamTal Cohen-LyShinski},
   year = {2024},
   license = {MIT},
@@ -350,6 +350,17 @@ If you use OPU in your research, please cite:
 - Designed for real-time audio processing and cognitive modeling
 
 ## Changelog
+
+### v3.4.1 (2025-01-XX)
+- **Bug Fixes**:
+  - Fixed emotion extraction for nested emotion structure in State Viewer
+  - Fixed matplotlib API compatibility (supports both `buffer_rgba` and `tostring_rgb`)
+  - Enhanced error logging throughout State Viewer with automatic log file creation
+  - Improved multiprocessing Queue cleanup to prevent semaphore leaks
+- **Improvements**:
+  - Better error handling and diagnostics in State Viewer
+  - Automatic creation of error log file if it doesn't exist
+  - More robust emotion visualization generation
 
 ### v3.4.0 (2024-12-24)
 - **Enhanced Emotion Persistence**: Improved emotional memory consolidation and statistics

@@ -2,11 +2,11 @@
 Configuration parameters for the OPU (Orthogonal Processing Unit).
 Contains the Genesis Constant and safety limits.
 
-OPU v3.4.0 - MIT License
+OPU v3.4.1 - MIT License
 """
 
 # Version
-OPU_VERSION = "3.4.0"  # v3.4: Enhanced Emotion Persistence + Emotional Memory Statistics
+OPU_VERSION = "3.4.1"  # v3.4.1: Bug fixes - Emotion extraction, matplotlib compatibility, error logging, semaphore cleanup
 
 # Genesis Constant: The Order of the Empty Set
 G_EMPTY_SET = 1.0
@@ -232,6 +232,26 @@ OPU_EMOTION_HISTORY_MAX_SIZE = 1000  # Maximum emotion history entries (prevents
 OPU_EMOTION_DEFAULT_CONFIDENCE = 0.0  # Default emotion confidence value
 OPU_EMOTION_DEFAULT_TOTAL = 0  # Default total emotions count
 OPU_EMOTION_UNKNOWN_LABEL = 'unknown'  # Default unknown emotion label
+
+# State Viewer Configuration
+STATE_VIEWER_EMOTION_HISTORY_MAX_DISPLAY = 100  # Maximum emotions to display in real-time panel (prevents UI lag)
+STATE_VIEWER_EMOTION_TIMESTAMP_FORMAT = "%H:%M:%S"  # Timestamp format for emotion history display
+STATE_VIEWER_EMOTION_UNKNOWN_TIMESTAMP = "??:??:??"  # Placeholder for invalid timestamps
+
+# Emotion Visualization Configuration
+EMOTION_VIZ_DPI = 100  # DPI for matplotlib figures
+EMOTION_VIZ_SECONDS_TO_MINUTES = 60.0  # Conversion factor for time normalization
+EMOTION_VIZ_SCATTER_ALPHA = 0.6  # Transparency for scatter plot points
+EMOTION_VIZ_SCATTER_SIZE = 30  # Size of scatter plot points
+EMOTION_VIZ_BOX_ALPHA = 0.7  # Transparency for box plot boxes
+EMOTION_VIZ_GRID_ALPHA = 0.3  # Transparency for grid lines
+EMOTION_VIZ_CONFIDENCE_MAX = 1.1  # Maximum y-axis value for confidence plots
+EMOTION_VIZ_PIE_START_ANGLE = 90  # Starting angle for pie charts (degrees)
+EMOTION_VIZ_PIE_TITLE_PAD = 10  # Padding for pie chart title
+EMOTION_VIZ_TITLE_FONTSIZE = 12  # Font size for chart titles
+EMOTION_VIZ_AXIS_FONTSIZE = 10  # Font size for axis labels
+EMOTION_VIZ_LEGEND_FONTSIZE = 8  # Font size for legends
+EMOTION_VIZ_TICK_FONTSIZE = 8  # Font size for tick labels
 
 # Object Detection Emotion Colors (BGR format for OpenCV)
 DETECTION_EMOTION_COLOR_HAPPY = (0, 255, 0)      # Green

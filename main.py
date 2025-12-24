@@ -62,6 +62,9 @@ def launch_state_viewer_process(state_file_path, image_queue):
     Receives real-time images via the image_queue.
     """
     viewer = None
+    import traceback
+    import sys
+    
     try:
         # Import inside process to avoid GIL conflicts
         from utils.state_viewer import OPUStateViewer
@@ -82,12 +85,22 @@ def launch_state_viewer_process(state_file_path, image_queue):
         signal.signal(signal.SIGINT, signal_handler)
         
         # Initialize with the queue
+        print("[VIEWER] Initializing State Viewer...", file=sys.stderr, flush=True)
         viewer = OPUStateViewer(state_file=state_file_path, image_queue=image_queue)
+        print("[VIEWER] State Viewer initialized, starting mainloop...", file=sys.stderr, flush=True)
         viewer.run()
+        print("[VIEWER] State Viewer mainloop exited", file=sys.stderr, flush=True)
     except KeyboardInterrupt:
-        pass
+        print("[VIEWER] Interrupted by user", file=sys.stderr, flush=True)
     except Exception as e:
-        print(f"[PROCESS] State Viewer crashed: {e}")
+        error_msg = f"[VIEWER] State Viewer crashed: {e}\n{traceback.format_exc()}"
+        print(error_msg, file=sys.stderr, flush=True)
+        # Also try to write to a log file as backup
+        try:
+            with open("viewer_error.log", "a") as f:
+                f.write(f"{error_msg}\n")
+        except Exception:
+            pass
     finally:
         if viewer:
             viewer.running = False
@@ -427,6 +440,22 @@ class OPUEventLoop:
                 print("[OPU] Force killing State Viewer...")
                 self.viewer_process.kill()
                 self.viewer_process.join(timeout=1.0)
+        
+        # Close and cleanup the image queue AFTER process has terminated
+        # This ensures semaphores are released properly
+        if hasattr(self, 'image_queue') and self.image_queue is not None:
+            try:
+                # Drain any remaining items from the queue
+                while True:
+                    try:
+                        self.image_queue.get_nowait()
+                    except queue.Empty:
+                        break
+                # Close the queue to release semaphores
+                self.image_queue.close()
+                self.image_queue.join_thread(timeout=2.0)
+            except Exception:
+                pass  # Ignore errors during cleanup
         
         # Cleanup other resources
         self.afl.cleanup()

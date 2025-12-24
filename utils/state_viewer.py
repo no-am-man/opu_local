@@ -21,6 +21,16 @@ import queue
 from dataclasses import dataclass
 from typing import Dict, Optional, List, Any, Tuple
 
+# Import emotion visualizer with error handling
+try:
+    from utils.emotion_visualizer import generate_all_visualizations
+    EMOTION_VIZ_AVAILABLE = True
+except ImportError as e:
+    EMOTION_VIZ_AVAILABLE = False
+    print(f"[VIEWER] Warning: Emotion visualizer not available: {e}", file=sys.stderr)
+    def generate_all_visualizations(*args, **kwargs):
+        return {'pie_chart': None, 'timeline': None, 'confidence_distribution': None}
+
 # PIL for image display
 try:
     from PIL import Image, ImageTk
@@ -30,6 +40,7 @@ except ImportError:
     PIL_AVAILABLE = False
     Image = None
     ImageTk = None
+    np = None  # Set np to None when not available
 
 # OpenCV for image conversion (BGR to RGB)
 try:
@@ -42,7 +53,9 @@ from config import (
     STATE_VIEWER_DEFAULT_STABILITY_THRESHOLD, STATE_VIEWER_DEFAULT_S_SCORE,
     STATE_VIEWER_DEFAULT_COHERENCE, STATE_VIEWER_DEFAULT_G_NOW,
     STATE_VIEWER_DEFAULT_CONFIDENCE, STATE_VIEWER_DEFAULT_SPEECH_THRESHOLD,
-    STATE_VIEWER_MEMORY_LEVELS_COUNT
+    STATE_VIEWER_MEMORY_LEVELS_COUNT,
+    STATE_VIEWER_EMOTION_HISTORY_MAX_DISPLAY, STATE_VIEWER_EMOTION_TIMESTAMP_FORMAT,
+    STATE_VIEWER_EMOTION_UNKNOWN_TIMESTAMP
 )
 
 
@@ -50,8 +63,8 @@ from config import (
 @dataclass
 class ViewerConfig:
     """Configuration constants for the state viewer."""
-    WINDOW_WIDTH = 2000  # Wider for 3 columns with larger cognitive map
-    WINDOW_HEIGHT = 800  # Taller for better cognitive map visibility
+    WINDOW_WIDTH = 1200  # Smaller window with 3 evenly distributed columns
+    WINDOW_HEIGHT = 700  # Compact height
     UPDATE_INTERVAL = 0.5
     DEFAULT_STATE_FILE = "opu_state.json"
     LOG_PANEL_WIDTH = 500
@@ -91,6 +104,22 @@ class ViewerConfig:
     PADX = 12
     PADY = 8
     PADY_ROW = 4
+    
+    # Visualization sizes
+    VIZ_PIE_WIDTH = 300
+    VIZ_PIE_HEIGHT = 200
+    VIZ_TIMELINE_WIDTH = 300
+    VIZ_TIMELINE_HEIGHT = 200
+    VIZ_CONFIDENCE_WIDTH = 300
+    VIZ_CONFIDENCE_HEIGHT = 200
+    VIZ_MAX_DISPLAY_WIDTH = 300
+    VIZ_MAX_DISPLAY_HEIGHT = 200
+    
+    # Valid emotion tags for color coding
+    VALID_EMOTION_TAGS = {
+        'emotion_angry', 'emotion_happy', 'emotion_sad', 'emotion_fear',
+        'emotion_surprise', 'emotion_disgust', 'emotion_neutral', 'emotion_unknown'
+    }
 
 
 @dataclass
@@ -135,18 +164,34 @@ class OPUStateViewer:
         self.original_stdout = sys.stdout
         self.original_stderr = sys.stderr
         
-        self._create_window()
-        self._create_split_layout()
-        self._create_scrollable_container()  # Left: State
-        self._create_cognitive_map_panel()    # Middle: Cognitive Map
-        self._create_log_panel()              # Right: Log
-        self._create_all_sections()
-        self._start_update_thread()
-        self._start_log_tail_thread()  # NEW: Tail the log file
-        
-        # Start image polling if queue is available
-        if self.image_queue:
-            self._start_image_poll_thread()
+        try:
+            self._create_window()
+            self._create_split_layout()
+            self._create_scrollable_container()  # Left: State
+            self._create_cognitive_map_panel()    # Middle: Cognitive Map
+            self._create_log_panel()              # Right: Log
+            self._create_all_sections()
+            self._start_update_thread()
+            self._start_log_tail_thread()  # NEW: Tail the log file
+            
+            # Start image polling if queue is available
+            if self.image_queue:
+                self._start_image_poll_thread()
+        except Exception as e:
+            # Log initialization errors
+            import traceback
+            error_msg = f"[VIEWER] Initialization error: {e}\n{traceback.format_exc()}"
+            try:
+                print(error_msg, file=sys.stderr, flush=True)
+                # Create error log file if it doesn't exist
+                error_log_path = Path("viewer_error.log")
+                error_log_path.touch(exist_ok=True)  # Create file if it doesn't exist
+                with open(error_log_path, "a") as f:
+                    f.write(f"{error_msg}\n")
+            except Exception:
+                pass
+            # Re-raise to let the process know initialization failed
+            raise
     
     def _create_window(self):
         """Create and configure the main window."""
@@ -170,17 +215,21 @@ class OPUStateViewer:
         self.root.lift()
         self.root.attributes('-topmost', True)
         self.root.after_idle(lambda: self.root.attributes('-topmost', False))
+        # Ensure window stays open - prevent auto-closing
+        self.root.deiconify()  # Make sure window is visible
+        self.root.update_idletasks()  # Process pending events
     
     def _create_split_layout(self):
         """Create split paned window for three columns: State | Cognitive Map | Log."""
-        self.paned = ttk.PanedWindow(self.root, orient=tk.HORIZONTAL)
+        # Use tk.PanedWindow (not ttk) to support minsize parameter
+        self.paned = tk.PanedWindow(self.root, orient=tk.HORIZONTAL, bg=self.config.BG_DARK, sashwidth=3)
         self.paned.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
     
     def _create_scrollable_container(self):
         """Create scrollable container for state content (Left column)."""
         # Left panel for state
         left_frame = tk.Frame(self.paned, bg=self.config.BG_DARK)
-        self.paned.add(left_frame, weight=1)  # Reduced from 2 to give more space to cognitive map
+        self.paned.add(left_frame, minsize=self.config.WINDOW_WIDTH // 3)  # Equal width distribution
         
         canvas = tk.Canvas(left_frame, bg=self.config.BG_DARK, highlightthickness=0)
         scrollbar = ttk.Scrollbar(left_frame, orient="vertical", command=canvas.yview)
@@ -203,7 +252,7 @@ class OPUStateViewer:
         """Create cognitive map panel (Middle column) with webcam preview above."""
         # Middle panel for webcam preview and cognitive map
         map_frame = tk.Frame(self.paned, bg=self.config.BG_DARK)
-        self.paned.add(map_frame, weight=2)  # Increased from 1 to make cognitive map bigger
+        self.paned.add(map_frame, minsize=self.config.WINDOW_WIDTH // 3)  # Equal width distribution
         
         # --- WEBCAM PREVIEW SECTION (Top) ---
         webcam_header = tk.Label(
@@ -256,10 +305,126 @@ class OPUStateViewer:
         self.map_label.pack(fill=tk.BOTH, expand=True)
     
     def _create_log_panel(self):
-        """Create log panel on the right side."""
-        # Right panel for logs
-        log_frame = tk.Frame(self.paned, bg=self.config.BG_DARK)
-        self.paned.add(log_frame, weight=1)
+        """Create log panel on the right side with emotional history above."""
+        # Right panel container
+        right_frame = tk.Frame(self.paned, bg=self.config.BG_DARK)
+        self.paned.add(right_frame, minsize=self.config.WINDOW_WIDTH // 3)  # Equal width distribution
+        
+        # Create vertical paned window to split emotional history and log
+        right_paned = ttk.PanedWindow(right_frame, orient=tk.VERTICAL)
+        right_paned.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        
+        # --- EMOTIONAL HISTORY SECTION (Top) ---
+        self._create_emotion_history_panel(right_paned)
+        
+        # --- LOG SECTION (Bottom) ---
+        self._create_log_section(right_paned)
+    
+    def _create_emotion_history_panel(self, parent):
+        """Create emotional history panel with visualizations above the log."""
+        # Emotion history frame
+        emotion_frame = tk.Frame(parent, bg=self.config.BG_DARK)
+        parent.add(emotion_frame)  # PanedWindow.add() doesn't support weight parameter
+        
+        # Header
+        emotion_header = tk.Label(
+            emotion_frame,
+            text="Emotional History (Real-Time)",
+            font=self.config.FONT_SECTION,
+            fg=self.config.TEXT_WHITE,
+            bg=self.config.BG_SECTION,
+            anchor='w'
+        )
+        emotion_header.pack(fill=tk.X, padx=5, pady=5)
+        
+        # Create a horizontal paned window for visualizations and text
+        viz_paned = tk.PanedWindow(emotion_frame, orient=tk.HORIZONTAL, bg=self.config.BG_DARK, sashwidth=3)
+        viz_paned.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        
+        # Left side: Visualizations
+        viz_container = tk.Frame(viz_paned, bg=self.config.BG_DARK)
+        viz_paned.add(viz_container, minsize=200)  # PanedWindow.add() doesn't accept weight parameter
+        
+        # Create visualization labels (will be updated with images)
+        self.pie_chart_label = tk.Label(
+            viz_container,
+            text="Pie Chart\n(Loading...)",
+            bg=self.config.BG_DARK,
+            fg=self.config.TEXT_GRAY,
+            font=('Arial', 9)
+        )
+        self.pie_chart_label.pack(fill=tk.BOTH, expand=True, padx=2, pady=2)
+        
+        self.timeline_label = tk.Label(
+            viz_container,
+            text="Timeline\n(Loading...)",
+            bg=self.config.BG_DARK,
+            fg=self.config.TEXT_GRAY,
+            font=('Arial', 9)
+        )
+        self.timeline_label.pack(fill=tk.BOTH, expand=True, padx=2, pady=2)
+        
+        self.confidence_label = tk.Label(
+            viz_container,
+            text="Confidence\n(Loading...)",
+            bg=self.config.BG_DARK,
+            fg=self.config.TEXT_GRAY,
+            font=('Arial', 9)
+        )
+        self.confidence_label.pack(fill=tk.BOTH, expand=True, padx=2, pady=2)
+        
+        # Right side: Text history
+        text_frame = tk.Frame(viz_paned, bg=self.config.BG_DARK)
+        viz_paned.add(text_frame, minsize=150)  # PanedWindow.add() doesn't accept weight parameter
+        
+        # Scrollable text widget for emotion history
+        self.emotion_text = scrolledtext.ScrolledText(
+            text_frame,
+            bg='#1e1e1e',
+            fg='#d4d4d4',
+            insertbackground='#ffffff',
+            selectbackground='#264f78',
+            font=('Courier', 10),
+            wrap=tk.WORD,
+            relief=tk.FLAT,
+            borderwidth=0,
+            height=15  # Fixed height for emotion history
+        )
+        self.emotion_text.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
+        
+        # Configure text tags for emotion colors
+        self.emotion_text.tag_config('timestamp', foreground='#888888')
+        self.emotion_text.tag_config('emotion_angry', foreground='#f48771')
+        self.emotion_text.tag_config('emotion_happy', foreground='#4ec9b0')
+        self.emotion_text.tag_config('emotion_sad', foreground='#569cd6')
+        self.emotion_text.tag_config('emotion_fear', foreground='#dcdcaa')
+        self.emotion_text.tag_config('emotion_surprise', foreground='#ce9178')
+        self.emotion_text.tag_config('emotion_disgust', foreground='#c586c0')
+        self.emotion_text.tag_config('emotion_neutral', foreground='#d4d4d4')
+        self.emotion_text.tag_config('emotion_unknown', foreground='#808080')
+        self.emotion_text.tag_config('confidence', foreground='#9e9e9e')
+        
+        # Add initial message
+        self._append_emotion("=" * 60 + "\n", 'emotion_neutral')
+        self._append_emotion("OPU Emotional History\n", 'emotion_neutral')
+        self._append_emotion("=" * 60 + "\n", 'emotion_neutral')
+        
+        # Store last emotion count to detect new entries
+        self.last_emotion_count = 0
+        
+        # Force initial visualization update to replace "Loading..." text
+        # This ensures labels are updated immediately, even if emotion_history is empty
+        try:
+            self._update_emotion_visualizations([])
+        except Exception as e:
+            # Log error but don't break initialization - update will happen on first state file read
+            self._log_error("initial emotion visualization update", e)
+    
+    def _create_log_section(self, parent):
+        """Create log section below emotional history."""
+        # Log frame
+        log_frame = tk.Frame(parent, bg=self.config.BG_DARK)
+        parent.add(log_frame)  # PanedWindow.add() doesn't support weight parameter
         
         # Log header
         log_header = tk.Label(
@@ -472,7 +637,8 @@ class OPUStateViewer:
         try:
             with open(self.state_file, 'r') as f:
                 return json.load(f)
-        except (json.JSONDecodeError, IOError):
+        except (json.JSONDecodeError, IOError) as e:
+            self._log_error(f"reading state file {self.state_file}", e)
             return None
     
     def _update_display(self, state: Dict[str, Any]):
@@ -484,9 +650,14 @@ class OPUStateViewer:
             cortex = self._extract_cortex(state)
             self._update_all_sections(cortex, state)
             # Note: Cognitive map is updated via image polling thread, not here
-        except Exception:
-            # Silently handle errors during display update (window might be closing)
-            pass
+        except Exception as e:
+            # Log errors but don't break the UI
+            self._log_error("updating display", e)
+            # Still try to update timestamp even if other updates fail
+            try:
+                self._update_timestamp()
+            except Exception:
+                pass
     
     def _can_update_display(self, state: Dict[str, Any]) -> bool:
         """Check if display can be updated."""
@@ -498,12 +669,35 @@ class OPUStateViewer:
     
     def _update_all_sections(self, cortex: Dict[str, Any], state: Dict[str, Any]):
         """Update all display sections."""
-        self._update_character_profile(cortex.get('character_profile', {}))
-        self._update_memory_levels(cortex.get('memory_levels', {}))
-        self._update_current_state(cortex.get('current_state', {}))
-        self._update_emotion_history(cortex.get('emotion_history', []))
-        self._update_phonemes(state.get('phonemes', {}))
-        self._update_timestamp()
+        try:
+            self._update_character_profile(cortex.get('character_profile', {}))
+        except Exception as e:
+            self._log_error("updating character profile", e)
+        
+        try:
+            self._update_memory_levels(cortex.get('memory_levels', {}))
+        except Exception as e:
+            self._log_error("updating memory levels", e)
+        
+        try:
+            self._update_current_state(cortex.get('current_state', {}))
+        except Exception as e:
+            self._log_error("updating current state", e)
+        
+        try:
+            self._update_emotion_history(cortex.get('emotion_history', []))
+        except Exception as e:
+            self._log_error("updating emotion history", e)
+        
+        try:
+            self._update_phonemes(state.get('phonemes', {}))
+        except Exception as e:
+            self._log_error("updating phonemes", e)
+        
+        try:
+            self._update_timestamp()
+        except Exception as e:
+            self._log_error("updating timestamp", e)
     
     def _update_character_profile(self, character: Dict[str, Any]):
         """Update character profile section."""
@@ -543,16 +737,21 @@ class OPUStateViewer:
         self.g_now_label.config(text=f"{g_now:.3f}")
     
     def _update_emotion_history(self, emotion_history: List[Dict[str, Any]]):
-        """Update emotion history section."""
+        """Update emotion history section (both left panel stats and right panel real-time list)."""
         emotion_count = len(emotion_history)
         self.emotion_count_label.config(text=f"{emotion_count}")
         
         if self._has_no_emotions(emotion_history):
             self._set_empty_emotion_state()
+            # Still update panel to show "No data" in visualizations instead of "Loading..."
+            self._update_emotion_history_panel(emotion_history)
             return
         
         emotion_stats = self._calculate_emotion_statistics(emotion_history)
         self._set_emotion_state_from_stats(emotion_stats)
+        
+        # Update real-time emotional history panel (right side)
+        self._update_emotion_history_panel(emotion_history)
     
     def _has_no_emotions(self, emotion_history: List[Dict[str, Any]]) -> bool:
         """Check if emotion history is empty."""
@@ -593,7 +792,15 @@ class OPUStateViewer:
     
     def _extract_emotion_name(self, emotion: Dict[str, Any]) -> str:
         """Extract emotion name from emotion dictionary."""
-        return emotion.get('emotion') or emotion.get('label', 'unknown')
+        # Handle nested emotion structure: {'emotion': {'emotion': 'angry', 'confidence': 0.8}, ...}
+        emotion_data = emotion.get('emotion')
+        if isinstance(emotion_data, dict):
+            return emotion_data.get('emotion', 'unknown')
+        # Handle flat structure: {'emotion': 'angry', ...}
+        if isinstance(emotion_data, str):
+            return emotion_data
+        # Fallback to label or unknown
+        return emotion.get('label', 'unknown')
     
     def _calculate_total_confidence(self, emotion_history: List[Dict[str, Any]]) -> float:
         """Calculate total confidence from emotion history."""
@@ -610,6 +817,11 @@ class OPUStateViewer:
     
     def _extract_confidence(self, emotion: Dict[str, Any]) -> float:
         """Extract confidence value from emotion dictionary."""
+        # Handle nested emotion structure: {'emotion': {'emotion': 'angry', 'confidence': 0.8}, ...}
+        emotion_data = emotion.get('emotion')
+        if isinstance(emotion_data, dict):
+            return emotion_data.get('confidence', STATE_VIEWER_DEFAULT_CONFIDENCE)
+        # Handle flat structure: {'emotion': 'angry', 'confidence': 0.8, ...}
         return emotion.get('confidence') or emotion.get('intensity', STATE_VIEWER_DEFAULT_CONFIDENCE)
     
     def _find_dominant_emotion(self, emotion_counts: Dict[str, int]) -> Tuple[str, int]:
@@ -635,6 +847,276 @@ class OPUStateViewer:
         """Set emotion display to empty state."""
         self.dominant_emotion_label.config(text="None")
         self.avg_confidence_label.config(text=f"{STATE_VIEWER_DEFAULT_CONFIDENCE:.3f}")
+    
+    def _update_emotion_history_panel(self, emotion_history: List[Dict[str, Any]]):
+        """Update the real-time emotional history panel with new emotions and visualizations."""
+        if not hasattr(self, 'emotion_text'):
+            return
+        
+        current_count = len(emotion_history)
+        
+        # Initialize last_emotion_count if not set
+        if not hasattr(self, 'last_emotion_count'):
+            self.last_emotion_count = 0
+        
+        # Always update visualizations first (even if emotion_history is empty)
+        # This ensures "No data" is shown instead of staying at "Loading..."
+        # Force update even if labels don't exist yet (they should be created by now)
+        try:
+            self._update_emotion_visualizations(emotion_history)
+        except Exception as e:
+            # Log but don't break the UI
+            self._log_error("in _update_emotion_history_panel", e)
+            # Even on error, try to update labels to show error state instead of "Loading..."
+            try:
+                if self._has_visualization_labels():
+                    self._set_all_labels_error(e)
+            except Exception:
+                pass
+        
+        # Check if this is the first update or if there are new emotions
+        is_first_update = (self.last_emotion_count == 0 and current_count > 0)
+        has_new_emotions = current_count > self.last_emotion_count
+        
+        if not is_first_update and not has_new_emotions:
+            return
+        
+        # On first update with existing emotions, show the most recent ones
+        # Otherwise, show only new emotions
+        max_display = STATE_VIEWER_EMOTION_HISTORY_MAX_DISPLAY
+        if is_first_update:
+            # First update: show the most recent emotions (up to max_display)
+            if current_count > max_display:
+                display_emotions = emotion_history[-max_display:]
+                self._handle_emotion_history_overflow(emotion_history, current_count, max_display)
+            else:
+                display_emotions = emotion_history
+                # Clear any initial messages
+                self.emotion_text.delete('1.0', tk.END)
+        else:
+            # Subsequent updates: show only new emotions
+            new_emotions = emotion_history[self.last_emotion_count:]
+            if current_count > max_display:
+                # If we're over the limit, show only the most recent
+                display_emotions = emotion_history[-max_display:]
+                self._handle_emotion_history_overflow(emotion_history, current_count, max_display)
+            else:
+                display_emotions = new_emotions
+        
+        # Update the count
+        self.last_emotion_count = current_count
+        
+        # Append emotions to display
+        for entry in display_emotions:
+            self._append_emotion_entry(entry)
+        
+        # Auto-scroll to bottom
+        self.emotion_text.see(tk.END)
+    
+    def _update_emotion_visualizations(self, emotion_history: List[Dict[str, Any]]):
+        """Update emotion visualization images in real-time."""
+        try:
+            # Check if labels exist - if not, we can't update them
+            if not self._has_visualization_labels():
+                # Labels should exist by now, but if they don't, log it
+                self._log_error("updating emotion visualizations", 
+                               Exception("Visualization labels not found"))
+                return
+            
+            # Check for missing libraries and update labels accordingly
+            missing_library = self._check_required_libraries()
+            if missing_library:
+                self._set_all_labels_unavailable(missing_library)
+                return
+            
+            # Generate visualizations and update labels
+            visualizations = self._generate_emotion_visualizations(emotion_history)
+            self._update_all_visualization_labels(visualizations)
+        except Exception as e:
+            self._log_error("updating emotion visualizations", e)
+            # Always try to update labels to show error state instead of "Loading..."
+            try:
+                if self._has_visualization_labels():
+                    self._set_all_labels_error(e)
+            except Exception:
+                pass
+    
+    def _has_visualization_labels(self) -> bool:
+        """Check if visualization labels exist."""
+        return (hasattr(self, 'pie_chart_label') and 
+                hasattr(self, 'timeline_label') and 
+                hasattr(self, 'confidence_label'))
+    
+    def _check_required_libraries(self) -> Optional[str]:
+        """Check if required libraries are available. Returns missing library name or None."""
+        if not PIL_AVAILABLE:
+            return "PIL"
+        if not CV2_AVAILABLE:
+            return "OpenCV"
+        if not EMOTION_VIZ_AVAILABLE:
+            return "Visualizer"
+        return None
+    
+    def _set_all_labels_unavailable(self, library_name: str):
+        """Set all visualization labels to show library unavailable message."""
+        message = f"({library_name} not available)"
+        self.pie_chart_label.config(text=f"Pie Chart\n{message}", image='')
+        self.timeline_label.config(text=f"Timeline\n{message}", image='')
+        self.confidence_label.config(text=f"Confidence\n{message}", image='')
+    
+    def _generate_emotion_visualizations(self, emotion_history: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Generate all emotion visualizations."""
+        return generate_all_visualizations(
+            emotion_history,
+            pie_width=self.config.VIZ_PIE_WIDTH,
+            pie_height=self.config.VIZ_PIE_HEIGHT,
+            timeline_width=self.config.VIZ_TIMELINE_WIDTH,
+            timeline_height=self.config.VIZ_TIMELINE_HEIGHT,
+            confidence_width=self.config.VIZ_CONFIDENCE_WIDTH,
+            confidence_height=self.config.VIZ_CONFIDENCE_HEIGHT
+        )
+    
+    def _update_all_visualization_labels(self, visualizations: Dict[str, Any]):
+        """Update all visualization labels with generated images or 'No data' message."""
+        self._update_single_visualization(
+            self.pie_chart_label, visualizations['pie_chart'], "Pie Chart"
+        )
+        self._update_single_visualization(
+            self.timeline_label, visualizations['timeline'], "Timeline"
+        )
+        self._update_single_visualization(
+            self.confidence_label, visualizations['confidence_distribution'], "Confidence"
+        )
+    
+    def _update_single_visualization(self, label: tk.Label, image_array: Any, label_name: str):
+        """Update a single visualization label with image or 'No data' message."""
+        if image_array is not None:
+            self._update_visualization_image(label, image_array)
+        else:
+            label.config(text=f"{label_name}\n(No data)", image='')
+    
+    def _set_all_labels_error(self, error: Exception):
+        """Set all visualization labels to show error state."""
+        error_msg = str(error)[:30]
+        try:
+            self.pie_chart_label.config(text=f"Pie Chart\n(Error: {error_msg})", image='')
+            self.timeline_label.config(text=f"Timeline\n(Error: {error_msg})", image='')
+            self.confidence_label.config(text=f"Confidence\n(Error: {error_msg})", image='')
+        except Exception:
+            pass
+    
+    def _log_error(self, context: str, error: Exception):
+        """Log error to stderr and error log file."""
+        import traceback
+        error_msg = f"[VIEWER] Error {context}: {error}\n{traceback.format_exc()}"
+        try:
+            print(error_msg, file=sys.stderr, flush=True)
+            # Create error log file if it doesn't exist
+            error_log_path = Path("viewer_error.log")
+            error_log_path.touch(exist_ok=True)  # Create file if it doesn't exist
+            with open(error_log_path, "a") as f:
+                f.write(f"{error_msg}\n")
+        except Exception:
+            pass
+    
+    def _update_visualization_image(self, label: tk.Label, image_array: Any):
+        """Update a label with a numpy array image."""
+        try:
+            if image_array is None:
+                return
+            
+            image_resized = self._resize_image_for_display(image_array)
+            photo = self._convert_array_to_photoimage(image_resized)
+            
+            # Update label
+            label.config(image=photo, text='')
+            label.image = photo  # Keep a reference to prevent garbage collection
+        except Exception as e:
+            self._log_error("updating visualization image", e)
+    
+    def _resize_image_for_display(self, image_array: Any) -> Any:
+        """Resize image array to fit display constraints."""
+        height, width = image_array.shape[:2]
+        max_width, max_height = self.config.VIZ_MAX_DISPLAY_WIDTH, self.config.VIZ_MAX_DISPLAY_HEIGHT
+        
+        # Calculate scaling
+        scale = min(max_width / width, max_height / height, 1.0)
+        
+        if scale >= 1.0:
+            return image_array
+        
+        new_width = int(width * scale)
+        new_height = int(height * scale)
+        return cv2.resize(image_array, (new_width, new_height), interpolation=cv2.INTER_AREA)
+    
+    def _convert_array_to_photoimage(self, image_array: Any):
+        """Convert numpy array to Tkinter PhotoImage."""
+        from PIL import Image
+        pil_image = Image.fromarray(image_array)
+        return ImageTk.PhotoImage(image=pil_image)
+    
+    def _handle_emotion_history_overflow(self, emotion_history: List[Dict[str, Any]], 
+                                         current_count: int, max_display: int) -> List[Dict[str, Any]]:
+        """Handle emotion history overflow by clearing and showing only recent entries."""
+        self.emotion_text.delete('1.0', tk.END)
+        display_emotions = emotion_history[-max_display:]
+        self._append_emotion("=" * 60 + "\n", 'emotion_neutral')
+        self._append_emotion(f"Showing last {max_display} emotions (Total: {current_count})\n", 'emotion_neutral')
+        self._append_emotion("=" * 60 + "\n", 'emotion_neutral')
+        return display_emotions
+    
+    def _append_emotion_entry(self, entry: Dict[str, Any]):
+        """Append a single emotion entry to the history panel."""
+        if not self._is_valid_emotion_entry(entry):
+            return
+        
+        emotion_name, confidence, timestamp = self._extract_emotion_data(entry)
+        time_str = self._format_emotion_timestamp(timestamp)
+        emotion_tag = self._get_emotion_tag(emotion_name)
+        
+        self._insert_emotion_text(time_str, emotion_name, confidence, emotion_tag)
+    
+    def _is_valid_emotion_entry(self, entry: Dict[str, Any]) -> bool:
+        """Check if emotion entry is valid."""
+        if not isinstance(entry, dict):
+            return False
+        emotion_dict = entry.get('emotion', {})
+        return isinstance(emotion_dict, dict)
+    
+    def _extract_emotion_data(self, entry: Dict[str, Any]) -> Tuple[str, float, float]:
+        """Extract emotion name, confidence, and timestamp from entry."""
+        emotion_dict = entry.get('emotion', {})
+        emotion_name = emotion_dict.get('emotion', 'unknown')
+        confidence = emotion_dict.get('confidence', 0.0)
+        timestamp = entry.get('timestamp', 0)
+        return emotion_name, confidence, timestamp
+    
+    def _format_emotion_timestamp(self, timestamp: float) -> str:
+        """Format timestamp for emotion display."""
+        if timestamp > 0:
+            dt = datetime.fromtimestamp(timestamp)
+            return dt.strftime(STATE_VIEWER_EMOTION_TIMESTAMP_FORMAT)
+        return STATE_VIEWER_EMOTION_UNKNOWN_TIMESTAMP
+    
+    def _get_emotion_tag(self, emotion_name: str) -> str:
+        """Get emotion tag for color coding."""
+        emotion_tag = f'emotion_{emotion_name.lower()}'
+        if emotion_tag not in self.config.VALID_EMOTION_TAGS:
+            return 'emotion_unknown'
+        return emotion_tag
+    
+    def _insert_emotion_text(self, time_str: str, emotion_name: str, 
+                            confidence: float, emotion_tag: str):
+        """Insert formatted emotion text into the display."""
+        self.emotion_text.insert(tk.END, f"[{time_str}] ", 'timestamp')
+        self.emotion_text.insert(tk.END, f"{emotion_name.upper():10s} ", emotion_tag)
+        self.emotion_text.insert(tk.END, f"(conf: {confidence:.3f})\n", 'confidence')
+    
+    def _append_emotion(self, text: str, tag: str = 'emotion_neutral'):
+        """Append text to emotion history panel."""
+        if hasattr(self, 'emotion_text'):
+            self.emotion_text.insert(tk.END, text, tag)
+            self.emotion_text.see(tk.END)
     
     def _update_phonemes(self, phonemes: Dict[str, Any]):
         """Update phoneme section."""
@@ -674,10 +1156,12 @@ class OPUStateViewer:
                     # Schedule update on main thread (thread-safe)
                     try:
                         self.root.after(0, self._update_display, state)
-                    except RuntimeError:
+                    except RuntimeError as e:
                         # Main loop not running or window closed
+                        self._log_error("scheduling display update (RuntimeError)", e)
                         break
-            except Exception:
+            except Exception as e:
+                self._log_error("in update loop", e)
                 if not self.running:
                     break
             if not self.running:  # Check before sleep
@@ -769,24 +1253,28 @@ class OPUStateViewer:
                         # Schedule GUI update on main thread for webcam
                         try:
                             self.root.after(0, self._update_webcam_image, image_array)
-                        except RuntimeError:
+                        except RuntimeError as e:
+                            self._log_error("scheduling webcam image update (RuntimeError)", e)
                             break
                     elif image_type == 'cognitive_map':
                         # Schedule GUI update on main thread for cognitive map
                         try:
                             self.root.after(0, self._update_map_image, image_array)
-                        except RuntimeError:
+                        except RuntimeError as e:
+                            self._log_error("scheduling cognitive map image update (RuntimeError)", e)
                             break
                 else:
                     # Backward compatibility: if it's just an array, assume cognitive map
                     try:
                         self.root.after(0, self._update_map_image, item)
-                    except RuntimeError:
+                    except RuntimeError as e:
+                        self._log_error("scheduling map image update (RuntimeError)", e)
                         break
                 
             except queue.Empty:
                 continue
-            except Exception:
+            except Exception as e:
+                self._log_error("in image poll loop", e)
                 if not self.running:
                     break
     
@@ -816,9 +1304,8 @@ class OPUStateViewer:
             self.webcam_label.config(image=photo, text="")
             self.webcam_label.image = photo  # Keep reference!
             
-        except Exception:
-            # Silently handle image update errors
-            pass
+        except Exception as e:
+            self._log_error("updating webcam image", e)
     
     def _update_map_image(self, image_array):
         """Convert numpy array to PhotoImage and display in cognitive map."""
@@ -844,9 +1331,8 @@ class OPUStateViewer:
             self.map_label.config(image=photo, text="")
             self.map_label.image = photo  # Keep reference!
             
-        except Exception:
-            # Silently handle image update errors
-            pass
+        except Exception as e:
+            self._log_error("updating webcam image", e)
     
     # --- LOGGING SYSTEM (FILE TAILING) ---
     
@@ -879,16 +1365,16 @@ class OPUStateViewer:
                         # Schedule GUI update on main thread
                         try:
                             self.root.after(0, self._append_log_safe, line)
-                        except RuntimeError:
+                        except RuntimeError as e:
                             # Window closed
+                            self._log_error("scheduling log append (RuntimeError)", e)
                             break
                     else:
                         if not self.running:  # Check before sleep
                             break
                         time.sleep(0.1)  # Wait for new data
-        except Exception:
-            # Silently handle errors
-            pass
+        except Exception as e:
+            self._log_error("in log tail loop", e)
     
     def _append_log_safe(self, message):
         """Append log (Main Thread Safe)."""
@@ -898,12 +1384,15 @@ class OPUStateViewer:
             self.log_text.see(tk.END)
             
             # Limit buffer (keep last 5000 lines)
-            line_count = int(self.log_text.index('end-1c').split('.')[0])
-            if line_count > 5000:
-                self.log_text.delete('1.0', '2.0')
-        except Exception:
-            # Silently handle errors
-            pass
+            try:
+                line_count = int(self.log_text.index('end-1c').split('.')[0])
+                if line_count > 5000:
+                    self.log_text.delete('1.0', '2.0')
+            except (ValueError, tk.TclError):
+                # Ignore errors from line counting/deletion - not critical
+                pass
+        except Exception as e:
+            self._log_error("appending log safely", e)
     
     def on_closing(self):
         """Handle window close event."""
@@ -920,10 +1409,24 @@ class OPUStateViewer:
     
     def run(self):
         """Start the GUI main loop (blocks until window is closed)."""
+        import traceback
         try:
+            # Ensure window is visible before starting mainloop
+            self.root.update_idletasks()
+            self.root.deiconify()  # Make sure window is visible
             self.root.mainloop()
-        except Exception:
-            pass  # Window was closed
+        except Exception as e:
+            # Log the error instead of silently failing
+            error_msg = f"[VIEWER] Mainloop error: {e}\n{traceback.format_exc()}"
+            try:
+                print(error_msg, file=sys.stderr, flush=True)
+                # Create error log file if it doesn't exist
+                error_log_path = Path("viewer_error.log")
+                error_log_path.touch(exist_ok=True)  # Create file if it doesn't exist
+                with open(error_log_path, "a") as f:
+                    f.write(f"{error_msg}\n")
+            except Exception:
+                pass
         finally:
             # Ensure all threads stop
             self.running = False

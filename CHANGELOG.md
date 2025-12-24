@@ -5,6 +5,26 @@ All notable changes to the Orthogonal Processing Unit (OPU) project will be docu
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.1] - 2025-01-XX
+
+### Fixed
+- **Emotion Extraction**: Fixed nested emotion structure handling in State Viewer (`_extract_emotion_name` and `_extract_confidence` methods)
+- **Matplotlib Compatibility**: Added support for both old and new matplotlib APIs (`buffer_rgba` vs `tostring_rgb`) for emotion visualizations
+- **Error Logging**: Enhanced error logging throughout State Viewer with automatic log file creation
+- **Semaphore Leaks**: Improved multiprocessing Queue cleanup to prevent semaphore leaks during shutdown
+
+### Changed
+- **Error Handling**: State Viewer now automatically creates `viewer_error.log` if it doesn't exist
+- **Queue Cleanup**: Proper cleanup order ensures queues are closed after processes terminate
+- **Visualization Robustness**: Emotion visualizations now work with both matplotlib 3.5+ and older versions
+
+### Technical Details
+- Backward compatible with v3.4.0 state files
+- Matplotlib API detection: tries `buffer_rgba()` first, falls back to `tostring_rgb()`
+- Queue cleanup: drains items, closes queue, joins thread before process termination
+
+---
+
 ## [3.4.0] - 2024-12-24
 
 ### Added
@@ -146,6 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[3.4.1]: https://github.com/no-am-man/opu_local/releases/tag/v3.4.1
 [3.4.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.4.0
 [3.3.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.3.0
 [3.2.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.2.0
