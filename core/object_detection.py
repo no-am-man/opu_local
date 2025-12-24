@@ -219,8 +219,17 @@ class ObjectDetector:
                 # Use DeepFace for emotion detection
                 from deepface import DeepFace
                 result = DeepFace.analyze(face_roi, actions=['emotion'], enforce_detection=False, silent=True)
-                if result and len(result) > 0:
-                    emotions = result[0].get('emotion', {})
+                
+                # DeepFace can return a dict or list of dicts
+                if result:
+                    # Handle both single dict and list of dicts
+                    if isinstance(result, list) and len(result) > 0:
+                        emotions = result[0].get('emotion', {})
+                    elif isinstance(result, dict):
+                        emotions = result.get('emotion', {})
+                    else:
+                        emotions = {}
+                    
                     if emotions:
                         # Get emotion with highest confidence
                         top_emotion = max(emotions.items(), key=lambda x: x[1])

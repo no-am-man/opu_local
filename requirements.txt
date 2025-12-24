@@ -4,6 +4,13 @@ sounddevice>=0.4.4
 scipy>=1.7.0
 opencv-python>=4.5.0
 
+# DeepFace for high-accuracy emotion detection
+# Note: DeepFace requires TensorFlow, which currently supports Python 3.8-3.12
+# For Python 3.13+, DeepFace will not install. The OPU will automatically
+# fall back to FER library or heuristic detection if DeepFace is unavailable.
+# Use Python 3.12 virtual environment (see setup_python312.sh) for DeepFace support.
+deepface>=0.0.79
+
 # Testing dependencies
 pytest>=7.4.0
 pytest-cov>=4.1.0

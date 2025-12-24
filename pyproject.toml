@@ -32,6 +32,8 @@ dependencies = [
     "matplotlib>=3.5.0",
     "sounddevice>=0.4.4",
     "scipy>=1.7.0",
+    # Note: deepface is optional - requires TensorFlow which supports Python 3.8-3.12
+    # For Python 3.13+, install manually: pip install deepface>=0.0.79
 ]
 
 [project.urls]
