@@ -45,6 +45,9 @@ class OrthogonalProcessingUnit(ObservableOPU):
         self.audio_cortex = AudioCortex()
         self.vision_cortex = VisualCortex()
         
+        # Emotion tracking: history of detected emotions for learning
+        self.emotion_history = []  # List of emotion dicts with timestamp
+        
         # DO NOT create shadow copies - use properties/delegation instead
         # This prevents synchronization issues when cortex objects update their internal state
     
@@ -83,7 +86,7 @@ class OrthogonalProcessingUnit(ObservableOPU):
         self._notify_state_change()
         return result
     
-    def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN"):
+    def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN", emotion=None):
         """
         Store memory (delegates to Brain).
         Uses EPOCH time for temporal synchronization across all senses.
@@ -92,6 +95,7 @@ class OrthogonalProcessingUnit(ObservableOPU):
             genomic_bit: the genomic bit to store
             s_score: the surprise score (determines level)
             sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1")
+            emotion: optional emotion dict with 'emotion' (str) and 'confidence' (float) from face detection
         """
         # --- FIX: USE EPOCH TIME FOR GLOBAL SYNC ---
         # EPOCH time (time.time()) creates a universal "Wall Clock" that forces
@@ -100,7 +104,18 @@ class OrthogonalProcessingUnit(ObservableOPU):
         # Old logical time: timestamp = len(self.audio_cortex.genomic_bits_history)
         timestamp = time.time()
         
-        self.brain.store_memory(genomic_bit, s_score, sense_label=sense_label, timestamp=timestamp)
+        self.brain.store_memory(genomic_bit, s_score, sense_label=sense_label, timestamp=timestamp, emotion=emotion)
+        
+        # Track emotion in history if available
+        if emotion is not None:
+            self.emotion_history.append({
+                'emotion': emotion,
+                'timestamp': timestamp,
+                'sense': sense_label
+            })
+            # Keep only last 1000 emotions to prevent unbounded growth
+            if len(self.emotion_history) > 1000:
+                self.emotion_history = self.emotion_history[-1000:]
     
     def consolidate_memory(self, level):
         """
@@ -128,6 +143,43 @@ class OrthogonalProcessingUnit(ObservableOPU):
             dict with maturity_index, base_pitch, stability_threshold
         """
         return self.brain.get_character_state()
+    
+    def get_emotion_statistics(self):
+        """
+        Get statistics about detected emotions.
+        
+        Returns:
+            dict with emotion counts, most common emotion, and average confidence
+        """
+        if not self.emotion_history:
+            return {
+                'total_emotions': 0,
+                'emotion_counts': {},
+                'most_common': None,
+                'average_confidence': 0.0
+            }
+        
+        emotion_counts = {}
+        total_confidence = 0.0
+        emotion_count = 0
+        
+        for entry in self.emotion_history:
+            if isinstance(entry.get('emotion'), dict):
+                em_name = entry['emotion'].get('emotion', 'unknown')
+                em_conf = entry['emotion'].get('confidence', 0.0)
+                emotion_counts[em_name] = emotion_counts.get(em_name, 0) + 1
+                total_confidence += em_conf
+                emotion_count += 1
+        
+        most_common = max(emotion_counts.items(), key=lambda x: x[1])[0] if emotion_counts else None
+        avg_confidence = total_confidence / emotion_count if emotion_count > 0 else 0.0
+        
+        return {
+            'total_emotions': len(self.emotion_history),
+            'emotion_counts': emotion_counts,
+            'most_common': most_common,
+            'average_confidence': avg_confidence
+        }
     
     def get_current_state(self):
         """

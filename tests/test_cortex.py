@@ -14,8 +14,8 @@ class TestOrthogonalProcessingUnit:
     def test_init(self):
         """Test OrthogonalProcessingUnit initialization."""
         opu = OrthogonalProcessingUnit()
-        assert len(opu.memory_levels) == 7  # Updated for 7 levels (0-6)
-        assert all(level in opu.memory_levels for level in range(7))
+        assert len(opu.memory_levels) == 8  # Updated for 8 levels (0-7)
+        assert all(level in opu.memory_levels for level in range(8))
         assert opu.character_profile['maturity_index'] == 0.0
         assert opu.character_profile['maturity_level'] == 0
         assert opu.character_profile['base_pitch'] == 440.0

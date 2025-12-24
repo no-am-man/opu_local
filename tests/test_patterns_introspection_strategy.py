@@ -106,9 +106,10 @@ class TestVisualIntrospectionStrategy:
         """Test introspect with insufficient history."""
         strategy = VisualIntrospectionStrategy()
         visual_vector = np.array([0.3, 0.4, 0.5])
-        result = strategy.introspect(visual_vector)
+        s_visual, channel_surprises = strategy.introspect(visual_vector)
         # Should return 0.0 with insufficient history
-        assert result == 0.0
+        assert s_visual == 0.0
+        assert isinstance(channel_surprises, dict)
     
     def test_introspect_builds_history(self):
         """Test that introspect builds history."""
@@ -127,8 +128,9 @@ class TestVisualIntrospectionStrategy:
         for i in range(15):
             strategy.introspect(np.array([0.3, 0.4, 0.5]))
         # Now introduce surprise
-        result = strategy.introspect(np.array([1.0, 1.0, 1.0]))
-        assert result >= 0.0
+        s_visual, channel_surprises = strategy.introspect(np.array([1.0, 1.0, 1.0]))
+        assert s_visual >= 0.0
+        assert isinstance(channel_surprises, dict)
     
     def test_introspect_max_surprise(self):
         """Test that introspect returns max surprise across channels."""
@@ -137,8 +139,9 @@ class TestVisualIntrospectionStrategy:
         for i in range(15):
             strategy.introspect(np.array([0.3, 0.4, 0.5]))
         # R channel has high surprise, G and B are normal
-        result = strategy.introspect(np.array([2.0, 0.4, 0.5]))
-        assert result > 0.0
+        s_visual, channel_surprises = strategy.introspect(np.array([2.0, 0.4, 0.5]))
+        assert s_visual > 0.0
+        assert isinstance(channel_surprises, dict)
     
     def test_introspect_memory_capping(self):
         """Test that visual memory is capped."""
@@ -157,8 +160,9 @@ class TestVisualIntrospectionStrategy:
         for _ in range(15):
             strategy.introspect(np.array([0.5, 0.5, 0.5]))
         # Should handle zero sigma gracefully
-        result = strategy.introspect(np.array([0.5, 0.5, 0.5]))
-        assert result >= 0.0
+        s_visual, channel_surprises = strategy.introspect(np.array([0.5, 0.5, 0.5]))
+        assert s_visual >= 0.0
+        assert isinstance(channel_surprises, dict)
     
     def test_introspect_with_channels(self):
         """Test introspect_with_channels method."""

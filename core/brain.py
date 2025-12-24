@@ -1,218 +1,214 @@
 """
-The Brain: Core Cognitive Processing.
-Handles memory abstraction, character evolution, and state management.
+The Brain: Core Cognitive Processing (v3.4).
+Implements 8-Layer Fractal Memory (1s to 10y) and Emotional Persistence.
 """
 
 import numpy as np
-import time  # For EPOCH timestamps
+import time
 from config import MATURITY_INCREMENT
+from core.patterns.maturity_state import MaturityContext
 
 
 class Brain:
     """
     The core brain: Memory abstraction and character evolution.
-    Manages 7-level memory hierarchy and personality development.
+    Manages 8-level memory hierarchy (1s to 10y) and Emotional Memory.
     """
     
     def __init__(self):
-        # Memory abstraction layers (7 levels: 0 = 1 minute, 6 = 10 years)
-        # Level 0: 1 minute - Immediate/short-term memory
-        # Level 1: 1 hour - Short-term patterns
-        # Level 2: 1 day - Daily patterns
-        # Level 3: 1 week - Weekly patterns
-        # Level 4: 1 month - Monthly patterns
-        # Level 5: 1 year - Yearly patterns/wisdom
-        # Level 6: 10 years - Decade patterns/Scire (Knowledge)
-        self.memory_levels = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []}
+        # 8 Memory Layers
+        # L0=1s, L1=1m, L2=1h, L3=1d, L4=1w, L5=1mo, L6=1y, L7=10y
+        self.memory_levels = {i: [] for i in range(8)}
         
-        # Character profile that evolves over time
+        # Use State Pattern for maturity management
+        self.maturity_context = MaturityContext()
+        
+        # Character profile that evolves over time (updated by maturity_context)
         self.character_profile = {
-            "maturity_index": 0.0,  # 0.0 = Child, 1.0 = Scire
-            "maturity_level": 0,    # Current maturity level (0-6)
-            "base_pitch": 440.0,     # Starts high (Child), drops to 110Hz (Scire)
-            "stability_threshold": 3.0  # Easily surprised initially
+            "maturity_index": 0.0,  # 0.0 = Child, 1.0 = Sage
+            "maturity_level": 0,    # Current highest active level (0-7)
+            "base_pitch": 440.0,    # Child (440Hz) -> Sage (110Hz)
+            "stability_threshold": 3.0
+        }
+        
+        # Consolidation Ratios (How many items of Level N make 1 item of Level N+1)
+        # Based on roughly converting seconds -> minutes -> hours etc.
+        # Assuming input rate of ~20Hz (50ms per cycle)
+        self.consolidation_ratios = {
+            0: 20,  # 20 raw inputs (~1s) -> 1 L1 item
+            1: 60,  # 60 L1 items (1m) -> 1 L2 item
+            2: 60,  # 60 L2 items (1h) -> 1 L3 item
+            3: 24,  # 24 L3 items (1d) -> 1 L4 item
+            4: 7,   # 7  L4 items (1w) -> 1 L5 item
+            5: 4,   # 4  L5 items (1mo)-> 1 L6 item
+            6: 12,  # 12 L6 items (1y) -> 1 L7 item
+            7: 10   # 10 L7 items -> Full Wisdom
         }
     
-    def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN", timestamp=None):
+    def store_memory(self, genomic_bit, s_score, sense_label="UNKNOWN", emotion=None, timestamp=None):
         """
-        Stores a memory at Level 0 (raw sensory input).
+        Stores a raw memory at Level 0 (1 Second).
+        Includes v3.4 Emotional Vector support.
         
         CRITICAL: All raw sensory data MUST enter at Level 0.
         Wisdom cannot be "jumped" to via high surprise scores.
         Evolution must be earned through time-based consolidation, not trauma.
-        
-        The hierarchy of time:
-        - Level 0: Raw input (every 50ms)
-        - Level 1: Short-term patterns (after 100 Level 0 items consolidate)
-        - Level 2: Daily patterns (after 50 Level 1 items consolidate)
-        - Level 3: Weekly patterns (after 20 Level 2 items consolidate)
-        - Level 4: Monthly patterns (after 10 Level 3 items consolidate)
-        - Level 5: Yearly patterns (after 5 Level 4 items consolidate)
-        - Level 6: Decade patterns/Scire (after 3 Level 5 items consolidate)
-        
-        Args:
-            genomic_bit: the genomic bit to store
-            s_score: the surprise score (used for filtering, not level assignment)
-            sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1")
-            timestamp: optional timestamp (if None, uses time.time() - EPOCH time)
         """
-        # --- FIX: ENFORCE HIERARCHY - ALL INPUTS START AT LEVEL 0 ---
-        # We cannot "jump" to Level 5 just because we are surprised.
-        # Even the most surprising event must start at Level 0 and progress
-        # through consolidation over time. This is "Cognitive Sedimentation."
-        level = 0  # All raw sensory data enters at the bottom of the hierarchy
+        # --- LAW OF STRICT ENTRY (v3.3) ---
+        # All inputs MUST start at Level 0. No skipping to wisdom.
+        level = 0
         
-        # --- FIX: DEFAULT TO EPOCH TIME ---
-        # EPOCH time (time.time()) creates a universal "Wall Clock" that forces
-        # Audio and Video to align perfectly on the timeline, regardless of
-        # processing rates (FPS vs Sample Rate).
-        # Old logical time: timestamp = sum(len(level_mem) for level_mem in self.memory_levels.values())
         if timestamp is None:
             timestamp = time.time()
-        
-        # Store in Level 0 with sense label
-        # All raw sensory data enters here, regardless of surprise score
-        # This enforces "Cognitive Sedimentation" - wisdom must be earned through time
-        self.memory_levels[level].append({
+            
+        # Default emotion if none provided (Neutral)
+        emotion_vector = None
+        if emotion is not None:
+            # Support both old format (dict with 'emotion' and 'confidence')
+            # and new format (dict with 'intensity' and 'label')
+            if 'emotion' in emotion and 'confidence' in emotion:
+                # Old format - convert to new format
+                emotion_vector = {
+                    'intensity': emotion.get('confidence', 0.0),
+                    'label': emotion.get('emotion', 'neutral')
+                }
+            else:
+                # New format or partial format
+                emotion_vector = {
+                    'intensity': emotion.get('intensity', emotion.get('confidence', 0.0)),
+                    'label': emotion.get('label', emotion.get('emotion', 'neutral'))
+                }
+        else:
+            # Default emotion (Neutral)
+            emotion_vector = {'intensity': 0.0, 'label': 'neutral'}
+
+        # Store Memory Object
+        memory_item = {
             'genomic_bit': genomic_bit,
-            's_score': s_score,  # Store s_score for reference, but it doesn't determine level
-            'sense': sense_label,  # Label the input sense (AUDIO_V1, VIDEO_V1, etc.)
+            's_score': s_score,
+            'sense': sense_label,
+            'emotion': emotion_vector,  # v3.4 Feature
             'timestamp': timestamp
-        })
+        }
         
-        # Check if we should consolidate Level 0
-        # Level 0 consolidates every 100 items (approximately 5-10 seconds of real-time input)
-        # This is the first step in the "Cognitive Sedimentation" process
-        # Higher levels consolidate automatically when their thresholds are met during consolidation
-        if len(self.memory_levels[0]) % 100 == 0 and len(self.memory_levels[0]) > 0:
-            self.consolidate_memory(0)
-    
+        self.memory_levels[level].append(memory_item)
+        
+        # Check Consolidation
+        ratio = self.consolidation_ratios.get(level, 20)
+        if len(self.memory_levels[level]) >= ratio:
+            self.consolidate_memory(level)
+
     def consolidate_memory(self, level):
         """
-        Consolidates memory at a given level, abstracting raw genomic bits
-        into higher-level "Wisdom" and updating maturity_index.
-        
-        Args:
-            level: abstraction level to consolidate
+        Compresses lower-level memories into a higher-level abstraction.
+        Preserves Emotional Context (v3.4).
         """
-        if level not in self.memory_levels or len(self.memory_levels[level]) == 0:
+        # Safety check
+        if level >= 7:
+            return  # Max level reached
+        
+        # Get the chunk to consolidate
+        chunk_size = self.consolidation_ratios.get(level, 10)
+        if len(self.memory_levels[level]) < chunk_size:
             return
+
+        # Extract chunk and remove from current level
+        chunk = self.memory_levels[level][:chunk_size]
+        self.memory_levels[level] = self.memory_levels[level][chunk_size:]
         
-        # Abstract: extract patterns from this level
-        level_memories = self.memory_levels[level]
+        # --- ABSTRACTION LOGIC ---
         
-        # Handle both raw memories (with 'genomic_bit') and abstractions (with 'mean_genomic_bit')
-        genomic_bits = []
-        for m in level_memories:
+        # 1. Structural Data (Genomic Bits)
+        bits = []
+        for m in chunk:
             if 'genomic_bit' in m:
-                # Raw memory
-                genomic_bits.append(m['genomic_bit'])
+                bits.append(m['genomic_bit'])
             elif 'mean_genomic_bit' in m:
-                # Abstraction - use mean_genomic_bit as the representative value
-                genomic_bits.append(m['mean_genomic_bit'])
-            else:
-                # Skip if neither key exists
-                continue
+                bits.append(m['mean_genomic_bit'])
         
-        if len(genomic_bits) == 0:
+        if len(bits) == 0:
             return  # No valid genomic bits to consolidate
         
-        # Collect sense labels from memories being consolidated
+        mean_bit = np.mean(bits)
+        pattern_strength = np.std(bits) if len(bits) > 1 else 0.0
+        
+        # 2. Emotional Data (v3.4 Consolidation)
+        # We calculate the "Average Mood" of this time block
+        emotions = [m.get('emotion') for m in chunk if 'emotion' in m]
+        
+        if emotions:
+            # Calculate average intensity
+            intensities = []
+            labels = []
+            for em in emotions:
+                if isinstance(em, dict):
+                    intensities.append(em.get('intensity', 0.0))
+                    labels.append(em.get('label', 'neutral'))
+            
+            avg_intensity = np.mean(intensities) if intensities else 0.0
+            
+            # Determine dominant emotion label (simple voting)
+            dominant_label = max(set(labels), key=labels.count) if labels else 'neutral'
+            
+            consolidated_emotion = {
+                'intensity': float(avg_intensity),
+                'label': dominant_label
+            }
+        else:
+            consolidated_emotion = {'intensity': 0.0, 'label': 'neutral'}
+
+        # 3. Collect sense labels
         sense_labels = []
-        for m in level_memories:
+        for m in chunk:
             if 'sense' in m:
                 sense_labels.append(m['sense'])
-        
-        # Create abstraction: mean and pattern, preserving sense information
+
+        # 4. Create the Abstracted Token
         abstraction = {
-            'mean_genomic_bit': np.mean(genomic_bits),
-            'pattern_strength': np.std(genomic_bits) if len(genomic_bits) > 1 else 0.0,
-            'count': len(genomic_bits),
-            'senses': list(set(sense_labels)) if sense_labels else ['UNKNOWN']  # Unique sense labels
+            'mean_genomic_bit': float(mean_bit),
+            'pattern_strength': float(pattern_strength),  # How chaotic was this period?
+            'emotion': consolidated_emotion,  # The "Vibe" of the period
+            'count': len(chunk),
+            'senses': list(set(sense_labels)) if sense_labels else ['UNKNOWN'],
+            'timestamp': time.time()  # Timestamp of consolidation
         }
         
-        # Store abstraction in next level (if exists)
-        if level < 6:  # Now we have 7 levels (0-6)
-            next_level = level + 1
-            self.memory_levels[next_level].append(abstraction)
+        # Push to next level
+        self.memory_levels[level + 1].append(abstraction)
+        
+        # Recursive check (Cascade effect: L0->L1 might trigger L1->L2)
+        next_ratio = self.consolidation_ratios.get(level + 1, 10)
+        if len(self.memory_levels[level + 1]) >= next_ratio:
+            self.consolidate_memory(level + 1)
             
-            # Check if the next level should also consolidate (cascade consolidation)
-            # This ensures the hierarchy progresses naturally through time
-            consolidation_thresholds = {
-                0: 100,  # Level 0: every 100 items (1 minute scale)
-                1: 50,   # Level 1: every 50 items (1 hour scale)
-                2: 20,   # Level 2: every 20 items (1 day scale)
-                3: 10,   # Level 3: every 10 items (1 week scale)
-                4: 5,    # Level 4: every 5 items (1 month scale)
-                5: 3,    # Level 5: every 3 items (1 year scale - wisdom)
-                6: 2     # Level 6: every 2 items (10 year scale - Scire/Knowledge)
-            }
-            
-            threshold = consolidation_thresholds.get(next_level, 10)
-            if len(self.memory_levels[next_level]) % threshold == 0:
-                # Cascade: consolidate the next level too
-                self.consolidate_memory(next_level)
-        
-        # Trigger character evolution (only for higher levels)
-        if level >= 2:  # Level 2+ (1 day and above) triggers evolution
-            self.evolve_character(level)
-    
-    def evolve_character(self, level=None):
+        # Trigger Evolution (Character Updates)
+        # We only evolve if we reach Level 3 (1 Day+) to prevent jitters
+        if level + 1 >= 3:
+            self.evolve_character()
+
+    def evolve_character(self):
         """
-        Reflects on deep memory to mature the personality.
-        Call this every time a higher abstraction level (Level 2+) is filled.
-        
-        Implements the "Aging" process: evolves from noisy child to deep-voiced Scire.
-        Now supports 7 maturity levels (1 minute to 10 years).
-        
-        Args:
-            level: The abstraction level that triggered evolution (0-6)
+        Updates Maturity Index based on the depth of the stack.
+        Uses State Pattern (MaturityContext) for maturity management.
         """
-        # Update maturity level based on highest level with consolidated memories
-        highest_level = 0
-        for lvl in range(6, -1, -1):
-            if len(self.memory_levels[lvl]) > 0:
-                highest_level = lvl
-                break
+        # Use State Pattern to update character profile
+        profile = self.maturity_context.update_from_memory_levels(self.memory_levels)
+        self.character_profile.update(profile)
         
-        # Maturity level is the highest level reached (0-6)
-        self.character_profile["maturity_level"] = highest_level
-        
-        # Maturity index is a continuous value from 0.0 to 1.0
-        # Based on both the level reached and how much of that level is filled
-        level_progress = min(1.0, len(self.memory_levels[highest_level]) / 10.0) if highest_level > 0 else 0.0
-        base_maturity = highest_level / 6.0  # 0.0, 0.167, 0.333, 0.5, 0.667, 0.833, 1.0
-        self.character_profile["maturity_index"] = min(1.0, base_maturity + (level_progress * 0.167))
-        
-        # 2. Voice Deepens with Wisdom
-        # Drops from 440Hz (A4) to 110Hz (A2) as maturity increases
+        # Get time scale from current state
+        time_scale = self.maturity_context.get_time_scale()
         maturity = self.character_profile["maturity_index"]
-        self.character_profile["base_pitch"] = 440.0 - (maturity * 330.0)
         
-        # 3. Stoicism Increases (Harder to Surprise)
-        # Threshold moves from 3.0 to 8.0 as maturity increases
-        self.character_profile["stability_threshold"] = 3.0 + (maturity * 5.0)
-        
-        # Get time scale name for the current maturity level
-        time_scales = {
-            0: "1 minute",
-            1: "1 hour",
-            2: "1 day",
-            3: "1 week",
-            4: "1 month",
-            5: "1 year",
-            6: "10 years"
-        }
-        time_scale = time_scales.get(highest_level, "unknown")
-        
-        print(f"[EVOLUTION] Level {highest_level} ({time_scale}) | Maturity: {maturity:.2f} | Pitch: {self.character_profile['base_pitch']:.0f}Hz | Threshold: {self.character_profile['stability_threshold']:.1f}")
+        print(f"[EVOLUTION] Level {profile['maturity_level']} ({time_scale}) | "
+              f"Maturity: {maturity:.3f} | "
+              f"Voice: {profile['base_pitch']:.1f}Hz | "
+              f"Threshold: {profile['stability_threshold']:.1f}")
     
     def get_character_state(self):
         """
         Returns current character state for use in expression.
         
         Returns:
-            dict with maturity_index, base_pitch, stability_threshold
+            dict with maturity_index, base_pitch, stability_threshold, maturity_level
         """
         return self.character_profile.copy()
-

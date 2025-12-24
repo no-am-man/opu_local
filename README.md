@@ -1,9 +1,9 @@
-# Orthogonal Processing Unit (OPU) v3.2.0
+# Orthogonal Processing Unit (OPU) v3.4.0
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
-A Process-Centric AI architecture that processes audio in real-time, evolving from a noisy child to a deep-voiced sage through memory abstraction and character evolution.
+A Process-Centric AI architecture that processes audio in real-time, evolving from a noisy child to a deep-voiced sage through memory abstraction and character evolution. Features color constancy for shadow-invariant visual perception and emotion persistence for building emotional memory.
 
 ## License
 
@@ -11,7 +11,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version
 
-**Current Version: 3.2.0**
+**Current Version: 3.4.0**
 
 ### ⚠️ Breaking Change in v3.2.0
 
@@ -95,9 +95,11 @@ pip install opu
 1. **Audio Input**: Captures audio from microphone (or uses simulated input)
 2. **Visual Input**: Captures video from webcam with object and emotion detection
 3. **Perception**: Normalizes input to create scale-invariant signatures
+   - **Color Constancy (v3.3+)**: Visual perception uses normalized chromaticity (R+G+B normalization)
+     to ignore lighting changes (shadows, flickers) and only detect actual color/structure changes
 4. **Introspection**: Calculates surprise score (s_score) by comparing current state to history
 5. **Ethical Veto**: Applies Genesis Constant to ensure actions maintain Order
-6. **Memory Storage**: Stores experiences at appropriate abstraction levels
+6. **Memory Storage**: Stores experiences at appropriate abstraction levels (with emotions)
 7. **Expression**: Generates audio feedback and analyzes phonemes
 8. **Visualization**: Displays real-time cognitive map
 9. **Abstraction Cycle**: Every 10 seconds triggers memory consolidation and character evolution
@@ -144,6 +146,54 @@ The OPU will automatically use the best available method. If no library is insta
 
 The OPU can react to emotions it sees - for example, it might produce a more somber tone when it detects sadness, or a higher-pitched response to surprise!
 
+**Emotion Persistence (v3.4):**
+- Detected emotions are now stored in memories and persist across sessions
+- Emotions are preserved through memory consolidation (dominant emotions in abstractions)
+- Emotion history is tracked and saved to disk
+- The OPU remembers the emotions it has seen, building emotional memory over time
+- Emotional statistics available via `get_emotion_statistics()` method
+
+## Color Constancy (Shadow Invariance)
+
+**OPU v3.3+** introduces **Color Constancy** - a sophisticated visual perception enhancement that makes the OPU invariant to lighting changes.
+
+### The Problem
+
+Without color constancy, the OPU sees shadows and light flickers as "chaos" (high surprise scores). If a cloud passes over the sun, R, G, and B all change simultaneously, causing false alarms even though the scene structure hasn't changed.
+
+### The Solution
+
+By normalizing RGB values by their sum (R+G+B), the OPU learns **Chromaticity** (color ratios) independent of **Luminance** (brightness):
+
+- **Luminance**: Σ = R + G + B (Energy/Intensity)
+- **Chromaticity**: r = R/Σ, g = G/Σ, b = B/Σ (Color Identity)
+
+### How It Works
+
+1. **Lighting Change**: When a shadow passes, R, G, B all drop proportionally
+   - Raw RGB: OPU sees massive change → False alarm
+   - Normalized: r, g, b ratios stay constant → OPU remains calm
+
+2. **Actual Change**: When a red ball moves, the color ratios change
+   - Raw RGB: OPU detects change
+   - Normalized: OPU detects change (ratios changed) → True positive
+
+### Benefits
+
+- **Shadow Invariance**: OPU ignores shadows, flickers, and lighting changes
+- **Structure Focus**: Only responds to actual color/structure changes (objects moving)
+- **Biological Accuracy**: Implements lateral inhibition (how biological eyes work)
+- **Reduced False Positives**: OPU only "speaks" when something real happens
+
+### Configuration
+
+Color constancy is enabled by default. To disable (use legacy raw RGB mode):
+
+```python
+# In config.py
+USE_COLOR_CONSTANCY = False  # Use raw RGB channels
+```
+
 ## Character Evolution
 
 The OPU evolves over time through **7 maturity levels**:
@@ -176,6 +226,7 @@ The OPU automatically saves its learned state to disk (`opu_state.json` by defau
 - **Memory Levels**: All 7 abstraction layers (L0-L6, from 1 minute to 10 years)
 - **History**: Genomic bits, mu/sigma history for introspection
 - **Phonemes**: Learned phoneme history and statistics
+- **Emotions**: Detected emotions from faces, stored in memories and emotion history (NEW)
 - **Abstraction Timers**: Per-level timing state to maintain cycle continuity
 - **Day Counter**: Current abstraction cycle count
 
@@ -215,7 +266,7 @@ If you use OPU in your research, please cite:
 
 ```bibtex
 @software{opu2024,
-  title = {Orthogonal Processing Unit (OPU) v3.2.0},
+  title = {Orthogonal Processing Unit (OPU) v3.4.0},
   author = {NoamTal Cohen-LyShinski},
   year = {2024},
   license = {MIT},
@@ -230,6 +281,23 @@ If you use OPU in your research, please cite:
 - Designed for real-time audio processing and cognitive modeling
 
 ## Changelog
+
+### v3.4.0 (2024-12-24)
+- **Enhanced Emotion Persistence**: Improved emotional memory consolidation and statistics
+  - Added `get_emotion_statistics()` method for analyzing emotional history
+  - Emotions now properly preserved through all memory abstraction levels
+  - Enhanced emotion tracking with confidence scores and timestamps
+- **Monograph Update**: Updated OPU Monograph to v3.4 with formal mathematical treatment of emotional memory persistence
+
+### v3.3.0 (2024-12-24)
+- **Color Constancy (Shadow Invariance)**: Visual perception now uses normalized chromaticity (R+G+B normalization)
+  - OPU ignores lighting changes (shadows, flickers) and only responds to actual color/structure changes
+  - Implements biological color constancy (lateral inhibition)
+  - Configurable via `USE_COLOR_CONSTANCY` in `config.py` (default: True)
+- **Emotion Persistence**: Detected emotions are now stored in memories and persist across sessions
+  - Emotions preserved through memory consolidation
+  - Emotion history tracked and saved to disk
+  - OPU builds emotional memory over time
 
 ### v3.2.0 (2024-12-24)
 - **Natural Learning Process**: Enforced "Cognitive Sedimentation" - all memories start at Level 0, preventing "Trauma Evolution"

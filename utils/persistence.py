@@ -56,7 +56,9 @@ class OPUPersistence:
                         'g_now': cortex.g_now,
                         's_score': cortex.s_score,
                         'coherence': cortex.coherence
-                    })
+                    }),
+                    # Emotion history (NEW: persist detected emotions)
+                    'emotion_history': self._convert_numpy_types_to_native(getattr(cortex, 'emotion_history', []))
                 },
                 
                 # Phoneme analyzer state
@@ -133,6 +135,13 @@ class OPUPersistence:
                     cortex.g_now = cs.get('g_now')
                     cortex.s_score = cs.get('s_score', 0.0)
                     cortex.coherence = cs.get('coherence', 0.0)
+                
+                # Restore emotion history (NEW: load persisted emotions)
+                if 'emotion_history' in cortex_data:
+                    cortex.emotion_history = cortex_data['emotion_history']
+                else:
+                    # Initialize empty emotion history if not present (backward compatibility)
+                    cortex.emotion_history = []
             
             # Load phoneme analyzer state
             if 'phonemes' in state:
@@ -150,13 +159,14 @@ class OPUPersistence:
                 last_abstraction_times = {}
                 for level_str, timestamp in state['abstraction_timers'].items():
                     level = int(level_str)
-                    if 0 <= level <= 6:  # Support all 7 levels
+                    if 0 <= level <= 7:  # Support all 8 levels
                         last_abstraction_times[level] = float(timestamp)
             
             print(f"[PERSISTENCE] State loaded from {self.state_file}")
             print(f"  Maturity Level: {cortex.character_profile.get('maturity_level', 0)} | Index: {cortex.character_profile['maturity_index']:.2f}")
-            print(f"  Memory: " + " | ".join([f"L{i}={len(cortex.memory_levels.get(i, []))}" for i in range(7)]))
+            print(f"  Memory: " + " | ".join([f"L{i}={len(cortex.memory_levels.get(i, []))}" for i in range(8)]))
             print(f"  Phonemes: {len(phoneme_analyzer.phoneme_history)}")
+            print(f"  Emotions: {len(getattr(cortex, 'emotion_history', []))} detected emotions")
             print(f"  Day: {day_counter}")
             if last_abstraction_times:
                 print(f"  Abstraction Timers: Restored for {len(last_abstraction_times)} levels")
@@ -272,7 +282,7 @@ class OPUPersistence:
             dict with deserialized memory levels
         """
         # Support old format (4 levels), new format (6 levels), and current format (7 levels)
-        memory_levels = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []}
+        memory_levels = {i: [] for i in range(8)}  # 8 levels (0-7)
         for level_str, memories in serialized.items():
             level = int(level_str)
             if level in memory_levels:

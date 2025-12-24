@@ -5,6 +5,46 @@ All notable changes to the Orthogonal Processing Unit (OPU) project will be docu
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2024-12-24
+
+### Added
+- **Enhanced Emotion Persistence**: Improved emotional memory consolidation and statistics
+  - Added `get_emotion_statistics()` method for analyzing emotional history
+  - Emotions now properly preserved through all memory abstraction levels
+  - Enhanced emotion tracking with confidence scores and timestamps
+- **Monograph Update**: Updated OPU Monograph to v3.4 with formal mathematical treatment of emotional memory persistence ($\Psi_{emotion}$)
+
+### Changed
+- **Emotion Memory**: Emotions are now stored alongside sensory memories and persist across learning phases
+- **Emotional Consolidation**: Dominant emotions are preserved in memory abstractions, allowing the OPU to build emotional associations over time
+
+### Technical Details
+- Emotional memory vector: $M(t) = \langle g_{bit}, S_{score}, E, \tau \rangle$
+- Emotional consolidation: $E_{abstraction} = \arg\max_{e \in E_{set}} \text{Frequency}(e) \cdot \text{Confidence}(e)$
+- Emotion history tracked with timestamps and confidence scores
+- Backward compatible with v3.3.0 state files
+
+---
+
+## [3.3.0] - 2024-12-24
+
+### Added
+- **Color Constancy (Shadow Invariance)**: Visual perception now uses normalized chromaticity (R+G+B normalization)
+  - OPU ignores lighting changes (shadows, flickers) and only responds to actual color/structure changes
+  - Implements biological color constancy (lateral inhibition)
+  - Configurable via `USE_COLOR_CONSTANCY` in `config.py` (default: True)
+- **Emotion Persistence**: Detected emotions are now stored in memories and persist across sessions
+  - Emotions preserved through memory consolidation
+  - Emotion history tracked and saved to disk
+  - OPU builds emotional memory over time
+
+### Technical Details
+- Chromaticity vector: $\vec{C} = \left\langle \frac{R}{\Sigma}, \frac{G}{\Sigma}, \frac{B}{\Sigma} \right\rangle$ where $\Sigma = R + G + B + \epsilon$
+- Luminance isolation for energetic events vs. structural changes
+- Backward compatible with v3.2.0 state files
+
+---
+
 ## [3.2.0] - 2024-12-24
 
 ### Added
@@ -106,6 +146,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[3.4.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.4.0
+[3.3.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.3.0
 [3.2.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.2.0
 [3.1.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.1.0
 [3.0.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.0.0

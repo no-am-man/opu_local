@@ -77,7 +77,7 @@ class TestOPUPersistence:
         
         # Add memories to multiple levels
         # FIX: Access via brain since memory_levels is now a property
-        for level in range(7):
+        for level in range(8):
             for i in range(3):
                 cortex.brain.memory_levels[level].append({
                     'genomic_bit': float(i),
@@ -91,7 +91,7 @@ class TestOPUPersistence:
         with open(temp_state_file, 'r') as f:
             state = json.load(f)
         assert 'memory_levels' in state['cortex']
-        assert len(state['cortex']['memory_levels']) == 7  # Updated for 7 levels
+        assert len(state['cortex']['memory_levels']) == 8  # Updated for 8 levels
     
     def test_save_state_phoneme_history(self, temp_state_file):
         """Test that phoneme history is properly serialized."""
@@ -195,8 +195,8 @@ class TestOPUPersistence:
         success, day_counter, timers = persistence.load_state(cortex, phoneme_analyzer)
         assert success is True
         assert day_counter == 5
-        # Should have 7 levels (4 from old + 3 empty, updated for 7 levels)
-        assert len(cortex.memory_levels) == 7
+        # Should have 8 levels (4 from old + 4 empty, updated for 8 levels)
+        assert len(cortex.memory_levels) == 8
         # timers may be None for old state files
     
     def test_convert_numpy_types_to_native_none(self):

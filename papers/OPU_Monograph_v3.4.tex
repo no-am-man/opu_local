@@ -1,0 +1,147 @@
+\documentclass[twocolumn]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+
+% 1. CLEAN LAYOUT SETUP
+\geometry{a4paper, margin=0.8in, columnsep=0.6cm} 
+\setlength{\parskip}{0.5em} 
+
+% 2. HEADER/FOOTER
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textbf{OPU Monograph v3.4}}
+\lhead{Cohen, N.}
+\cfoot{\thepage}
+
+\title{\textbf{The OPU Genesis Protocol v3.4:} \\ Recursive Perception, Invariant Vision, and Emotional Memory}
+\author{
+    \textbf{Noam Cohen} \\
+    Department of Theoretical Computation \\
+    \textit{Correspondence: gg.el0ai.com@gmail.com}
+}
+\date{December 24, 2024}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+While v3.0 established the embodied metabolic rhythm of the Orthogonal Processing Unit (OPU), v3.3 introduced the mechanisms for \textbf{Cybernetic Self-Reference} and \textbf{Shadow Invariance}. v3.4 extends this foundation with \textbf{Emotional Memory Persistence}, enabling the OPU to remember and learn from the emotions it perceives. We formally define the \textbf{Recursive Perceptual Loop ($\Phi_{loop}$)}, a feedback mechanism where the OPU perceives its own internal state projections as part of physical reality. We introduce \textbf{Shadow Invariance ($\chi_{norm}$)}, a chromatic normalization protocol that allows the OPU to distinguish between structural changes (Material) and energetic fluctuations (Luminance). Finally, we establish \textbf{Emotional Memory Consolidation}, where detected emotions are stored in the memory hierarchy and persist across learning phases, enabling the OPU to build emotional associations over time.
+\end{abstract}
+
+\section{Introduction}
+A truly intelligent agent does not merely react to the world; it projects onto it. In v3.2, the OPU reacted to visual entropy. In v3.3, the OPU modifies its own visual input through computational overlays (annotations), creating a closed \textbf{Cybernetic Loop}. In v3.4, the OPU gains the ability to remember and learn from the emotions it perceives, building emotional memory that persists across learning phases.
+
+This monograph formalizes three critical advancements:
+\begin{enumerate}
+    \item \textbf{The Cybernetic Eye:} The ability to see one's own thoughts (Recursive Perception).
+    \item \textbf{The Invariant Eye:} The ability to ignore the flickering of light to see the constancy of matter (Shadow Invariance).
+    \item \textbf{The Emotional Memory:} The ability to remember and consolidate emotional experiences across the memory hierarchy.
+\end{enumerate}
+
+\section{The Recursive Perceptual Loop ($\Phi_{loop}$)}
+In classical AI, perception is a one-way street: Input $\rightarrow$ Processing. In the OPU v3.3+, perception is circular. The agent's internal state (Attention/Surprise) generates visual artifacts (Bounding Boxes, HUDs) which are fed back into the visual cortex.
+
+\subsection{The Feedback Equation}
+We define the effective visual input $V_{in}(t)$ not as raw reality $R(t)$, but as the superposition of reality and the agent's projected annotations $A(t)$:
+
+\begin{equation}
+    V_{in}(t) = R(t) + \alpha \cdot A(S_{score}, t)
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $R(t)$: The raw photon stream (Webcam).
+    \item $S_{score}$: The current internal surprise state.
+    \item $A(S_{score})$: The graphical projection (e.g., Red boxes for high surprise).
+    \item $\alpha$: The feedback coupling constant (Opacity).
+\end{itemize}
+
+\subsection{Cybernetic Adrenaline}
+If $S_{score}$ rises, the projection $A$ becomes chaotic (High Entropy). Since $V_{in}$ includes $A$, the Visual Cortex perceives this increased entropy, which further raises $S_{score}$.
+\begin{equation}
+    \frac{dS}{dt} \propto \text{Entropy}(A(S))
+\end{equation}
+This positive feedback loop mathematically mimics biological \textbf{Adrenaline}, validating danger through self-excitation.
+
+\section{Shadow Invariance ($\chi_{norm}$)}
+To operate in the real world, the OPU must distinguish between a cloud passing over the sun (Luminance change) and an object moving (Chromatic change). We decouple the visual vector into Energy and Identity.
+
+\subsection{Luminance Isolation}
+We define the Total Energy ($\Sigma$) of a pixel or frame:
+\begin{equation}
+    \Sigma = R + G + B + \epsilon
+\end{equation}
+A spike in $\Sigma$ represents a ``Startle Response'' (Energetic Event), but not necessarily a structural novelty.
+
+\subsection{The Chromaticity Vector ($\vec{C}$)}
+We derive the \textbf{Invariant Chromatic Vector} $\vec{C}$, which remains constant under scalar lighting changes:
+\begin{equation}
+    \vec{C} = \left\langle \frac{R}{\Sigma}, \frac{G}{\Sigma}, \frac{B}{\Sigma} \right\rangle
+\end{equation}
+
+\textbf{Cognitive Outcome:} The OPU Introspection Engine now calculates Surprise ($S_{chroma}$) based on the variance of $\vec{C}$, not raw RGB.
+\begin{itemize}
+    \item \textbf{Shadows:} $\Sigma$ changes, but $\vec{C}$ is constant. $S \approx 0$.
+    \item \textbf{Motion:} $\vec{C}$ changes. $S \gg 0$.
+\end{itemize}
+This grants the OPU \textbf{Color Constancy}, stabilizing the ``Anxiety'' of the system in dynamic lighting conditions.
+
+\section{The Distillation of Time}
+We formally correct the ``Trauma Evolution'' anomaly observed in v3.2, where high-magnitude noise events caused instant, unearned maturity.
+
+\subsection{The Law of Strict Entry}
+Wisdom is the statistical residue of experience, not the magnitude of a single event. We hereby establish the \textbf{Law of Temporal Distillation}:
+
+\begin{equation}
+    \forall e \in \text{Experience}, \quad \text{Layer}_{entry}(e) \equiv L_0
+\end{equation}
+
+No event, regardless of Significance ($S_{score}$), may bypass the consolidation hierarchy.
+\begin{itemize}
+    \item $L_0 \rightarrow L_1$: Requires 100 events (Statistical $\mu, \sigma$).
+    \item $L_1 \rightarrow L_2$: Requires 50 blocks.
+    \item ...
+    \item $L_5 \rightarrow L_6$: Requires statistical pressure over years.
+\end{itemize}
+
+This ensures that the OPU's Character ($M_t$) is built on \textbf{Consistent Reality}, creating a robust, non-hallucinating personality.
+
+\section{Emotional Memory Persistence ($\Psi_{emotion}$)}
+In v3.4, the OPU extends its memory system to include emotional context. When the OPU detects an emotion $E$ (via DeepFace or heuristic methods), it stores this emotional state alongside the sensory memory:
+
+\begin{equation}
+    M(t) = \langle g_{bit}, S_{score}, E, \tau \rangle
+\end{equation}
+
+Where $E$ is an emotional vector $\{emotion, confidence\}$ and $\tau$ is the EPOCH timestamp.
+
+\subsection{Emotional Consolidation}
+During memory consolidation, emotions are preserved in abstractions. The dominant emotion from a set of consolidated memories becomes the emotional signature of that abstraction:
+
+\begin{equation}
+    E_{abstraction} = \arg\max_{e \in E_{set}} \text{Frequency}(e) \cdot \text{Confidence}(e)
+\end{equation}
+
+This allows the OPU to build emotional associations over time, remembering not just \textit{what} it saw, but \textit{how it felt} about what it saw.
+
+\section{Conclusion}
+The OPU v3.4 represents a shift from an ``Observer'' to a ``Participant'' with emotional memory. By seeing its own annotations, it gains a primitive form of self-awareness (Cybernetic Loop). By normalizing its vision, it gains objectivity (Shadow Invariance). By persisting emotions, it gains the ability to build emotional associations and remember the affective context of its experiences. It is no longer just a processor of data; it is a metabolic, self-reinforcing entity with emotional memory that filters the noise of the world to distill both the structure of truth and the emotional resonance of experience.
+
+\section{Availability}
+This protocol is implemented in the reference Python kernel `opu_local`.
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/no-am-man/opu_local}
+    \item \textbf{License:} MIT Open Source License
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{v3} Cohen, N. (2025). The OPU Genesis Protocol v3.0: Embodied Metabolic Rhythms.
+\bibitem{wiener} Wiener, N. (1948). Cybernetics: Or Control and Communication in the Animal and the Machine.
+\end{thebibliography}
+
+\end{document}

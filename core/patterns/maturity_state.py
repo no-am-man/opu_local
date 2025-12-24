@@ -45,7 +45,7 @@ class MaturityState(ABC):
     @abstractmethod
     def get_level(self) -> int:
         """
-        Return maturity level number (0-6).
+        Return maturity level number (0-7).
         
         Returns:
             int: Level number
@@ -53,11 +53,27 @@ class MaturityState(ABC):
         pass
 
 
-class ChildState(MaturityState):
-    """Level 0: Child state (1 minute)."""
+class InstantState(MaturityState):
+    """Level 0: Instant state (1 second) - Immediate Sensation (The "Now")."""
     
     def get_pitch_multiplier(self):
         return 1.0  # 440Hz
+    
+    def get_stability_threshold(self):
+        return 2.5  # Very reactive
+    
+    def get_time_scale(self):
+        return "1 second"
+    
+    def get_level(self):
+        return 0
+
+
+class ChildState(MaturityState):
+    """Level 1: Child state (1 minute) - Working Memory."""
+    
+    def get_pitch_multiplier(self):
+        return 0.95  # ~418Hz
     
     def get_stability_threshold(self):
         return 3.0
@@ -66,11 +82,11 @@ class ChildState(MaturityState):
         return "1 minute"
     
     def get_level(self):
-        return 0
+        return 1
 
 
 class InfantState(MaturityState):
-    """Level 1: Infant state (1 hour)."""
+    """Level 2: Infant state (1 hour) - Episode / Situation."""
     
     def get_pitch_multiplier(self):
         return 0.9  # ~396Hz
@@ -82,11 +98,11 @@ class InfantState(MaturityState):
         return "1 hour"
     
     def get_level(self):
-        return 1
+        return 2
 
 
 class AdolescentState(MaturityState):
-    """Level 2: Adolescent state (1 day)."""
+    """Level 3: Adolescent state (1 day) - Circadian / Sleep Consolidation."""
     
     def get_pitch_multiplier(self):
         return 0.7  # ~308Hz
@@ -98,11 +114,11 @@ class AdolescentState(MaturityState):
         return "1 day"
     
     def get_level(self):
-        return 2
+        return 3
 
 
 class AdultState(MaturityState):
-    """Level 3: Adult state (1 week)."""
+    """Level 4: Adult state (1 week) - Trend."""
     
     def get_pitch_multiplier(self):
         return 0.5  # ~220Hz
@@ -114,11 +130,11 @@ class AdultState(MaturityState):
         return "1 week"
     
     def get_level(self):
-        return 3
+        return 4
 
 
 class ElderState(MaturityState):
-    """Level 4: Elder state (1 month)."""
+    """Level 5: Elder state (1 month) - Season."""
     
     def get_pitch_multiplier(self):
         return 0.35  # ~154Hz
@@ -130,11 +146,11 @@ class ElderState(MaturityState):
         return "1 month"
     
     def get_level(self):
-        return 4
+        return 5
 
 
 class SageState(MaturityState):
-    """Level 5: Sage state (1 year)."""
+    """Level 6: Sage state (1 year) - Epoch."""
     
     def get_pitch_multiplier(self):
         return 0.25  # 110Hz
@@ -146,11 +162,11 @@ class SageState(MaturityState):
         return "1 year"
     
     def get_level(self):
-        return 5
+        return 6
 
 
 class ScireState(MaturityState):
-    """Level 6: Scire state (10 years) - Knowledge/Transcendence."""
+    """Level 7: Scire state (10 years) - Core Identity / Deep Wisdom."""
     
     def get_pitch_multiplier(self):
         return 0.2  # ~88Hz (even deeper, approaching fundamental)
@@ -162,20 +178,21 @@ class ScireState(MaturityState):
         return "10 years"
     
     def get_level(self):
-        return 6
+        return 7
 
 
 class MaturityContext:
     """Context that maintains current maturity state."""
     
     _state_map = {
-        0: ChildState(),
-        1: InfantState(),
-        2: AdolescentState(),
-        3: AdultState(),
-        4: ElderState(),
-        5: SageState(),
-        6: ScireState(),
+        0: InstantState(),
+        1: ChildState(),
+        2: InfantState(),
+        3: AdolescentState(),
+        4: AdultState(),
+        5: ElderState(),
+        6: SageState(),
+        7: ScireState(),
     }
     
     def __init__(self):
@@ -188,22 +205,30 @@ class MaturityContext:
         Transition to a specific maturity level.
         
         Args:
-            level: Maturity level (0-6)
+            level: Maturity level (0-7)
         """
-        if 0 <= level <= 6:
+        if 0 <= level <= 7:
             self._state = self._state_map[level]
     
     def get_current_state(self) -> MaturityState:
         """Get current maturity state."""
         return self._state
     
-    def get_pitch(self) -> float:
+    def get_pitch(self, maturity_index: float = None) -> float:
         """
-        Get current pitch based on state.
+        Get current pitch based on state, with optional continuous interpolation.
+        
+        Args:
+            maturity_index: Optional continuous maturity index (0.0-1.0) for interpolation.
+                           If None, uses discrete state multiplier.
         
         Returns:
             float: Pitch in Hz
         """
+        if maturity_index is not None:
+            # Interpolate between states based on continuous maturity_index
+            # Drops from 440Hz (A4) to 110Hz (A2) as maturity increases
+            return 440.0 - (maturity_index * 330.0)
         return self._base_pitch * self._state.get_pitch_multiplier()
     
     def set_base_pitch(self, base_pitch: float):
@@ -215,8 +240,20 @@ class MaturityContext:
         """
         self._base_pitch = base_pitch
     
-    def get_stability_threshold(self) -> float:
-        """Get stability threshold for current state."""
+    def get_stability_threshold(self, maturity_index: float = None) -> float:
+        """
+        Get stability threshold for current state, with optional continuous interpolation.
+        
+        Args:
+            maturity_index: Optional continuous maturity index (0.0-1.0) for interpolation.
+                           If None, uses discrete state threshold.
+        
+        Returns:
+            float: Stability threshold
+        """
+        if maturity_index is not None:
+            # Interpolate: Threshold moves from 3.0 to 8.0 as maturity increases
+            return 3.0 + (maturity_index * 5.0)
         return self._state.get_stability_threshold()
     
     def get_time_scale(self) -> str:
@@ -226,4 +263,38 @@ class MaturityContext:
     def get_level(self) -> int:
         """Get current maturity level."""
         return self._state.get_level()
+    
+    def update_from_memory_levels(self, memory_levels: Dict[int, list]) -> Dict[str, float]:
+        """
+        Update maturity state based on memory levels and return character profile.
+        
+        This matches Brain.evolve_character() logic but uses State Pattern.
+        
+        Args:
+            memory_levels: Dict mapping level (0-7) to list of memories/abstractions
+        
+        Returns:
+            dict with maturity_level, maturity_index, base_pitch, stability_threshold
+        """
+        # Find highest level with consolidated memories
+        highest_level = 0
+        for lvl in range(7, -1, -1):
+            if len(memory_levels.get(lvl, [])) > 0:
+                highest_level = lvl
+                break
+        
+        # Transition to highest level reached
+        self.transition_to_level(highest_level)
+        
+        # Calculate continuous maturity_index
+        level_progress = min(1.0, len(memory_levels.get(highest_level, [])) / 10.0) if highest_level > 0 else 0.0
+        base_maturity = highest_level / 7.0  # 0.0, 0.143, 0.286, 0.429, 0.571, 0.714, 0.857, 1.0
+        maturity_index = min(1.0, base_maturity + (level_progress * 0.143))
+        
+        return {
+            'maturity_level': highest_level,
+            'maturity_index': maturity_index,
+            'base_pitch': self.get_pitch(maturity_index),
+            'stability_threshold': self.get_stability_threshold(maturity_index)
+        }
 

@@ -1,4 +1,4 @@
-# Testing Guide for OPU v3.0.0
+# Testing Guide for OPU v3.4.0
 
 ## Overview
 
@@ -171,5 +171,5 @@ Audio tests use mocks and shouldn't require hardware. If they fail:
 
 ---
 
-**The test suite ensures OPU v3.0.0 is robust, reliable, and maintainable.**
+**The test suite ensures OPU v3.4.0 is robust, reliable, and maintainable.**
 

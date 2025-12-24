@@ -118,13 +118,16 @@ class TestVisualPerception:
             r_channel = test_frame[:, :, 2]
             mock_split.return_value = (b_channel, g_channel, r_channel)
             
-            vc = VisualPerception(camera_index=0)
+            # Test with color constancy disabled (legacy mode) for predictable results
+            from config import USE_COLOR_CONSTANCY
+            vc = VisualPerception(camera_index=0, use_color_constancy=False)
             visual_vector, frame = vc.get_visual_input()
             
             # All channels should have std dev of 0 (uniform values)
-            assert visual_vector[0] == 0.0  # R channel std dev
-            assert visual_vector[1] == 0.0  # G channel std dev
-            assert visual_vector[2] == 0.0  # B channel std dev
+            # Use small epsilon for floating point comparison
+            assert abs(visual_vector[0]) < 1e-10  # R channel std dev
+            assert abs(visual_vector[1]) < 1e-10  # G channel std dev
+            assert abs(visual_vector[2]) < 1e-10  # B channel std dev
     
     def test_get_visual_input_high_entropy(self):
         """Test visual input with high entropy (random frame)."""
@@ -134,6 +137,7 @@ class TestVisualPerception:
             mock_cap.return_value = mock_cap_instance
             
             # Create a high-entropy frame (random values)
+            np.random.seed(42)  # For reproducible results
             test_frame = np.random.randint(0, 255, (240, 320, 3), dtype=np.uint8)
             mock_cap_instance.read.return_value = (True, test_frame)
             
@@ -143,12 +147,13 @@ class TestVisualPerception:
             r_channel = test_frame[:, :, 2]
             mock_split.return_value = (b_channel, g_channel, r_channel)
             
-            vc = VisualPerception(camera_index=0)
+            # Test with color constancy disabled (legacy mode) for predictable range
+            vc = VisualPerception(camera_index=0, use_color_constancy=False)
             visual_vector, frame = vc.get_visual_input()
             
             # High entropy should produce high std dev values
             assert all(x > 0 for x in visual_vector)
-            # Random frame should have std dev around 70-80
+            # Random frame should have std dev around 70-80 (raw RGB range)
             assert all(50 < x < 100 for x in visual_vector)
     
     def test_is_active(self):
