@@ -131,20 +131,11 @@ class VisualPerception:
                          np.array([sigma_r_norm, sigma_g_norm, sigma_b_norm])
         """
         if self._cannot_process_frame(frame):
-            return np.array([0.0, 0.0, 0.0])
+            return self._create_empty_visual_vector()
         
-        # 1. SPLIT CHANNELS (OpenCV uses BGR format)
-        # Convert to float32 for precise calculations
-        b, g, r = cv2.split(frame.astype(np.float32))
-        
-        if self.use_color_constancy:
-            sigma_r, sigma_g, sigma_b = self._calculate_color_constancy_vector(r, g, b)
-        else:
-            sigma_r, sigma_g, sigma_b = self._calculate_raw_rgb_vector(r, g, b)
-
-        visual_vector = np.array([sigma_r, sigma_g, sigma_b], dtype=np.float32)
-        
-        return visual_vector
+        r, g, b = self._split_channels(frame)
+        sigma_r, sigma_g, sigma_b = self._calculate_visual_vector(r, g, b)
+        return self._create_visual_vector(sigma_r, sigma_g, sigma_b)
     
     def get_visual_input(self):
         """
@@ -165,23 +156,95 @@ class VisualPerception:
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, VISUAL_CAMERA_HEIGHT)
         self.cap.set(cv2.CAP_PROP_FPS, VISUAL_CAMERA_FPS)
     
+    def _split_channels(self, frame):
+        """
+        Split BGR frame into R, G, B channels.
+        
+        OpenCV uses BGR format, so we need to reorder to RGB.
+        Converts to float32 for precise calculations.
+        
+        Args:
+            frame: BGR image frame
+            
+        Returns:
+            tuple: (r, g, b) channels as float32 arrays
+        """
+        b, g, r = cv2.split(frame.astype(np.float32))
+        return r, g, b
+    
+    def _calculate_visual_vector(self, r, g, b):
+        """
+        Calculate visual vector (sigma_r, sigma_g, sigma_b).
+        
+        Delegates to color constancy or raw RGB calculation based on configuration.
+        
+        Args:
+            r, g, b: Red, green, blue channel arrays
+            
+        Returns:
+            tuple: (sigma_r, sigma_g, sigma_b) standard deviations
+        """
+        if self.use_color_constancy:
+            return self._calculate_color_constancy_vector(r, g, b)
+        return self._calculate_raw_rgb_vector(r, g, b)
+    
     def _calculate_color_constancy_vector(self, r, g, b):
-        """Calculate visual vector using color constancy (normalized chromaticity)."""
-        luminance = r + g + b + VISUAL_EPSILON
+        """
+        Calculate visual vector using color constancy (normalized chromaticity).
+        
+        Normalizes RGB by luminance to achieve shadow-invariance.
+        Chromaticity (r=R/Σ, g=G/Σ, b=B/Σ) remains constant under lighting changes.
+        
+        Args:
+            r, g, b: Red, green, blue channel arrays
+            
+        Returns:
+            tuple: (sigma_r, sigma_g, sigma_b) scaled standard deviations
+        """
+        luminance = self._calculate_luminance(r, g, b)
+        r_norm, g_norm, b_norm = self._normalize_by_luminance(r, g, b, luminance)
+        return self._calculate_channel_std_deviations(r_norm, g_norm, b_norm)
+    
+    def _calculate_luminance(self, r, g, b):
+        """Calculate luminance (R + G + B + epsilon)."""
+        return r + g + b + VISUAL_EPSILON
+    
+    def _normalize_by_luminance(self, r, g, b, luminance):
+        """Normalize RGB channels by luminance to get chromaticity."""
         r_norm = r / luminance
         g_norm = g / luminance
         b_norm = b / luminance
+        return r_norm, g_norm, b_norm
+    
+    def _calculate_channel_std_deviations(self, r_norm, g_norm, b_norm):
+        """Calculate standard deviations of normalized channels and scale."""
         sigma_r = np.std(r_norm) * VISUAL_COLOR_CONSTANCY_SCALE
         sigma_g = np.std(g_norm) * VISUAL_COLOR_CONSTANCY_SCALE
         sigma_b = np.std(b_norm) * VISUAL_COLOR_CONSTANCY_SCALE
         return sigma_r, sigma_g, sigma_b
     
     def _calculate_raw_rgb_vector(self, r, g, b):
-        """Calculate visual vector using raw RGB channels (legacy mode)."""
+        """
+        Calculate visual vector using raw RGB channels (legacy mode).
+        
+        Args:
+            r, g, b: Red, green, blue channel arrays
+            
+        Returns:
+            tuple: (sigma_r, sigma_g, sigma_b) standard deviations
+        """
         sigma_r = np.std(r)
         sigma_g = np.std(g)
         sigma_b = np.std(b)
         return sigma_r, sigma_g, sigma_b
+    
+    def _create_visual_vector(self, sigma_r, sigma_g, sigma_b):
+        """Create visual vector numpy array from channel standard deviations."""
+        return np.array([sigma_r, sigma_g, sigma_b], dtype=np.float32)
+    
+    def _create_empty_visual_vector(self):
+        """Create empty visual vector (all zeros)."""
+        return np.array([0.0, 0.0, 0.0])
     
     def _cannot_process_frame(self, frame):
         """Check if frame cannot be processed (guard clause helper)."""

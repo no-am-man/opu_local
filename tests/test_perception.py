@@ -48,12 +48,13 @@ class TestPerception:
         assert 'normalized' in result
         assert 'raw' in result
         
-        # Genomic bit should be standard deviation
-        expected_std = np.std(input_vector)
+        # Genomic bit should be standard deviation of soft-limited input
+        soft_limited = np.tanh(input_vector)
+        expected_std = np.std(soft_limited)
         assert abs(result['genomic_bit'] - expected_std) < 1e-10
         
-        # Magnitude should be norm
-        expected_magnitude = np.linalg.norm(input_vector)
+        # Magnitude should be norm of soft-limited input
+        expected_magnitude = np.linalg.norm(soft_limited)
         assert abs(result['magnitude'] - expected_magnitude) < 1e-10
     
     def test_perceive_scale_invariance_enabled(self):
@@ -136,28 +137,45 @@ class TestPerception:
         input_vector = np.array([5.0])
         result = perceive(input_vector)
         
-        # Single value has std dev of 0 (or NaN in some implementations)
-        # But magnitude should be the absolute value
-        assert result['magnitude'] == 5.0
+        # Single value has std dev of 0
+        assert result['genomic_bit'] == 0.0
+        # Magnitude should be norm of soft-limited value
+        expected_magnitude = np.linalg.norm(np.tanh(input_vector))
+        assert abs(result['magnitude'] - expected_magnitude) < 1e-10
+        # Raw should be soft-limited
+        assert abs(result['raw'][0] - np.tanh(5.0)) < 1e-10
     
     def test_perceive_preserves_raw(self):
-        """Test that raw input is preserved in result."""
+        """Test that raw input is soft-limited in result."""
         input_vector = np.array([1.0, 2.0, 3.0])
         result = perceive(input_vector)
         
-        np.testing.assert_array_equal(result['raw'], input_vector)
+        # Raw should be soft-limited (tanh applied)
+        expected_raw = np.tanh(input_vector)
+        np.testing.assert_array_almost_equal(result['raw'], expected_raw, decimal=10)
     
     def test_perceive_normalized_direction(self):
-        """Test that normalized vector preserves direction."""
+        """Test that normalized vector preserves direction of soft-limited input."""
+        # Reload module to ensure we have the correct config state
+        import importlib
+        import core.mic
+        importlib.reload(core.mic)
+        from core.mic import perceive as perceive_fresh
+        from config import SCALE_INVARIANCE_ENABLED
+        
         input_vector = np.array([1.0, 2.0, 3.0])
-        result = perceive(input_vector)
+        result = perceive_fresh(input_vector)
         
-        # Calculate expected unit vector (direction)
-        unit_original = input_vector / np.linalg.norm(input_vector)
+        # Calculate expected result from soft-limited input
+        soft_limited = np.tanh(input_vector)
         
-        # Normalize the result to get its direction (regardless of scale invariance setting)
-        result_normalized = result['normalized'] / np.linalg.norm(result['normalized'])
+        if SCALE_INVARIANCE_ENABLED and np.linalg.norm(soft_limited) > 0:
+            # When scale invariance is enabled, normalized should be unit vector
+            expected_normalized = soft_limited / np.linalg.norm(soft_limited)
+        else:
+            # When scale invariance is disabled, normalized should be a copy
+            expected_normalized = soft_limited.copy()
         
-        # Check that direction is preserved (normalized vectors should match)
-        np.testing.assert_array_almost_equal(result_normalized, unit_original, decimal=10)
+        # Normalized should match the expected result
+        np.testing.assert_array_almost_equal(result['normalized'], expected_normalized, decimal=10)
 

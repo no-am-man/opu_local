@@ -65,56 +65,83 @@ class AudioIntrospectionStrategy(IntrospectionStrategy):
         
         Matches AudioCortex implementation exactly for backward compatibility.
         """
-        # Update current genomic bit immediately
-        self.g_now = float(genomic_bit) if genomic_bit is not None else INTROSPECTION_DEFAULT_G_NOW
+        self.g_now = self._update_genomic_bit(genomic_bit)
+        self._cap_and_append_history()
         
-        # Cap histories BEFORE appending to ensure we never exceed max_history_size
+        if not self._has_sufficient_data():
+            return self._get_default_surprise_score()
+        
+        mu_history, sigma_history = self._calculate_historical_statistics()
+        sigma_history = self._apply_noise_floor(sigma_history)
+        self._store_statistics(mu_history, sigma_history)
+        self.s_score = self._calculate_surprise_score(mu_history, sigma_history)
+        self.coherence = self._calculate_coherence()
+        
+        return self.s_score
+    
+    def _update_genomic_bit(self, genomic_bit):
+        """Update current genomic bit from input."""
+        return float(genomic_bit) if genomic_bit is not None else INTROSPECTION_DEFAULT_G_NOW
+    
+    def _cap_and_append_history(self):
+        """Cap histories if needed and append current genomic bit."""
         if len(self.genomic_bits_history) >= self.max_history_size:
-            # Remove oldest entry to make room
-            self.genomic_bits_history.pop(0)
-            if len(self.mu_history) > 0:
-                self.mu_history.pop(0)
-            if len(self.sigma_history) > 0:
-                self.sigma_history.pop(0)
-        
-        # Append current genomic bit
+            self._remove_oldest_entries()
         self.genomic_bits_history.append(self.g_now)
-        
-        # Need at least 2 data points for meaningful introspection
+    
+    def _remove_oldest_entries(self):
+        """Remove oldest entries from all history lists."""
+        self.genomic_bits_history.pop(0)
+        if len(self.mu_history) > 0:
+            self.mu_history.pop(0)
+        if len(self.sigma_history) > 0:
+            self.sigma_history.pop(0)
+    
+    def _has_sufficient_data(self):
+        """Check if there's enough data for meaningful introspection."""
         if len(self.genomic_bits_history) < INTROSPECTION_MIN_DATA_POINTS:
             self.s_score = INTROSPECTION_DEFAULT_S_SCORE
-            self.coherence = INTROSPECTION_DEFAULT_COHERENCE  # Perfect coherence when no history
-            return self.s_score
-        
-        # Calculate historical statistics from ALL history (not just mu/sigma history)
+            self.coherence = INTROSPECTION_DEFAULT_COHERENCE
+            return False
+        return True
+    
+    def _get_default_surprise_score(self):
+        """Return default surprise score when insufficient data."""
+        return self.s_score
+    
+    def _calculate_historical_statistics(self):
+        """Calculate mean and standard deviation from genomic bits history."""
         history_array = np.array(self.genomic_bits_history, dtype=np.float64)
         mu_history = float(np.mean(history_array))
         sigma_history = float(np.std(history_array))
+        return mu_history, sigma_history
+    
+    def _apply_noise_floor(self, sigma_history):
+        """
+        Apply noise floor to prevent trauma learning.
         
-        # --- FIX: RAISE NOISE FLOOR TO PREVENT "TRAUMA LEARNING" ---
-        # A perfectly silent room has sigma=0. We enforce a minimum noise floor.
-        # 0.0001 was too sensitive - it caused tiny glitches to generate s_score > 5.0,
-        # which triggered "Trauma Evolution" (jumping directly to Level 5).
-        # INTROSPECTION_NOISE_FLOOR prevents false high scores from silence while still allowing real surprises.
+        A perfectly silent room has sigma=0. We enforce a minimum noise floor
+        to prevent false high scores from silence while still allowing real surprises.
+        """
         if sigma_history < INTROSPECTION_NOISE_FLOOR:
-            sigma_history = INTROSPECTION_NOISE_FLOOR
-        
-        # Store for later use (these are for backward compatibility)
+            return INTROSPECTION_NOISE_FLOOR
+        return sigma_history
+    
+    def _store_statistics(self, mu_history, sigma_history):
+        """Store statistics for backward compatibility."""
         self.mu_history.append(mu_history)
         self.sigma_history.append(sigma_history)
-        
-        # Calculate surprise score (Z-score formula)
-        # Now safe because sigma_history is guaranteed >= INTROSPECTION_NOISE_FLOOR
-        self.s_score = float(abs(self.g_now - mu_history) / sigma_history)
-        
-        # Calculate coherence (inverse of surprise, normalized)
-        self.coherence = float(1.0 / (1.0 + self.s_score))
-        
-        # Ensure s_score is never negative (safety check)
-        if self.s_score < 0:
-            self.s_score = INTROSPECTION_DEFAULT_S_SCORE
-        
-        return self.s_score
+    
+    def _calculate_surprise_score(self, mu_history, sigma_history):
+        """Calculate surprise score (Z-score) from historical statistics."""
+        s_score = float(abs(self.g_now - mu_history) / sigma_history)
+        if s_score < 0:
+            return INTROSPECTION_DEFAULT_S_SCORE
+        return s_score
+    
+    def _calculate_coherence(self):
+        """Calculate coherence (inverse of surprise, normalized)."""
+        return float(1.0 / (1.0 + self.s_score))
     
     def get_state(self):
         """Get current audio introspection state."""
@@ -170,44 +197,63 @@ class VisualIntrospectionStrategy(IntrospectionStrategy):
         Returns:
             tuple: (s_visual, channel_surprises_dict)
         """
-        channels = ['R', 'G', 'B']
         channel_surprises = {}
         
-        for i, channel in enumerate(channels):
+        for i, channel in enumerate(['R', 'G', 'B']):
             g_now = visual_vector[i]
-            mem = self.visual_memory[channel]
+            self._update_channel_memory(channel, g_now)
             
-            # 1. Add to Short Term Memory
-            mem.append(g_now)
-            if len(mem) > self.max_visual_history:
-                mem.pop(0)
-            
-            # Need history to judge surprise (at least INTROSPECTION_VISUAL_MIN_FRAMES frames)
-            if len(mem) < INTROSPECTION_VISUAL_MIN_FRAMES:
+            if not self._has_sufficient_channel_frames(channel):
                 channel_surprises[channel] = INTROSPECTION_DEFAULT_S_SCORE
                 continue
-                
-            # 2. Calculate Baseline (Normalcy)
-            # What does "Red" usually look like in this room?
-            mu_history = np.mean(mem)
-            sigma_history = np.std(mem)
             
-            # Prevent divide by zero
-            if sigma_history == 0:
-                sigma_history = INTROSPECTION_SIGMA_DEFAULT
-            
-            # 3. Calculate Z-Score (Surprise)
-            # Same formula as audio introspection: |g_now - mu| / sigma
-            s_channel = abs(g_now - mu_history) / sigma_history
-            channel_surprises[channel] = s_channel
+            surprise = self._calculate_channel_surprise(channel, g_now)
+            channel_surprises[channel] = surprise
 
-        # 4. SENSORY FUSION
-        # The "Visual Score" is the maximum surprise found in any channel.
-        # If the scene is mostly static (Low G, Low B) but a red laser appears (High R),
-        # the OPU should be Surprised.
+        return self._fuse_visual_scores(channel_surprises)
+    
+    def _update_channel_memory(self, channel, g_now):
+        """Update channel memory with new value, capping size if needed."""
+        mem = self.visual_memory[channel]
+        mem.append(g_now)
+        if len(mem) > self.max_visual_history:
+            mem.pop(0)
+    
+    def _has_sufficient_channel_frames(self, channel):
+        """Check if channel has enough frames for meaningful introspection."""
+        return len(self.visual_memory[channel]) >= INTROSPECTION_VISUAL_MIN_FRAMES
+    
+    def _calculate_channel_surprise(self, channel, g_now):
+        """Calculate surprise score for a single channel."""
+        mem = self.visual_memory[channel]
+        mu_history = np.mean(mem)
+        sigma_history = np.std(mem)
+        sigma_history = self._apply_visual_noise_floor(sigma_history)
+        
+        return abs(g_now - mu_history) / sigma_history
+    
+    def _apply_visual_noise_floor(self, sigma_history):
+        """Apply noise floor to prevent divide by zero."""
+        if sigma_history == 0:
+            return INTROSPECTION_SIGMA_DEFAULT
+        return sigma_history
+    
+    def _fuse_visual_scores(self, channel_surprises):
+        """
+        Fuse channel scores into overall visual surprise.
+        
+        The visual score is the maximum surprise found in any channel.
+        If the scene is mostly static (Low G, Low B) but a red laser appears (High R),
+        the OPU should be Surprised.
+        """
         if not channel_surprises:
-            return INTROSPECTION_DEFAULT_S_SCORE, {'R': INTROSPECTION_DEFAULT_S_SCORE, 'G': INTROSPECTION_DEFAULT_S_SCORE, 'B': INTROSPECTION_DEFAULT_S_SCORE}
-            
+            default_scores = {
+                'R': INTROSPECTION_DEFAULT_S_SCORE,
+                'G': INTROSPECTION_DEFAULT_S_SCORE,
+                'B': INTROSPECTION_DEFAULT_S_SCORE
+            }
+            return INTROSPECTION_DEFAULT_S_SCORE, default_scores
+        
         s_visual = max(channel_surprises.values())
         return s_visual, channel_surprises
     

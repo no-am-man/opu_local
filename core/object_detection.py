@@ -5,6 +5,10 @@ Uses OpenCV DNN for real-time object detection and emotion recognition.
 OPU v3.2 - Visual Object Recognition + Emotion Detection
 """
 
+# Suppress TensorFlow verbose logging before importing
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Suppress INFO and WARNING messages
+
 try:
     import cv2
 except ImportError:
@@ -135,28 +139,38 @@ class EmotionDetector:
         try:
             return detection_method(face_roi)
         except (KeyboardInterrupt, SystemExit):
+            # Re-raise to allow proper cleanup
             raise
-        except Exception:
+        except Exception as e:
+            # Silently handle all other exceptions (TensorFlow errors, etc.)
+            # to prevent GIL issues during shutdown
             return None
     
     def _detect_with_deepface(self, face_roi: np.ndarray) -> Optional[EmotionResult]:
         """Detect emotion using DeepFace."""
-        from deepface import DeepFace
-        result = DeepFace.analyze(
-            face_roi, 
-            actions=['emotion'], 
-            enforce_detection=False, 
-            silent=True
-        )
-        
-        if not result:
+        try:
+            from deepface import DeepFace
+            result = DeepFace.analyze(
+                face_roi, 
+                actions=['emotion'], 
+                enforce_detection=False, 
+                silent=True
+            )
+            
+            if not result:
+                return None
+            
+            emotions = self._extract_emotions_from_deepface(result)
+            if not emotions:
+                return None
+            
+            return self._create_emotion_result_from_emotions(emotions)
+        except (KeyboardInterrupt, SystemExit):
+            # Re-raise to allow proper cleanup
+            raise
+        except Exception:
+            # Handle TensorFlow/GIL errors gracefully
             return None
-        
-        emotions = self._extract_emotions_from_deepface(result)
-        if not emotions:
-            return None
-        
-        return self._create_emotion_result_from_emotions(emotions)
     
     def _create_emotion_result_from_emotions(self, emotions: Dict[str, float]) -> EmotionResult:
         """Create EmotionResult from emotions dictionary."""
@@ -320,16 +334,23 @@ class ObjectDetector:
         if not self.active or frame is None:
             return []
         
-        detections = []
-        
-        if self.use_dnn and self.net:
-            dnn_detections = self._detect_with_dnn(frame)
-            detections.extend(dnn_detections)
-        
-        face_detections = self._detect_faces(frame)
-        detections.extend(face_detections)
-        
-        return detections
+        try:
+            detections = []
+            
+            if self.use_dnn and self.net:
+                dnn_detections = self._detect_with_dnn(frame)
+                detections.extend(dnn_detections)
+            
+            face_detections = self._detect_faces(frame)
+            detections.extend(face_detections)
+            
+            return detections
+        except (KeyboardInterrupt, SystemExit):
+            # Re-raise to allow proper cleanup
+            raise
+        except Exception:
+            # Handle any errors gracefully (TensorFlow/GIL issues during shutdown)
+            return []
     
     def _detect_with_dnn(self, frame):
         """Detect objects using DNN (placeholder - requires model files)."""
@@ -340,13 +361,19 @@ class ObjectDetector:
         if not self.face_cascade:
             return []
         
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        faces = self.face_cascade.detectMultiScale(
-            gray, 
-            scaleFactor=1.1, 
-            minNeighbors=5, 
-            minSize=(30, 30)
-        )
+        try:
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            faces = self.face_cascade.detectMultiScale(
+                gray, 
+                scaleFactor=1.1, 
+                minNeighbors=5, 
+                minSize=(30, 30)
+            )
+        except (KeyboardInterrupt, SystemExit):
+            raise
+        except Exception:
+            # Handle OpenCV errors gracefully
+            return []
         
         detections = []
         for (x, y, w, h) in faces:
@@ -357,12 +384,20 @@ class ObjectDetector:
             }
             
             if self.detect_emotions and self.emotion_detector:
-                emotion_result = self.emotion_detector.detect(frame[y:y+h, x:x+w])
-                if emotion_result:
-                    detection['emotion'] = {
-                        'emotion': emotion_result.emotion,
-                        'confidence': emotion_result.confidence
-                    }
+                try:
+                    emotion_result = self.emotion_detector.detect(frame[y:y+h, x:x+w])
+                    if emotion_result:
+                        detection['emotion'] = {
+                            'emotion': emotion_result.emotion,
+                            'confidence': emotion_result.confidence
+                        }
+                except (KeyboardInterrupt, SystemExit):
+                    # Re-raise to allow proper cleanup
+                    raise
+                except Exception:
+                    # Silently handle emotion detection errors (TensorFlow/GIL issues)
+                    # Continue with face detection without emotion
+                    pass
             
             detections.append(detection)
         

@@ -219,13 +219,35 @@ class PhonemeAnalyzer:
         return s_score >= self.speech_threshold
     
     def _map_tension_to_phoneme(self, s_score, pitch):
-        """Map tension level (s_score) to phoneme type."""
-        if s_score < PHONEME_VOWEL_BOUNDARY:
-            return "a" if pitch > PHONEME_PITCH_THRESHOLD else "o"
-        elif s_score < PHONEME_FRICATIVE_BOUNDARY:
-            return "s"
-        else:
-            return "k"
+        """Map tension level (s_score) to phoneme type using method dispatch."""
+        method_map = self._build_phoneme_method_map()
+        
+        # Find the appropriate method based on s_score
+        for boundary, method in method_map:
+            if s_score < boundary:
+                return method(s_score, pitch)
+        
+        # Default to plosive for highest tension
+        return self._get_plosive_phoneme(s_score, pitch)
+    
+    def _build_phoneme_method_map(self):
+        """Build method dispatch map for phoneme selection."""
+        return [
+            (PHONEME_VOWEL_BOUNDARY, self._get_vowel_phoneme),
+            (PHONEME_FRICATIVE_BOUNDARY, self._get_fricative_phoneme)
+        ]
+    
+    def _get_vowel_phoneme(self, s_score, pitch):
+        """Get vowel phoneme based on pitch."""
+        return "a" if pitch > PHONEME_PITCH_THRESHOLD else "o"
+    
+    def _get_fricative_phoneme(self, s_score, pitch):
+        """Get fricative phoneme."""
+        return "s"
+    
+    def _get_plosive_phoneme(self, s_score, pitch):
+        """Get plosive phoneme."""
+        return "k"
     
     def _store_phoneme(self, phoneme, s_score, pitch):
         """Store phoneme in history with memory cap."""

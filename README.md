@@ -37,6 +37,75 @@ The OPU consists of several interconnected subsystems:
 - **Expression** (`core/expression.py`): Aesthetic feedback loop and phoneme analysis
 - **Visualization** (`utils/visualization.py`): Real-time cognitive map visualization
 
+### System Architecture Diagram
+
+The OPU uses a **multiprocessing architecture** to safely run GUI components on macOS:
+
+```mermaid
+graph TB
+    subgraph "Main Process (OpenCV)"
+        direction TB
+        EventLoop[OPU Event Loop<br/>main.py]
+        
+        subgraph "Input Layer"
+            Mic[Microphone<br/>Audio Input Handler]
+            Cam[Camera<br/>Visual Perception]
+            ObjDet[Object Detector<br/>Face & Emotion Detection]
+        end
+        
+        subgraph "Processing Layer"
+            Genesis[Genesis Kernel<br/>Ethical Veto]
+            Cortex[OPU Cortex<br/>Brain + AudioCortex + VisualCortex]
+            AFL[Aesthetic Feedback Loop<br/>Voice Generation]
+            Phoneme[Phoneme Analyzer]
+        end
+        
+        subgraph "Output Layer"
+            Viz[Cognitive Map Visualizer<br/>Matplotlib Agg]
+            Persist[Persistence<br/>opu_state.json]
+        end
+        
+        subgraph "OpenCV Windows"
+            WebCam[WebCam Preview<br/>Position: 100,100]
+            CogMap[Cognitive Map<br/>Position: 800,100]
+        end
+        
+        Mic --> Cortex
+        Cam --> ObjDet
+        ObjDet --> Cortex
+        Cortex --> Genesis
+        Genesis --> AFL
+        Genesis --> Phoneme
+        Cortex --> Viz
+        Cortex --> Persist
+        Viz --> CogMap
+        ObjDet --> WebCam
+    end
+    
+    subgraph "Viewer Process (Tkinter)"
+        StateViewer[State Viewer<br/>OPUStateViewer]
+        StateGUI[GUI Window<br/>Centered on Screen]
+        StateViewer --> StateGUI
+    end
+    
+    Persist -.->|File-based Sync| StateViewer
+    
+    style EventLoop fill:#4CAF50
+    style Cortex fill:#2196F3
+    style Genesis fill:#F44336
+    style StateViewer fill:#FF9800
+    style Persist fill:#9C27B0
+```
+
+**Key Architecture Features:**
+
+1. **Multiprocessing Isolation**: Main process (OpenCV) and Viewer process (Tkinter) run independently, preventing macOS GUI conflicts
+2. **File-based Communication**: State synchronization via `opu_state.json` (no shared memory)
+3. **8-Layer Memory Hierarchy**: Memories progress from Level 0 (1 second) to Level 7 (10 years)
+4. **Real-time Processing**: Audio and visual input processed in parallel with surprise score calculation
+5. **Emotion Persistence**: Detected emotions stored in memories and preserved through consolidation
+6. **Color Constancy**: Visual perception uses normalized chromaticity for shadow-invariant detection
+
 ### Design Patterns
 
 The OPU architecture implements **8 Gang of Four (GOF) design patterns** for improved extensibility and maintainability:

@@ -9,15 +9,25 @@ Now implements Observer Pattern to react to OPU state changes.
 # This must be done before any matplotlib imports
 import os
 import platform
-if platform.system() == 'Darwin':
-    os.environ['TK_SILENCE_DEPRECATION'] = '1'
-    # Use a non-tkinter backend on macOS to avoid conflicts
-    import matplotlib
-    matplotlib.use('TkAgg')  # TkAgg is fine if TK_SILENCE_DEPRECATION is set
+
+# FIX: FORCE NON-INTERACTIVE BACKEND (Agg)
+# This prevents Matplotlib from trying to open a Tkinter window,
+# which crashes macOS when OpenCV is also running.
+# Matplotlib will render to an image buffer instead, which we'll display via OpenCV.
+import matplotlib
+matplotlib.use('Agg')  # Non-interactive backend - renders to image buffer only
 
 import numpy as np
 import matplotlib.pyplot as plt
 from collections import deque
+
+# Optional cv2 import for rendering to OpenCV image
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
+
 from config import VISUALIZATION_UPDATE_RATE, WINDOW_SIZE
 from core.patterns.observer import OPUObserver
 
@@ -28,7 +38,8 @@ class CognitiveMapVisualizer(OPUObserver):
     """
     
     def __init__(self):
-        self.fig, self.ax = plt.subplots(figsize=WINDOW_SIZE)
+        self.fig, self.ax = plt.subplots(figsize=WINDOW_SIZE, dpi=100)
+        self.fig.tight_layout(pad=2.0)
         self.ax.set_xlim(-2, 2)
         self.ax.set_ylim(-2, 2)
         self.ax.set_aspect('equal')
@@ -232,23 +243,50 @@ class CognitiveMapVisualizer(OPUObserver):
         
         return points
     
-    def show(self):
-        """Display the visualization window."""
-        plt.ion()  # Turn on interactive mode
-        plt.tight_layout()
-        plt.show(block=False)
-        plt.pause(0.001)  # Small pause to ensure window is ready
-    
-    def refresh(self):
-        """Refresh the display (call after draw_cognitive_map)."""
+    def render_to_image(self):
+        """
+        Renders the current Matplotlib figure to a Numpy/OpenCV image.
+        This allows us to display the graph inside the OpenCV loop
+        without crashing the thread.
+        
+        Returns:
+            numpy.ndarray: BGR image array (OpenCV format) or None if cv2 unavailable
+        """
+        if not CV2_AVAILABLE:
+            return None
+        
         try:
-            plt.draw()
-            plt.pause(0.001)  # Small pause to allow GUI to update
+            # 1. Draw the canvas (this renders the figure to the buffer)
+            self.fig.canvas.draw()
+            
+            # 2. Convert to Numpy Array
+            # Use buffer_rgba() for better compatibility, then convert to RGB
+            buf = self.fig.canvas.buffer_rgba()
+            ncols, nrows = self.fig.canvas.get_width_height()
+            data = np.frombuffer(buf, dtype=np.uint8)
+            image = data.reshape((nrows, ncols, 4))  # RGBA
+            
+            # 3. Convert RGBA -> RGB (drop alpha channel)
+            image_rgb = image[:, :, :3]
+            
+            # 4. Convert RGB (Matplotlib) to BGR (OpenCV)
+            image_bgr = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
+            
+            return image_bgr
         except (KeyboardInterrupt, SystemExit):
             raise
-        except Exception:
-            # Silently ignore matplotlib errors (e.g., window closed, threading issues)
-            pass
+        except Exception as e:
+            # Log error for debugging (but don't crash)
+            print(f"[VISUALIZATION] render_to_image error: {e}")
+            return None
+    
+    def show(self):
+        """Display method - now handled by OpenCV in main.py."""
+        pass  # Do nothing, main.py handles display now
+    
+    def refresh(self):
+        """Refresh method - now handled by OpenCV in main.py."""
+        pass  # Do nothing, main.py handles display now
     
     def on_state_changed(self, state):
         """

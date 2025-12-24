@@ -63,7 +63,7 @@ MATURITY_INCREMENT = 0.0125  # Smaller increment for 8 levels (1.0 / 80 steps to
 
 # Visualization Configuration
 VISUALIZATION_UPDATE_RATE = 30  # FPS
-WINDOW_SIZE = (12, 8)  # inches
+WINDOW_SIZE = (6, 4)  # inches (reduced from 12x8 for smaller window)
 
 # Persistence Configuration
 STATE_FILE = "opu_state.json"  # Path to save/load OPU state
@@ -312,4 +312,3 @@ OPU_BUILDER_DEFAULT_VISUAL_HISTORY = 50  # Default visual history size for build
 # Mic/Perception Configuration
 MIC_DEFAULT_GENOMIC_BIT = 0.0  # Default genomic bit for empty input
 MIC_DEFAULT_MAGNITUDE = 0.0  # Default magnitude for empty input
-
