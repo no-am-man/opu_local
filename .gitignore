@@ -34,3 +34,10 @@ Thumbs.db
 .coverage
 htmlcov/
 
+# Log Files
+*.log
+opu.log
+youtube_opu.log
+viewer_error.log
+opu_debug.log
+
