@@ -127,7 +127,7 @@ class TimeScale:
     """Time scale mapping for maturity levels."""
     SCALES = {
         0: "1s", 1: "1m", 2: "1h", 3: "1d",
-        4: "1w", 5: "1mo", 6: "1y", 7: "10y"
+        4: "1w", 5: "1mo", 6: "1y", 7: "4y"
     }
     
     @classmethod

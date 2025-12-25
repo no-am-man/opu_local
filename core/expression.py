@@ -5,6 +5,7 @@ Maps surprise scores to audio frequencies and phonemes.
 
 import numpy as np
 import sounddevice as sd
+from typing import Optional
 from config import (
     BASE_FREQUENCY, SAMPLE_RATE,
     AFL_BASE_BREATH_RATE, AFL_BREATH_RATE_MULTIPLIER, AFL_BREATH_SMOOTHING,
@@ -17,6 +18,8 @@ from config import (
     PHONEME_PITCH_THRESHOLD, PHONEME_MAX_HISTORY
 )
 from core.phoneme_inventory import PHONEME_INVENTORY
+from core.universal_phoneme_inventory import UNIVERSAL_PHONEME_INVENTORY
+from config import PHONEME_USE_UNIVERSAL_INVENTORY, PHONEME_LANGUAGE_FAMILIES
 from core.formant_synthesizer import FORMANT_SYNTHESIZER
 
 
@@ -189,12 +192,41 @@ class PhonemeAnalyzer:
     s_score, pitch, and spectral features.
     """
     
-    def __init__(self, speech_threshold=None, max_history=None, use_full_inventory=True):
+    def __init__(self, speech_threshold=None, max_history=None, use_full_inventory=True, use_universal_inventory=None):
         self.speech_threshold = speech_threshold or PHONEME_SPEECH_THRESHOLD
         self.phoneme_history = []
         self.max_history = max_history or PHONEME_MAX_HISTORY
         self.use_full_inventory = use_full_inventory
-        self.inventory = PHONEME_INVENTORY if use_full_inventory else None 
+        
+        # Initialize inventory based on configuration
+        self.inventory = self._initialize_inventory(use_universal_inventory)
+    
+    def _initialize_inventory(self, use_universal_inventory: Optional[bool]) -> Optional[object]:
+        """
+        Initialize phoneme inventory based on configuration.
+        
+        Args:
+            use_universal_inventory: Whether to use universal inventory (None = from config)
+            
+        Returns:
+            Phoneme inventory instance or None
+        """
+        if not self.use_full_inventory:
+            return None
+        
+        # Use universal inventory if enabled (default from config)
+        if use_universal_inventory is None:
+            use_universal_inventory = PHONEME_USE_UNIVERSAL_INVENTORY
+        
+        if use_universal_inventory:
+            # Import here to avoid circular dependencies
+            from core.universal_phoneme_inventory import UniversalPhonemeInventory
+            if PHONEME_LANGUAGE_FAMILIES is not None:
+                return UniversalPhonemeInventory(enabled_families=set(PHONEME_LANGUAGE_FAMILIES))
+            else:
+                return UNIVERSAL_PHONEME_INVENTORY
+        else:
+            return PHONEME_INVENTORY 
     
     def analyze(self, s_score, pitch):
         """

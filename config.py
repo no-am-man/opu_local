@@ -207,6 +207,10 @@ PHONEME_FRICATIVE_BOUNDARY = 6.0  # Boundary between fricatives and plosives
 PHONEME_PITCH_THRESHOLD = 200.0  # Pitch threshold for vowel selection (a vs o)
 PHONEME_MAX_HISTORY = 10000  # Maximum phoneme history entries (prevents memory leak)
 PHONEME_USE_FULL_INVENTORY = True  # Use full IPA inventory (~44 phonemes) instead of basic set
+PHONEME_USE_UNIVERSAL_INVENTORY = True  # Use universal inventory supporting all languages (~150+ phonemes)
+PHONEME_LANGUAGE_FAMILIES = None  # Set of language families to include (None = all families)
+# Options: 'romance', 'germanic', 'slavic', 'semitic', 'sino-tibetan', 'dravidian',
+#          'japonic', 'koreanic', 'african', 'polynesian', 'native_american', etc.
 
 # Speech Synthesis Configuration
 SPEECH_USE_TTS = True  # Use TTS library (pyttsx3) for word-level synthesis
