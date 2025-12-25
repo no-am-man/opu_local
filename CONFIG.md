@@ -242,7 +242,7 @@ See [Surprise Sensitivity](#introspection_noise_floor-default-0001) section abov
 - Level 4: 1 week (604800s)
 - Level 5: 1 month (2592000s)
 - Level 6: 1 year (31536000s)
-- Level 7: 10 years (315360000s)
+- Level 7: 4 years (126230400s)
 
 **Effect:** Controls how long each abstraction cycle takes.
 

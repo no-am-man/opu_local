@@ -178,7 +178,7 @@ class SageState(MaturityState):
 
 
 class ScireState(MaturityState):
-    """Level 7: Scire state (10 years) - Core Identity / Deep Wisdom."""
+    """Level 7: Scire state (4 years) - Core Identity / Deep Wisdom."""
     
     def get_pitch_multiplier(self):
         return MATURITY_SCIRE_PITCH_MULTIPLIER  # ~88Hz (even deeper, approaching fundamental)
@@ -187,7 +187,7 @@ class ScireState(MaturityState):
         return MATURITY_SCIRE_STABILITY  # Very hard to surprise - true wisdom
     
     def get_time_scale(self):
-        return "10 years"
+        return "4 years"
     
     def get_level(self):
         return 7

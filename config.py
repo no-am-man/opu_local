@@ -38,7 +38,7 @@ USE_COLOR_CONSTANCY = True  # If True, uses normalized chromaticity (shadow-inva
 # Level 4: 1 week (604800s) - Trend
 # Level 5: 1 month (2592000s) - Season
 # Level 6: 1 year (31536000s) - Epoch
-# Level 7: 10 years (315360000s) - Core Identity / Deep Wisdom
+# Level 7: 4 years (126230400s) - Core Identity / Deep Wisdom
 
 # Time scale multipliers (for simulation - can be adjusted for faster/slower progression)
 TIME_SCALE_MULTIPLIER = 1.0  # 1.0 = real time, 10.0 = 10x faster, etc.
@@ -51,7 +51,7 @@ MATURITY_LEVEL_TIMES = {
     4: 604800.0,       # 1 week
     5: 2592000.0,      # 1 month
     6: 31536000.0,     # 1 year
-    7: 315360000.0     # 10 years (Deep Wisdom)
+    7: 126230400.0     # 4 years (Deep Wisdom)
 }
 
 # Apply time scale multiplier
@@ -175,7 +175,7 @@ MATURITY_TIME_SCALES = {
     4: "1 week",
     5: "1 month",
     6: "1 year",
-    7: "10 years"
+    7: "4 years"
 }
 DAY_COUNTER_LEVEL = 3  # Level 3 (1 day) increments day counter
 

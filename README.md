@@ -105,7 +105,7 @@ graph TB
 
 1. **Multiprocessing Isolation**: Main process (OpenCV) and Viewer process (Tkinter) run independently, preventing macOS GUI conflicts
 2. **File-based Communication**: State synchronization via `opu_state.json` (no shared memory)
-3. **8-Layer Memory Hierarchy**: Memories progress from Level 0 (1 second) to Level 7 (10 years)
+3. **8-Layer Memory Hierarchy**: Memories progress from Level 0 (1 second) to Level 7 (4 years)
 4. **Real-time Processing**: Audio and visual input processed in parallel with surprise score calculation
 5. **Emotion Persistence**: Detected emotions stored in memories and preserved through consolidation
 6. **Color Constancy**: Visual perception uses normalized chromaticity for shadow-invariant detection
@@ -302,15 +302,16 @@ USE_COLOR_CONSTANCY = False  # Use raw RGB channels
 
 ## Character Evolution
 
-The OPU evolves over time through **7 maturity levels**:
+The OPU evolves over time through **8 maturity levels**:
 
-- **Level 0**: 1 minute - Child (440Hz, easily surprised)
-- **Level 1**: 1 hour - Infant (~396Hz)
-- **Level 2**: 1 day - Adolescent (~308Hz)
-- **Level 3**: 1 week - Adult (~220Hz)
-- **Level 4**: 1 month - Elder (~154Hz)
-- **Level 5**: 1 year - Sage (110Hz, deep wisdom)
-- **Level 6**: 10 years - **Scire** (~88Hz, transcendent knowledge)
+- **Level 0**: 1 second - Instant (440Hz, very reactive)
+- **Level 1**: 1 minute - Child (~418Hz, easily surprised)
+- **Level 2**: 1 hour - Infant (~396Hz)
+- **Level 3**: 1 day - Adolescent (~308Hz)
+- **Level 4**: 1 week - Adult (~220Hz)
+- **Level 5**: 1 month - Elder (~154Hz)
+- **Level 6**: 1 year - Sage (110Hz, deep wisdom)
+- **Level 7**: 4 years - **Scire** (~88Hz, transcendent knowledge)
 
 **Evolution Characteristics:**
 - **Maturity Index**: Increases from 0.0 (child) to 1.0 (Scire)
@@ -328,8 +329,8 @@ The OPU evolves over time through **7 maturity levels**:
 
 The OPU automatically saves its learned state to disk (`opu_state.json` by default) so it can resume learning from where it left off. The state includes:
 
-- **Character Profile**: Maturity level (0-6), maturity index, base pitch, stability threshold
-- **Memory Levels**: All 7 abstraction layers (L0-L6, from 1 minute to 10 years)
+- **Character Profile**: Maturity level (0-7), maturity index, base pitch, stability threshold
+- **Memory Levels**: All 8 abstraction layers (L0-L7, from 1 second to 4 years)
 - **History**: Genomic bits, mu/sigma history for introspection
 - **Phonemes**: Learned phoneme history and statistics
 - **Emotions**: Detected emotions from faces, stored in memories and emotion history (NEW)
@@ -448,11 +449,11 @@ If you use OPU in your research, please cite:
 - **Breaking Change**: Delete `opu_state.json` to reset (existing files contain false memories)
 
 ### v3.1.0 (2024-12-23)
-- **Added Level 7 "Scire"**: 10-year maturity cycle with transcendent knowledge state
+- **Added Level 7 "Scire"**: 4-year maturity cycle with transcendent knowledge state
 - **Enhanced Persistence**: Abstraction cycle timers now saved/restored for timing continuity
 - **Emotion Detection**: Real-time facial emotion recognition (7 emotions)
 - **Improved Sensitivity**: Lower thresholds for more responsive, "chatty" behavior
-- **Extended Memory Hierarchy**: Now supports 7 levels (1 minute to 10 years)
+- **Extended Memory Hierarchy**: Now supports 8 levels (1 second to 4 years)
 - **Visual Cortex**: Multi-modal integration with recursive perceptual loops
 - **Acoustic Feedback Prevention**: Mutes microphone when OPU is speaking
 - **Design Patterns**: 8 GOF patterns implemented for extensibility
