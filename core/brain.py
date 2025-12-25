@@ -116,6 +116,16 @@ class Brain:
         memory_item = self._create_memory_item(memory_data)
         
         self.memory_levels[level].append(memory_item)
+        
+        # Log memory storage (every 50 memories to avoid spam)
+        level_count = len(self.memory_levels[level])
+        if level_count % 50 == 0 or level_count == 1:
+            emotion_str = ""
+            if emotion_vector and emotion_vector.get('label') != 'neutral':
+                emotion_str = f" | Emotion: {emotion_vector.get('label', 'unknown')} ({emotion_vector.get('intensity', 0):.2f})"
+            print(f"[MEMORY] Stored {sense_label} at L{level}: g_bit={genomic_bit:.4f} | s_score={s_score:.4f} | "
+                  f"L{level}_count={level_count}{emotion_str}")
+        
         self._check_and_consolidate_if_needed(level)
     
     def _get_timestamp(self, timestamp):
@@ -167,6 +177,16 @@ class Brain:
         abstraction = self._create_abstraction(abstraction_data)
         
         self.memory_levels[level + 1].append(abstraction)
+        
+        # Log consolidation event
+        emotion_str = ""
+        if consolidated_emotion and consolidated_emotion.get('label') != 'neutral':
+            emotion_str = f" | Emotion: {consolidated_emotion.get('label', 'unknown')}"
+        sense_str = f" | Senses: {', '.join(set(sense_labels))}" if sense_labels else ""
+        print(f"[CONSOLIDATION] L{level} → L{level+1}: {len(chunk)} items → 1 abstraction | "
+              f"mean_bit={abstraction_result.mean_bit:.4f} | pattern={abstraction_result.pattern_strength:.4f}"
+              f"{emotion_str}{sense_str}")
+        
         self._check_recursive_consolidation(level + 1)
         self._trigger_evolution_if_needed(level + 1)
     

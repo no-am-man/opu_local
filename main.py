@@ -37,7 +37,7 @@ from config import (
     VISUAL_SURPRISE_THRESHOLD, AUDIO_TONE_DURATION_SECONDS,
     MATURITY_TIME_SCALES, DAY_COUNTER_LEVEL,
     MAIN_DEFAULT_CONFIDENCE_THRESHOLD, MAIN_DEFAULT_SURPRISE_SCORE,
-    MAIN_EMPTY_VISUAL_VECTOR
+    MAIN_EMPTY_VISUAL_VECTOR, YOUTUBE_AUTO_START_URL
 )
 from core.genesis import GenesisKernel
 from core.mic import perceive
@@ -159,6 +159,7 @@ class OPUEventLoop:
         print("[OPU] Initialized. Starting event loop...")
     
     def _load_state(self):
+        """Load OPU state from disk."""
         success, day_counter, last_abstraction_times = self.persistence.load_state(
             self.cortex, self.phoneme_analyzer
         )
@@ -170,14 +171,26 @@ class OPUEventLoop:
                         self.last_abstraction_times[level] = timestamp
             character = self.cortex.get_character_state()
             self.afl.update_pitch(character['base_pitch'])
+            
+            # Log loaded state
+            memory_counts = [len(self.cortex.memory_levels[i]) for i in range(8)]
+            memory_str = " | ".join([f"L{i}={memory_counts[i]}" for i in range(8)])
+            print(f"[STATE] Loaded: Day {day_counter} | Maturity: {character['maturity_index']:.3f} | "
+                  f"Memory: {memory_str}")
+        else:
+            print("[STATE] No saved state found, starting fresh")
     
     def _save_state(self):
-        self.persistence.save_state(
+        """Save OPU state to disk."""
+        success = self.persistence.save_state(
             self.cortex,
             self.phoneme_analyzer,
             self.day_counter,
             self.last_abstraction_times
         )
+        if success:
+            char = self.cortex.get_character_state()
+            print(f"[STATE] Saved: Day {self.day_counter} | Maturity: {char['maturity_index']:.3f}")
     
     def process_cycle(self):
         # ============================================================
@@ -187,51 +200,85 @@ class OPUEventLoop:
         # the same timestamp when storing memories in the same cycle
         cycle_timestamp = time.time()
         
+        # Process audio channel (AUDIO_V1)
         audio_result = self._process_audio_perception()
         self._last_audio_result = audio_result
+        
+        # Process visual channel (VIDEO_V1)
         visual_result = self._process_visual_perception()
         
+        # Fusion: combine audio and visual surprise scores
         fused_score = max(audio_result['surprise'], visual_result['surprise'])
+        
+        # Ethical veto: apply safety kernel
         safe_score = self._apply_ethical_veto(fused_score, audio_result['genomic_bit'])
         
         # Store memories with synchronized timestamp (VIDEO_V1, AUDIO_V1)
         self._store_memories(audio_result, visual_result, safe_score, cycle_timestamp)
+        
+        # Expression: audio feedback and phonemes
         self._update_expression(safe_score)
         self._analyze_phonemes(audio_result['surprise'])
-        self._display_visual_hud(visual_result)
         
-        # Update and Send Graph (use fresh audio_result s_score to ensure it's current)
+        # Display: HUD overlay and visualization
+        self._display_visual_hud(visual_result)
         self._update_visualization(audio_result.get('surprise'))
         
+        # Process OpenCV events (keyboard input)
         self._process_opencv_events()
     
     def _process_audio_perception(self):
+        """Process audio input and calculate surprise score."""
         audio_input = self.audio_handler.get_audio_input()
         perception = perceive(audio_input)
+        genomic_bit = perception['genomic_bit']
+        
         # Call introspect to calculate s_score - this updates audio_cortex.s_score
-        s_score = self.cortex.introspect(perception['genomic_bit'])
-        # Verify s_score was calculated (debug)
-        if s_score == 0.0 and len(self.cortex.audio_cortex.genomic_bits_history) >= 2:
-            # Only log if we have data but s_score is still 0 (potential issue)
-            pass  # Silent - don't spam logs
-        return {'genomic_bit': perception['genomic_bit'], 'surprise': s_score}
+        s_score = self.cortex.introspect(genomic_bit)
+        
+        # Log introspection result (every 100 cycles to avoid spam)
+        if not hasattr(self, '_audio_log_counter'):
+            self._audio_log_counter = 0
+        self._audio_log_counter += 1
+        if self._audio_log_counter % 100 == 0:
+            history_len = len(self.cortex.audio_cortex.genomic_bits_history)
+            print(f"[AUDIO] g_bit: {genomic_bit:.4f} | s_score: {s_score:.4f} | history: {history_len}")
+        
+        return {'genomic_bit': genomic_bit, 'surprise': s_score}
     
     def _process_visual_perception(self):
+        """Process visual input and calculate surprise score."""
         try:
             raw_frame = self.visual_perception.capture_frame()
-            if raw_frame is None: return self._create_empty_visual_result()
+            if raw_frame is None:
+                return self._create_empty_visual_result()
             
+            # Object detection
             detections = self.object_detector.detect_objects(raw_frame)
             processed_frame = self.object_detector.draw_detections(raw_frame.copy(), detections)
+            
+            # Visual analysis
             visual_vector = self.visual_perception.analyze_frame(processed_frame)
             surprise, channel_scores = self.cortex.introspect_visual(visual_vector)
             emotion = self._extract_emotion(detections)
+            
+            # Log visual processing (every 100 cycles to avoid spam)
+            if not hasattr(self, '_visual_log_counter'):
+                self._visual_log_counter = 0
+            self._visual_log_counter += 1
+            if self._visual_log_counter % 100 == 0:
+                det_count = len(detections)
+                emotion_str = f" | Emotion: {emotion['emotion']} ({emotion['confidence']:.2f})" if emotion else ""
+                print(f"[VISUAL] s_visual: {surprise:.4f} | Channels: R={channel_scores.get('R', 0):.4f} "
+                      f"G={channel_scores.get('G', 0):.4f} B={channel_scores.get('B', 0):.4f} | "
+                      f"Detections: {det_count}{emotion_str}")
             
             return {
                 'surprise': surprise, 'vector': visual_vector, 'detections': detections,
                 'emotion': emotion, 'processed_frame': processed_frame, 'channel_scores': channel_scores
             }
-        except Exception:
+        except Exception as e:
+            print(f"[VISUAL] Error in visual processing: {e}")
             return self._create_empty_visual_result()
     
     def _create_empty_visual_result(self):
@@ -247,8 +294,18 @@ class OPUEventLoop:
         return None
     
     def _apply_ethical_veto(self, score, bit):
+        """Apply ethical veto (safety kernel) to fused score."""
         action = self.genesis.ethical_veto(np.array([score, bit]))
-        return action[0] if len(action) > 0 else score
+        safe_score = action[0] if len(action) > 0 else score
+        
+        # Log if veto modified the score (every 50 cycles to avoid spam)
+        if not hasattr(self, '_veto_log_counter'):
+            self._veto_log_counter = 0
+        self._veto_log_counter += 1
+        if self._veto_log_counter % 50 == 0 and abs(safe_score - score) > 0.01:
+            print(f"[FUSION] Ethical veto: {score:.4f} → {safe_score:.4f} (reduced by {score - safe_score:.4f})")
+        
+        return safe_score
     
     def _store_memories(self, audio, visual, score, timestamp=None):
         """
@@ -260,11 +317,18 @@ class OPUEventLoop:
             score: Safe score after ethical veto
             timestamp: Synchronized timestamp for temporal sync (if None, uses current time)
         """
-        # Use same timestamp for both channels (temporal sync)
+        # Store audio memory (AUDIO_V1) - always stored
         self.cortex.store_memory(audio['genomic_bit'], score, sense_label=AUDIO_SENSE, timestamp=timestamp)
+        
+        # Store visual memory (VIDEO_V1) if surprise threshold met
         if visual['surprise'] > VISUAL_SURPRISE_THRESHOLD:
             v_bit = max(visual['vector']) if len(visual['vector']) > 0 else 0
-            self.cortex.store_memory(v_bit, visual['surprise'], sense_label=VIDEO_SENSE, emotion=visual['emotion'], timestamp=timestamp)
+            emotion = visual.get('emotion')
+            self.cortex.store_memory(v_bit, visual['surprise'], sense_label=VIDEO_SENSE, emotion=emotion, timestamp=timestamp)
+            
+            # Log visual memory storage
+            emotion_str = f" | Emotion: {emotion['emotion']} ({emotion['confidence']:.2f})" if emotion else ""
+            print(f"[MEMORY] Stored VIDEO_V1: s_visual={visual['surprise']:.4f} | v_bit={v_bit:.4f}{emotion_str}")
     
     def _update_expression(self, score):
         char = self.cortex.get_character_state()
@@ -388,15 +452,21 @@ class OPUEventLoop:
         return getattr(self, '_last_audio_result', None)
     
     def check_abstraction_cycle(self):
+        """Check if any abstraction cycles have elapsed and trigger consolidation."""
         now = time.time()
         for lvl in range(8):
             if now - self.last_abstraction_times[lvl] >= self.maturity_level_times[lvl]:
                 self.last_abstraction_times[lvl] = now
                 if len(self.cortex.memory_levels[lvl]) > 0:
+                    print(f"[ABSTRACTION] Triggering L{lvl} consolidation (time elapsed: {self.maturity_level_times[lvl]:.1f}s)")
                     self.cortex.consolidate_memory(lvl)
                     self._print_abstraction_summary(lvl)
+                else:
+                    print(f"[ABSTRACTION] L{lvl} cycle elapsed but no memories to consolidate")
                 self._save_state()
-                if lvl == DAY_COUNTER_LEVEL: self.day_counter += 1
+                if lvl == DAY_COUNTER_LEVEL:
+                    self.day_counter += 1
+                    print(f"[ABSTRACTION] Day counter incremented: Day {self.day_counter}")
 
     def _print_abstraction_summary(self, lvl):
         char = self.cortex.get_character_state()
@@ -434,6 +504,7 @@ class OPUEventLoop:
             self.cleanup()
     
     def _print_status(self, cycle):
+        """Print comprehensive status summary every 100 cycles."""
         # Use the most recent audio result if available, otherwise fall back to get_current_state()
         if hasattr(self, '_last_audio_result') and self._last_audio_result:
             audio_s_score = self._last_audio_result.get('surprise', 0.0)
@@ -441,11 +512,27 @@ class OPUEventLoop:
             s = self.cortex.get_current_state()
             audio_s_score = s.get('s_score', 0.0)
         
-        s = self.cortex.get_current_state()
+        state = self.cortex.get_current_state()
         char = self.cortex.get_character_state()
-        # Use the fresh audio_s_score for logging
-        print(f"[CYCLE {cycle}] s_score: {audio_s_score:.2f}, maturity: {char.get('maturity_index', 0.0):.2f}, "
-              f"genomic_bits: {len(self.cortex.audio_cortex.genomic_bits_history)}")
+        
+        # Get memory counts
+        memory_counts = [len(self.cortex.memory_levels[i]) for i in range(8)]
+        memory_str = " | ".join([f"L{i}={memory_counts[i]}" for i in range(8)])
+        
+        # Get emotion stats
+        emotion_stats = self.cortex.get_emotion_statistics()
+        emotion_str = ""
+        if emotion_stats['total_emotions'] > 0:
+            most_common = emotion_stats.get('most_common', 'none')
+            emotion_str = f" | Emotions: {emotion_stats['total_emotions']} ({most_common})"
+        
+        print(f"[CYCLE {cycle}] s_score: {audio_s_score:.4f} | coherence: {state.get('coherence', 0):.3f} | "
+              f"maturity: {char.get('maturity_index', 0.0):.3f} | pitch: {char.get('base_pitch', 0):.1f}Hz")
+        print(f"  Memory: {memory_str}{emotion_str}")
+        print(f"  Audio history: {len(self.cortex.audio_cortex.genomic_bits_history)} | "
+              f"Visual history: R={len(self.cortex.vision_cortex.visual_memory['R'])} "
+              f"G={len(self.cortex.vision_cortex.visual_memory['G'])} "
+              f"B={len(self.cortex.vision_cortex.visual_memory['B'])}")
     
     def cleanup(self):
         print("[OPU] Saving state...")
@@ -524,24 +611,78 @@ Examples:
         default=None,
         help='Path to OPU state file (default: from config.py)'
     )
+    parser.add_argument(
+        '--youtube-url',
+        type=str,
+        default=None,
+        help='YouTube video URL to process (enables YouTube mode). Overrides config YOUTUBE_AUTO_START_URL'
+    )
+    parser.add_argument(
+        '--no-youtube',
+        action='store_true',
+        help='Disable YouTube auto-start (even if YOUTUBE_AUTO_START_URL is set in config)'
+    )
     args = parser.parse_args()
     
     # Default log file if --log-file is specified without a path
     log_file = args.log_file if args.log_file else ('opu_debug.log' if args.log_file is not None else None)
     
-    print("=" * 60)
-    print("Orthogonal Processing Unit (OPU)")
-    print(f"Version {OPU_VERSION} - MIT License")
-    print("Process-Centric AI Architecture")
-    print("=" * 60)
-    print()
+    # Determine YouTube mode
+    youtube_url = None
+    if args.no_youtube:
+        # Explicitly disabled
+        youtube_url = None
+    elif args.youtube_url:
+        # Explicitly provided via command line
+        youtube_url = args.youtube_url
+    elif YOUTUBE_AUTO_START_URL:
+        # Auto-start from config
+        youtube_url = YOUTUBE_AUTO_START_URL
     
-    opu = OPUEventLoop(
-        state_file=args.state_file,
-        log_file=log_file,
-        enable_state_viewer=not args.no_state_viewer
-    )
-    opu.run()
+    # If YouTube mode is enabled, launch YouTube OPU instead
+    if youtube_url:
+        print("=" * 60)
+        print("Orthogonal Processing Unit (OPU) - YouTube Mode")
+        print(f"Version {OPU_VERSION} - MIT License")
+        print("Process-Centric AI Architecture")
+        print("=" * 60)
+        print()
+        print(f"[OPU] Auto-starting YouTube mode with URL: {youtube_url}")
+        print()
+        
+        # Import and run YouTube OPU
+        try:
+            from youtube_opu import run_youtube_opu
+            run_youtube_opu(
+                youtube_url=youtube_url,
+                enable_state_viewer=not args.no_state_viewer,
+                log_file=log_file
+            )
+        except ImportError as e:
+            print(f"[ERROR] Failed to import YouTube OPU: {e}")
+            print("[ERROR] Make sure youtube_opu.py is available and dependencies are installed")
+            sys.exit(1)
+        except Exception as e:
+            print(f"[ERROR] YouTube OPU failed: {e}")
+            import traceback
+            traceback.print_exc()
+            sys.exit(1)
+    else:
+        # Regular OPU mode
+        print("=" * 60)
+        print("Orthogonal Processing Unit (OPU)")
+        print(f"Version {OPU_VERSION} - MIT License")
+        print("Process-Centric AI Architecture")
+        print("=" * 60)
+        print()
+        
+        # Create and run the event loop
+        opu = OPUEventLoop(
+            state_file=args.state_file,
+            log_file=log_file,
+            enable_state_viewer=not args.no_state_viewer
+        )
+        opu.run()
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()

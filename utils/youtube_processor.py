@@ -197,13 +197,18 @@ class YouTubeOPUProcessor:
         # Store visual memory if surprise threshold met (VIDEO_V2)
         if video_result['s_visual'] > VISUAL_SURPRISE_THRESHOLD:
             v_bit = max(video_result['visual_vector_annotated']) if len(video_result['visual_vector_annotated']) > 0 else 0
+            emotion = video_result.get('emotion')
             self.cortex.store_memory(
                 v_bit,
                 video_result['s_visual'],
                 sense_label=VIDEO_SENSE_YOUTUBE,
-                emotion=video_result['emotion'],
+                emotion=emotion,
                 timestamp=cycle_timestamp
             )
+            
+            # Log memory storage for debugging
+            emotion_str = f" | Emotion: {emotion['emotion']} ({emotion['confidence']:.2f})" if emotion else ""
+            print(f"[YOUTUBE] Stored VIDEO_V2 memory: s_visual={video_result['s_visual']:.4f}{emotion_str}")
     
     def update_expression(self, safe_score: float):
         """
@@ -293,6 +298,16 @@ class YouTubeOPUProcessor:
         
         # Increment frame count
         self.frame_count += 1
+        
+        # Log cycle activity every 100 frames for debugging
+        if self.frame_count % 100 == 0:
+            elapsed = time.time() - self.start_time
+            fps = self.frame_count / max(elapsed, 0.1)
+            char = self.cortex.get_character_state()
+            print(f"[YOUTUBE] Cycle {self.frame_count} | FPS: {fps:.1f} | "
+                  f"s_audio: {s_audio:.4f} | s_visual: {video_result['s_visual']:.4f} | "
+                  f"safe_score: {safe_score:.4f} | Maturity: {char['maturity_index']:.3f} | "
+                  f"Memories: L0={len(self.cortex.memory_levels[0])} L1={len(self.cortex.memory_levels[1])}")
         
         return {
             's_audio': s_audio,

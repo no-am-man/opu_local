@@ -113,6 +113,11 @@ STATUS_COLOR_GREEN = (0, 255, 0)  # BGR color for GREEN calm
 # YouTube OPU Configuration
 YOUTUBE_VIDEO_RESIZE_DIM = (640, 360)  # Resize video frames for faster processing
 YOUTUBE_AUDIO_VOLUME_MULTIPLIER = 0.5  # Reduce YouTube audio volume
+
+# Auto-start YouTube mode when main.py starts (set to None to disable)
+# If set to a YouTube URL, the app will automatically launch YouTube mode instead of regular mode
+YOUTUBE_AUTO_START_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk"  # Lofi Girl (default)
+# YOUTUBE_AUTO_START_URL = None  # Uncomment to disable auto-start
 YOUTUBE_HUD_POS_X = 10  # X position for HUD text
 YOUTUBE_HUD_POS_Y_LINE1 = 30  # Y position for first HUD line
 YOUTUBE_HUD_POS_Y_LINE2 = 60  # Y position for second HUD line

@@ -366,13 +366,8 @@ def run_youtube_opu(youtube_url, enable_state_viewer=True, log_file=None):
                     paused = not paused
                     print(f"[OPU] {'Paused' if paused else 'Resumed'}")
             
-            # Status update every 100 frames
-            if result['frame_count'] % 100 == 0:
-                elapsed = time.time() - processor.start_time
-                fps = result['frame_count'] / max(elapsed, 0.1)
-                char = cortex.get_character_state()
-                print(f"[STATUS] Frame {result['frame_count']} | FPS: {fps:.1f} | "
-                      f"s_score: {result['safe_score']:.4f} | Maturity: {char['maturity_index']:.3f}")
+            # Status update is now handled in YouTubeOPUProcessor.process_cycle()
+            # This keeps logging consistent and centralized
             
             # Sync to ~30 FPS
             time.sleep(1.0 / 30.0)
