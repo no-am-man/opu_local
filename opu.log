@@ -35631,3 +35631,87 @@ OPU Debug Log - Session started at 2025-12-25 23:32:31
   Memory: L0=10 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
 [PERSISTENCE] State saved to opu_state.json
 [STATE] Saved: Day 0 | Maturity: 0.000
+[MEMORY] Stored VIDEO_V1: s_visual=0.9661 | v_bit=11.3343 | Emotion: angry (0.95)
+[ABSTRACTION] Triggering L0 consolidation (time elapsed: 1.0s)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[MEMORY] Stored VIDEO_V1: s_visual=1.8937 | v_bit=10.9746 | Emotion: angry (0.74)
+[ABSTRACTION] Triggering L0 consolidation (time elapsed: 1.0s)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[AUDIO] g_bit: 0.0001 | s_score: 0.0036 | history: 10
+[VISUAL] s_visual: 1.2679 | Channels: R=1.2679 G=0.8279 B=0.1386 | Detections: 1 | Emotion: angry (0.93)
+[FUSION] Ethical veto: 1.2679 → 1.0000 (reduced by 0.2679)
+[MEMORY] Stored VIDEO_V1: s_visual=1.2679 | v_bit=11.0399 | Emotion: angry (0.93)
+[CYCLE 100] s_score: 0.0036 | coherence: 0.996 | maturity: 0.000 | pitch: 440.0Hz
+  Memory: L0=16 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0 | Emotions: 91 (angry)
+  Audio history: 10 | Visual history: R=10 G=10 B=10
+[MEMORY] Stored VIDEO_V1: s_visual=2.0608 | v_bit=10.8526 | Emotion: angry (0.97)
+[ABSTRACTION] Triggering L0 consolidation (time elapsed: 1.0s)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=5.5856 | pattern=5.5867 | Senses: AUDIO_V1, VIDEO_V1
+[MEMORY] Stored VIDEO_V1: s_visual=0.5868 | v_bit=11.0745 | Emotion: angry (0.98)
+[MEMORY] Stored AUDIO_V1 at L0: g_bit=0.0001 | s_score=1.0000 | L0_count=1
+[MEMORY] Stored VIDEO_V1: s_visual=1.5490 | v_bit=10.8380 | Emotion: angry (0.95)
+[ABSTRACTION] Triggering L0 consolidation (time elapsed: 1.0s)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=10 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[MEMORY] Stored VIDEO_V1: s_visual=1.6964 | v_bit=10.9341 | Emotion: angry (0.86)
+[MEMORY] Stored VIDEO_V1: s_visual=1.4521 | v_bit=10.7907 | Emotion: angry (0.94)
+[MEMORY] Stored VIDEO_V1: s_visual=1.3586 | v_bit=10.9334 | Emotion: angry (0.83)
+[ABSTRACTION] Triggering L0 consolidation (time elapsed: 1.0s)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=10 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[MEMORY] Stored VIDEO_V1: s_visual=0.6298 | v_bit=11.0569 | Emotion: angry (1.00)
+[MEMORY] Stored VIDEO_V1: s_visual=0.7978 | v_bit=10.8979 | Emotion: angry (0.99)
+[MEMORY] Stored VIDEO_V1: s_visual=2.8654 | v_bit=10.7530 | Emotion: angry (0.94)
+[ABSTRACTION] Triggering L0 consolidation (time elapsed: 1.0s)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=10 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[MEMORY] Stored VIDEO_V1: s_visual=2.8906 | v_bit=11.0473 | Emotion: happy (0.58)
+[MEMORY] Stored VIDEO_V1: s_visual=1.0570 | v_bit=11.0184 | Emotion: neutral (0.82)
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=5.4677 | pattern=5.4681 | Senses: AUDIO_V1, VIDEO_V1
+[MEMORY] Stored VIDEO_V1: s_visual=1.3423 | v_bit=11.0829 | Emotion: angry (1.00)
+[ABSTRACTION] L0 cycle elapsed but no memories to consolidate
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[MEMORY] Stored AUDIO_V1 at L0: g_bit=0.0001 | s_score=0.7298 | L0_count=1
+[MEMORY] Stored VIDEO_V1: s_visual=0.7298 | v_bit=10.8582 | Emotion: angry (0.99)
+[MEMORY] Stored VIDEO_V1: s_visual=0.4787 | v_bit=10.9832 | Emotion: angry (0.95)
+[MEMORY] Stored VIDEO_V1: s_visual=1.1807 | v_bit=10.8208 | Emotion: angry (0.94)
+[ABSTRACTION] Triggering L0 consolidation (time elapsed: 1.0s)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=11 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[MEMORY] Stored VIDEO_V1: s_visual=1.9322 | v_bit=10.6509 | Emotion: angry (1.00)
+[MEMORY] Stored VIDEO_V1: s_visual=1.7661 | v_bit=11.2159 | Emotion: angry (1.00)
+[MEMORY] Stored VIDEO_V1: s_visual=1.0138 | v_bit=10.7903 | Emotion: angry (1.00)
+[ABSTRACTION] Triggering L0 consolidation (time elapsed: 1.0s)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=11 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[STATE] Saved: Day 0 | Maturity: 0.000
+[MEMORY] Stored VIDEO_V1: s_visual=2.2120 | v_bit=10.6729 | Emotion: angry (0.98)
+[MEMORY] Stored VIDEO_V1: s_visual=1.8742 | v_bit=10.5864 | Emotion: angry (0.99)
