@@ -77,7 +77,7 @@ VIDEO_SENSE = "VIDEO_V1"
 BRAIN_DEFAULT_SENSE_LABEL = "UNKNOWN"  # Default sense label for unknown input sources
 
 # Processing Thresholds
-VISUAL_SURPRISE_THRESHOLD = 0.5  # Minimum visual surprise to store memory
+VISUAL_SURPRISE_THRESHOLD = 0.2  # Minimum visual surprise to store memory (lowered for more sensitivity)
 AUDIO_TONE_DURATION_SECONDS = 0.05  # Duration of audio feedback tone
 
 # Audio Input Configuration
@@ -281,11 +281,11 @@ COMMAND_MAX_HISTORY_DEFAULT = 100  # Default maximum command history size
 COMMAND_UNDO_SEARCH_MAX_LEVEL = 7  # Maximum level to search when undoing (0-7 for 8-layer architecture)
 
 # Introspection Strategy Configuration
-INTROSPECTION_AUDIO_MAX_HISTORY = 50  # Maximum history size for audio introspection
+INTROSPECTION_AUDIO_MAX_HISTORY = 30  # Maximum history size for audio introspection (reduced for faster reaction)
 INTROSPECTION_VISUAL_MAX_HISTORY = 50  # Maximum history size for visual introspection
 INTROSPECTION_MIN_DATA_POINTS = 2  # Minimum data points needed for meaningful introspection
 INTROSPECTION_VISUAL_MIN_FRAMES = 10  # Minimum frames needed for visual introspection
-INTROSPECTION_NOISE_FLOOR = 0.01  # Minimum sigma to prevent false high scores from silence
+INTROSPECTION_NOISE_FLOOR = 0.001  # Minimum sigma to prevent false high scores from silence (lowered for 10x more sensitivity)
 INTROSPECTION_SIGMA_DEFAULT = 0.1  # Default sigma when history is zero
 INTROSPECTION_DEFAULT_S_SCORE = 0.0  # Default surprise score
 INTROSPECTION_DEFAULT_COHERENCE = 1.0  # Default coherence (perfect when no history)
