@@ -43,9 +43,11 @@ These parameters control how sensitive the OPU is to detecting surprises (change
 
 ---
 
-### `VISUAL_SURPRISE_THRESHOLD` (Default: `0.05`)
+### `VISUAL_SURPRISE_THRESHOLD` (Default: `0.2`)
 
 **What it does:** Minimum visual surprise score required to store a visual memory.
+
+**Calibration Note:** Start at `0.2` for YouTube testing. If memory storage is too frequent (spammy), raise to `0.3` or `0.4`. If too quiet, lower to `0.1` or `0.15`.
 
 **Effect:**
 - **Lower value** = More visual memories stored (OPU remembers more visual events)
@@ -206,9 +208,11 @@ See [Surprise Sensitivity](#introspection_noise_floor-default-0001) section abov
 
 ---
 
-### `INTROSPECTION_SIGMA_DEFAULT` (Default: `0.1`)
+### `INTROSPECTION_SIGMA_DEFAULT` (Default: `0.05`)
 
-**What it does:** Default sigma value used when visual history is zero.
+**What it does:** Default sigma value used when visual history is zero. Controls the width of the expectation bell curve - narrower curve = more sensitive to deviations.
+
+**Calibration Note:** Lower values (0.02-0.05) make OPU more "jumpy" and reactive. Higher values (0.08-0.1) make it more stable and less reactive.
 
 **Effect:** Prevents divide-by-zero errors in visual introspection calculations.
 

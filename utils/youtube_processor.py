@@ -36,7 +36,7 @@ class YouTubeOPUProcessor:
     """
     
     def __init__(self, youtube_streamer, cortex, genesis, afl, phoneme_analyzer, 
-                 visualizer, visual_perception, object_detector):
+                 visualizer, visual_perception, object_detector, image_queue=None):
         """
         Initialize the processor.
         
@@ -49,6 +49,7 @@ class YouTubeOPUProcessor:
             visualizer: CognitiveMapVisualizer instance
             visual_perception: VisualPerception instance
             object_detector: ObjectDetector instance
+            image_queue: multiprocessing.Queue for sending cognitive map images to State Viewer
         """
         self.yt = youtube_streamer
         self.cortex = cortex
@@ -58,6 +59,7 @@ class YouTubeOPUProcessor:
         self.visualizer = visualizer
         self.visual_perception = visual_perception
         self.object_detector = object_detector
+        self.image_queue = image_queue  # Queue for State Viewer
         
         # State
         self.safe_score = 0.0
@@ -243,11 +245,26 @@ class YouTubeOPUProcessor:
             char['maturity_index'], char.get('maturity_level', 0)
         )
         self.visualizer.draw_cognitive_map()
-        return self.visualizer.render_to_image()
+        viz_image = self.visualizer.render_to_image()
+        
+        # Send to State Viewer if available (as tuple: ('cognitive_map', image))
+        if self.image_queue is not None and viz_image is not None:
+            try:
+                # Convert BGR to RGB for State Viewer
+                if CV2_AVAILABLE:
+                    viz_rgb = cv2.cvtColor(viz_image, cv2.COLOR_BGR2RGB)
+                    # Send as tuple: ('cognitive_map', image) - State Viewer expects this format
+                    if not self.image_queue.full():
+                        self.image_queue.put_nowait(('cognitive_map', viz_rgb))
+            except Exception:
+                pass  # Don't block if queue is full or viewer closed
+        
+        return viz_image
     
     def display_frames(self, processed_frame, viz_image):
         """
         Display processed video frame and cognitive map.
+        Also sends video frame to State Viewer if available.
         
         Args:
             processed_frame: Processed video frame with annotations
@@ -256,6 +273,18 @@ class YouTubeOPUProcessor:
         if not CV2_AVAILABLE:
             return
         
+        # Send processed video frame to State Viewer (as 'webcam' for compatibility)
+        if self.image_queue is not None and processed_frame is not None:
+            try:
+                # Convert BGR to RGB for State Viewer
+                display_rgb = cv2.cvtColor(processed_frame, cv2.COLOR_BGR2RGB)
+                # Send as tuple: ('webcam', image) - State Viewer expects this format
+                if not self.image_queue.full():
+                    self.image_queue.put_nowait(('webcam', display_rgb))
+            except Exception:
+                pass  # Don't block if queue is full or viewer closed
+        
+        # Also show in OpenCV windows (optional, for debugging)
         if processed_frame is not None:
             cv2.imshow("OPU YouTube Viewer", processed_frame)
         

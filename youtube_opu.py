@@ -22,6 +22,7 @@ import threading
 import queue
 import argparse
 import subprocess
+import multiprocessing
 from pathlib import Path
 
 # Add project root to path
@@ -59,7 +60,7 @@ except ImportError:
 from config import (
     SAMPLE_RATE, CHUNK_SIZE, AUDIO_SENSE_YOUTUBE, VIDEO_SENSE_YOUTUBE, OPU_VERSION,
     YOUTUBE_VIDEO_RESIZE_DIM, YOUTUBE_AUDIO_VOLUME_MULTIPLIER, VISUAL_SURPRISE_THRESHOLD,
-    BASE_FREQUENCY
+    BASE_FREQUENCY, STATE_FILE
 )
 from core.opu import OrthogonalProcessingUnit
 from core.mic import perceive
@@ -304,6 +305,58 @@ class YouTubeStreamer:
         
         if self.audio_thread is not None:
             self.audio_thread.join(timeout=1)
+def launch_state_viewer_process(state_file_path, image_queue):
+    """
+    Runs the State Viewer in a standalone process.
+    Receives real-time images via the image_queue.
+    """
+    viewer = None
+    import traceback
+    import sys
+    
+    try:
+        # Import inside process to avoid GIL conflicts
+        from utils.state_viewer import OPUStateViewer
+        import signal
+        
+        # Set up signal handler for graceful shutdown
+        def signal_handler(signum, frame):
+            if viewer:
+                viewer.running = False
+                try:
+                    viewer.root.quit()
+                    viewer.root.destroy()
+                except Exception:
+                    pass
+        
+        signal.signal(signal.SIGTERM, signal_handler)
+        signal.signal(signal.SIGINT, signal_handler)
+        
+        # Initialize with the queue
+        print("[VIEWER] Initializing State Viewer...", file=sys.stderr, flush=True)
+        viewer = OPUStateViewer(state_file=state_file_path, image_queue=image_queue)
+        print("[VIEWER] State Viewer initialized, starting mainloop...", file=sys.stderr, flush=True)
+        viewer.run()
+        print("[VIEWER] State Viewer mainloop exited", file=sys.stderr, flush=True)
+    except KeyboardInterrupt:
+        print("[VIEWER] Interrupted by user", file=sys.stderr, flush=True)
+    except Exception as e:
+        error_msg = f"[VIEWER] State Viewer crashed: {e}\n{traceback.format_exc()}"
+        print(error_msg, file=sys.stderr, flush=True)
+        # Also try to write to a log file as backup
+        try:
+            with open("viewer_error.log", "a") as f:
+                f.write(f"{error_msg}\n")
+        except Exception:
+            pass
+    finally:
+        if viewer:
+            viewer.running = False
+            try:
+                viewer.root.quit()
+                viewer.root.destroy()
+            except Exception:
+                pass
 
 
 def run_youtube_opu(youtube_url, enable_state_viewer=True, log_file=None):
@@ -328,6 +381,24 @@ def run_youtube_opu(youtube_url, enable_state_viewer=True, log_file=None):
     print(f"Logging active: {file_logger.log_file_path if file_logger else 'None'}")
     print()
     
+    # --- STATE VIEWER SETUP ---
+    image_queue = None
+    viewer_process = None
+    if enable_state_viewer:
+        # Create shared queue for sending images to State Viewer
+        image_queue = multiprocessing.Queue(maxsize=2)
+        
+        # Launch State Viewer in separate process
+        state_file_path = STATE_FILE
+        viewer_process = multiprocessing.Process(
+            target=launch_state_viewer_process,
+            args=(state_file_path, image_queue),
+            daemon=True
+        )
+        viewer_process.start()
+        print("[OPU] State viewer launched in background process.")
+        time.sleep(1)  # Give viewer time to initialize
+    
     # Initialize YouTube streamer
     try:
         yt = YouTubeStreamer(youtube_url)
@@ -349,7 +420,7 @@ def run_youtube_opu(youtube_url, enable_state_viewer=True, log_file=None):
     # Create processor to encapsulate processing logic
     processor = YouTubeOPUProcessor(
         yt, cortex, genesis, afl, phoneme_analyzer,
-        visualizer, visual_perception, object_detector
+        visualizer, visual_perception, object_detector, image_queue=image_queue
     )
     
     print("[OPU] Ready. Processing YouTube stream...")
@@ -390,6 +461,30 @@ def run_youtube_opu(youtube_url, enable_state_viewer=True, log_file=None):
         traceback.print_exc()
     finally:
         print("[OPU] Cleaning up...")
+        
+        # Terminate State Viewer process
+        if viewer_process is not None:
+            print("[OPU] Terminating State Viewer...")
+            viewer_process.terminate()
+            viewer_process.join(timeout=2)
+            if viewer_process.is_alive():
+                print("[OPU] Force killing State Viewer...")
+                viewer_process.kill()
+                viewer_process.join()
+        
+        # Drain and close image queue
+        if image_queue is not None:
+            try:
+                while not image_queue.empty():
+                    try:
+                        image_queue.get_nowait()
+                    except queue.Empty:
+                        break
+                image_queue.close()
+                image_queue.join_thread()
+            except Exception:
+                pass
+        
         yt.close()
         afl.cleanup()
         if CV2_AVAILABLE:

@@ -79,7 +79,7 @@ VIDEO_SENSE_YOUTUBE = "VIDEO_V2"  # YouTube video stream
 BRAIN_DEFAULT_SENSE_LABEL = "UNKNOWN"  # Default sense label for unknown input sources
 
 # Processing Thresholds
-VISUAL_SURPRISE_THRESHOLD = 0.05  # Minimum visual surprise to store memory (baby-like: very sensitive, remembers everything)
+VISUAL_SURPRISE_THRESHOLD = 0.2  # Minimum visual surprise to store memory (tunable: start at 0.2, raise to 0.3-0.4 if too spammy)
 AUDIO_TONE_DURATION_SECONDS = 0.05  # Duration of audio feedback tone
 
 # Audio Input Configuration
@@ -116,8 +116,11 @@ YOUTUBE_AUDIO_VOLUME_MULTIPLIER = 0.5  # Reduce YouTube audio volume
 
 # Auto-start YouTube mode when main.py starts (set to None to disable)
 # If set to a YouTube URL, the app will automatically launch YouTube mode instead of regular mode
-YOUTUBE_AUTO_START_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk"  # Lofi Girl (default)
-# YOUTUBE_AUTO_START_URL = None  # Uncomment to disable auto-start
+# YouTube Auto-Start Configuration
+# Set to None to disable auto-start (default: normal OPU mode)
+# Set to a URL string to auto-start YouTube mode
+YOUTUBE_AUTO_START_URL = None  # Default: None (normal OPU mode)
+# YOUTUBE_AUTO_START_URL = "https://www.youtube.com/watch?v=jfKfPfyJRdk"  # Uncomment to enable auto-start
 YOUTUBE_HUD_POS_X = 10  # X position for HUD text
 YOUTUBE_HUD_POS_Y_LINE1 = 30  # Y position for first HUD line
 YOUTUBE_HUD_POS_Y_LINE2 = 60  # Y position for second HUD line
@@ -325,7 +328,7 @@ INTROSPECTION_VISUAL_MAX_HISTORY = 10  # Maximum history size for visual introsp
 INTROSPECTION_MIN_DATA_POINTS = 2  # Minimum data points needed for meaningful introspection
 INTROSPECTION_VISUAL_MIN_FRAMES = 5  # Minimum frames needed for visual introspection (baby-like: reacts faster)
 INTROSPECTION_NOISE_FLOOR = 0.0001  # Minimum sigma to prevent false high scores from silence (baby-like: extremely sensitive, 100x more than default)
-INTROSPECTION_SIGMA_DEFAULT = 0.1  # Default sigma when history is zero
+INTROSPECTION_SIGMA_DEFAULT = 0.05  # Default sigma when history is zero (baby-like: very sensitive, narrow expectation curve)
 INTROSPECTION_DEFAULT_S_SCORE = 0.0  # Default surprise score
 INTROSPECTION_DEFAULT_COHERENCE = 1.0  # Default coherence (perfect when no history)
 INTROSPECTION_DEFAULT_G_NOW = 0.0  # Default genomic bit value

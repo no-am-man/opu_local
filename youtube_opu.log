@@ -120,3 +120,117 @@ Logging active: youtube_opu.log
 OPU Debug Log - Session ended at 2025-12-25 18:27:19
 ================================================================================
 
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 23:16:43
+================================================================================
+
+======================================================================
+OPU YouTube Mode
+======================================================================
+Version: 3.4.3
+URL: https://www.youtube.com/watch?v=jfKfPfyJRdk
+Logging active: youtube_opu.log
+
+[YOUTUBE] Extracting stream info from: https://www.youtube.com/watch?v=jfKfPfyJRdk
+[YOUTUBE] Stream found: lofi hip hop radio 📚 beats to relax/study to 2025-12-25 23:16
+[YOUTUBE] Duration: 0s
+[YOUTUBE] Failed to open video stream
+[YOUTUBE] ffmpeg not available, audio disabled
+[YOUTUBE] Install ffmpeg: brew install ffmpeg (macOS) or apt-get install ffmpeg (Linux)
+[OPU] Initializing...
+[AFL] Continuous phase oscillator initialized.
+[VISION] Visual Cortex Initialized (Color Constancy (Shadow-Invariant) + Object Detection).
+[VISION] WebCam preview window will show object detection overlays.
+[DETECTION] Face detector initialized.
+[OPU] Ready. Processing YouTube stream...
+[OPU] Press 'q' to quit, 'p' to pause
+
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+
+[OPU] Interrupted by user
+[OPU] Cleaning up...
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 23:17:15
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 23:24:20
+================================================================================
+
+======================================================================
+OPU YouTube Mode
+======================================================================
+Version: 3.4.3
+URL: https://www.youtube.com/watch?v=jfKfPfyJRdk
+Logging active: youtube_opu.log
+
+[OPU] State viewer launched in background process.
+[YOUTUBE] Extracting stream info from: https://www.youtube.com/watch?v=jfKfPfyJRdk
+[YOUTUBE] Stream found: lofi hip hop radio 📚 beats to relax/study to 2025-12-25 23:24
+[YOUTUBE] Duration: 0s
+[YOUTUBE] Failed to open video stream
+[YOUTUBE] ffmpeg not available, audio disabled
+[YOUTUBE] Install ffmpeg: brew install ffmpeg (macOS) or apt-get install ffmpeg (Linux)
+[OPU] Initializing...
+[AFL] Continuous phase oscillator initialized.
+[VISION] Visual Cortex Initialized (Color Constancy (Shadow-Invariant) + Object Detection).
+[VISION] WebCam preview window will show object detection overlays.
+[DETECTION] Face detector initialized.
+[OPU] Ready. Processing YouTube stream...
+[OPU] Press 'q' to quit, 'p' to pause
+
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[YOUTUBE] Cycle 100 | FPS: 8.7 | s_audio: 0.0000 | s_visual: 0.0000 | safe_score: 0.0000 | Maturity: 0.000 | Memories: L0=0 L1=5
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[YOUTUBE] Cycle 200 | FPS: 8.2 | s_audio: 0.0000 | s_visual: 0.0000 | safe_score: 0.0000 | Maturity: 0.000 | Memories: L0=0 L1=10
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[YOUTUBE] Cycle 300 | FPS: 8.4 | s_audio: 0.0000 | s_visual: 0.0000 | safe_score: 0.0000 | Maturity: 0.000 | Memories: L0=0 L1=15
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+[MEMORY] Stored AUDIO_V2 at L0: g_bit=0.0000 | s_score=0.0000 | L0_count=1
+[CONSOLIDATION] L0 → L1: 20 items → 1 abstraction | mean_bit=0.0000 | pattern=0.0000 | Senses: AUDIO_V2
+
+[OPU] Interrupted by user
+[OPU] Cleaning up...
+[OPU] Terminating State Viewer...
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 23:25:28
+================================================================================
+
