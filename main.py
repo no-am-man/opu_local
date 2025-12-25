@@ -35,11 +35,6 @@ from config import (
     SAMPLE_RATE, CHUNK_SIZE, BASE_FREQUENCY, STATE_FILE, MATURITY_LEVEL_TIMES,
     AUDIO_SENSE, VIDEO_SENSE, USE_COLOR_CONSTANCY,
     VISUAL_SURPRISE_THRESHOLD, AUDIO_TONE_DURATION_SECONDS,
-    PREVIEW_SCALE, MAX_BAR_SCORE, BAR_SCALE_FACTOR, BAR_SPACING,
-    BAR_LABEL_X, BAR_START_X, BAR_HEIGHT, ALERT_THRESHOLD, INTEREST_THRESHOLD,
-    FONT_SCALE_SMALL, FONT_SCALE_MEDIUM, FONT_THICKNESS_THIN, FONT_THICKNESS_THICK,
-    TEXT_COLOR_GRAY, STATUS_COLOR_RED, STATUS_COLOR_YELLOW, STATUS_COLOR_GREEN,
-    CHANNEL_COLOR_RED, CHANNEL_COLOR_GREEN, CHANNEL_COLOR_BLUE,
     MATURITY_TIME_SCALES, DAY_COUNTER_LEVEL,
     MAIN_DEFAULT_CONFIDENCE_THRESHOLD, MAIN_DEFAULT_SURPRISE_SCORE,
     MAIN_EMPTY_VISUAL_VECTOR
@@ -54,6 +49,7 @@ from core.audio_input_handler import AudioInputHandler
 from utils.visualization import CognitiveMapVisualizer
 from utils.persistence import OPUPersistence
 from utils.file_logger import FileLogger
+from utils.main_hud_utils import draw_main_hud, MainHUDParams
 
 # --- HELPER PROCESS ---
 def launch_state_viewer_process(state_file_path, image_queue):
@@ -110,23 +106,6 @@ def launch_state_viewer_process(state_file_path, image_queue):
             except Exception:
                 pass
 
-@dataclass
-class VisualHUDParams:
-    frame: np.ndarray
-    s_global: float
-    s_visual: float
-    s_audio: float
-    channel_scores: Dict[str, float]
-    detections: Optional[list] = None
-
-@dataclass
-class ChannelBarParams:
-    display: np.ndarray
-    channel: str
-    score: float
-    bar_length: int
-    color: Tuple[int, int, int]
-    y_position: int
 
 class OPUEventLoop:
     def __init__(self, state_file=None, log_file=None, enable_state_viewer=True):
@@ -201,6 +180,13 @@ class OPUEventLoop:
         )
     
     def process_cycle(self):
+        # ============================================================
+        # 4-CHANNEL TEMPORAL SYNC: Capture timestamp once per cycle
+        # ============================================================
+        # This ensures VIDEO_V1, AUDIO_V1, VIDEO_V2, AUDIO_V2 all use
+        # the same timestamp when storing memories in the same cycle
+        cycle_timestamp = time.time()
+        
         audio_result = self._process_audio_perception()
         self._last_audio_result = audio_result
         visual_result = self._process_visual_perception()
@@ -208,7 +194,8 @@ class OPUEventLoop:
         fused_score = max(audio_result['surprise'], visual_result['surprise'])
         safe_score = self._apply_ethical_veto(fused_score, audio_result['genomic_bit'])
         
-        self._store_memories(audio_result, visual_result, safe_score)
+        # Store memories with synchronized timestamp (VIDEO_V1, AUDIO_V1)
+        self._store_memories(audio_result, visual_result, safe_score, cycle_timestamp)
         self._update_expression(safe_score)
         self._analyze_phonemes(audio_result['surprise'])
         self._display_visual_hud(visual_result)
@@ -263,11 +250,21 @@ class OPUEventLoop:
         action = self.genesis.ethical_veto(np.array([score, bit]))
         return action[0] if len(action) > 0 else score
     
-    def _store_memories(self, audio, visual, score):
-        self.cortex.store_memory(audio['genomic_bit'], score, sense_label=AUDIO_SENSE)
+    def _store_memories(self, audio, visual, score, timestamp=None):
+        """
+        Store memories for VIDEO_V1 and AUDIO_V1 with synchronized timestamp.
+        
+        Args:
+            audio: Audio perception result
+            visual: Visual perception result
+            score: Safe score after ethical veto
+            timestamp: Synchronized timestamp for temporal sync (if None, uses current time)
+        """
+        # Use same timestamp for both channels (temporal sync)
+        self.cortex.store_memory(audio['genomic_bit'], score, sense_label=AUDIO_SENSE, timestamp=timestamp)
         if visual['surprise'] > VISUAL_SURPRISE_THRESHOLD:
             v_bit = max(visual['vector']) if len(visual['vector']) > 0 else 0
-            self.cortex.store_memory(v_bit, visual['surprise'], sense_label=VIDEO_SENSE, emotion=visual['emotion'])
+            self.cortex.store_memory(v_bit, visual['surprise'], sense_label=VIDEO_SENSE, emotion=visual['emotion'], timestamp=timestamp)
     
     def _update_expression(self, score):
         char = self.cortex.get_character_state()
@@ -322,47 +319,46 @@ class OPUEventLoop:
         pass
     
     def _display_visual_hud(self, visual_result):
-        if visual_result.get('processed_frame') is None: return
+        """Display visual HUD overlay on processed frame."""
+        if visual_result.get('processed_frame') is None:
+            return
+        
         audio = self._last_audio_result
-        s_glob = max(audio.get('surprise', 0) if audio else 0, visual_result['surprise'])
-        self.display_visual_cortex(
-            visual_result['processed_frame'], s_glob, visual_result['surprise'],
+        s_glob = max(
             audio.get('surprise', 0) if audio else 0,
-            visual_result.get('channel_scores', {}), visual_result['detections']
+            visual_result['surprise']
+        )
+        
+        self.display_visual_cortex(
+            visual_result['processed_frame'],
+            s_glob,
+            visual_result['surprise'],
+            audio.get('surprise', 0) if audio else 0,
+            visual_result.get('channel_scores', {}),
+            visual_result['detections']
         )
     
     def display_visual_cortex(self, frame, s_glob, s_vis, s_aud, scores, dets):
+        """Display visual cortex with HUD overlay and send to State Viewer."""
         try:
-            params = VisualHUDParams(frame, s_glob, s_vis, s_aud, scores, dets)
-            if not CV2_AVAILABLE or frame is None: return
-            display = self._create_hud_overlay(params)
-            # Send to State Viewer instead of separate window
+            if not CV2_AVAILABLE or frame is None:
+                return
+            
+            # Create HUD overlay using utility function
+            params = MainHUDParams(
+                frame=frame,
+                s_global=s_glob,
+                s_visual=s_vis,
+                s_audio=s_aud,
+                channel_scores=scores,
+                detections=dets
+            )
+            display = draw_main_hud(params)
+            
+            # Send to State Viewer
             self._send_webcam_to_viewer(display)
-        except: pass
-
-    def _create_hud_overlay(self, params):
-        display = params.frame.copy()
-        h, w = display.shape[:2]
-        y = BAR_SPACING
-        self._draw_channel_bars(display, params.channel_scores, y)
-        self._draw_global_status(display, params.s_global, h)
-        return display
-
-    def _draw_channel_bars(self, display, scores, y):
-        colors = {'R': CHANNEL_COLOR_RED, 'G': CHANNEL_COLOR_GREEN, 'B': CHANNEL_COLOR_BLUE}
-        for ch in ['R', 'G', 'B']:
-            score = scores.get(ch, 0)
-            length = int(min(score, MAX_BAR_SCORE) * BAR_SCALE_FACTOR)
-            color = colors[ch]
-            cv2.putText(display, f"{ch}: {score:.2f}", (BAR_LABEL_X, y),
-                        cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE_SMALL, color, FONT_THICKNESS_THICK)
-            cv2.rectangle(display, (BAR_START_X, y-BAR_HEIGHT//2), (BAR_START_X+length, y+BAR_HEIGHT//2), color, -1)
-            y += BAR_SPACING
-
-    def _draw_global_status(self, display, score, h):
-        color = STATUS_COLOR_RED if score > ALERT_THRESHOLD else (STATUS_COLOR_YELLOW if score > INTEREST_THRESHOLD else STATUS_COLOR_GREEN)
-        cv2.putText(display, f"GLOBAL SURPRISE: {score:.2f}", (BAR_LABEL_X, h-20),
-                    cv2.FONT_HERSHEY_SIMPLEX, FONT_SCALE_MEDIUM, color, FONT_THICKNESS_THICK)
+        except Exception:
+            pass  # Silently handle errors
 
     def _show_preview_window(self, display):
         # DISABLED: Webcam preview is now shown in State Viewer, not in separate OpenCV window

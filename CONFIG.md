@@ -11,6 +11,8 @@ This document explains all configuration parameters in `config.py` and how they 
 5. [Maturity & Evolution](#maturity--evolution)
 6. [Display & Visualization](#display--visualization)
 7. [State & Persistence](#state--persistence)
+8. [YouTube Mode Configuration](#youtube-mode-configuration)
+9. [Quick Reference: Making OPU More Sensitive](#quick-reference-making-opu-more-sensitive)
 
 ---
 
@@ -18,7 +20,7 @@ This document explains all configuration parameters in `config.py` and how they 
 
 These parameters control how sensitive the OPU is to detecting surprises (changes in input).
 
-### `INTROSPECTION_NOISE_FLOOR` (Default: `0.001`)
+### `INTROSPECTION_NOISE_FLOOR` (Default: `0.0001`)
 
 **What it does:** Minimum sigma (standard deviation) value used in s_score calculation.
 
@@ -31,15 +33,17 @@ These parameters control how sensitive the OPU is to detecting surprises (change
 **Example:**
 - With `0.01`: Small audio change → s_score = 5.0
 - With `0.001`: Same change → s_score = 50.0 (10x higher!)
+- With `0.0001`: Same change → s_score = 500.0 (100x higher! - baby-like sensitivity)
 
 **Recommended values:**
-- `0.001` - Very sensitive (current default)
+- `0.0001` - Extremely sensitive, baby-like (current default)
+- `0.001` - Very sensitive
 - `0.01` - Moderate sensitivity
 - `0.1` - Low sensitivity (only large changes detected)
 
 ---
 
-### `VISUAL_SURPRISE_THRESHOLD` (Default: `0.2`)
+### `VISUAL_SURPRISE_THRESHOLD` (Default: `0.05`)
 
 **What it does:** Minimum visual surprise score required to store a visual memory.
 
@@ -50,36 +54,41 @@ These parameters control how sensitive the OPU is to detecting surprises (change
 **Note:** This does NOT directly affect s_score calculation, only memory storage decisions.
 
 **Recommended values:**
+- `0.05` - Baby-like: very sensitive, remembers almost everything (current default)
 - `0.1` - Store almost all visual changes
-- `0.2` - Store moderate visual changes (current default)
+- `0.2` - Store moderate visual changes
 - `0.5` - Store only significant visual changes
 
 ---
 
-### `INTROSPECTION_AUDIO_MAX_HISTORY` (Default: `30`)
+### `INTROSPECTION_AUDIO_MAX_HISTORY` (Default: `10`)
 
 **What it does:** Maximum number of audio genomic bits kept in history for introspection.
 
 **Effect:**
-- **Smaller value** = Faster reaction to changes (less historical averaging)
+- **Smaller value** = Faster reaction to changes (less historical averaging, more reactive)
 - **Larger value** = Slower reaction (more stable, but less reactive)
 
 **Recommended values:**
-- `20-30` - Very reactive (current default: 30)
+- `10` - Baby-like: extremely reactive, very short memory (current default)
+- `20-30` - Very reactive
 - `50` - Moderate reactivity
 - `100+` - Very stable, slow to adapt
 
 ---
 
-### `INTROSPECTION_VISUAL_MAX_HISTORY` (Default: `50`)
+### `INTROSPECTION_VISUAL_MAX_HISTORY` (Default: `10`)
 
 **What it does:** Maximum number of visual frames kept in history for visual introspection.
 
 **Effect:** Similar to audio history, but for visual processing.
+- **Smaller value** = Faster reaction to visual changes (less historical averaging)
+- **Larger value** = Slower reaction (more stable, but less reactive)
 
 **Recommended values:**
+- `10` - Baby-like: extremely reactive, very short memory (current default)
 - `30` - More reactive to visual changes
-- `50` - Balanced (current default)
+- `50` - Balanced
 - `100` - More stable visual processing
 
 ---
@@ -96,6 +105,22 @@ These parameters control how sensitive the OPU is to detecting surprises (change
 - `2` - Start calculating immediately (current default)
 - `5` - Wait for more data before calculating
 - `10` - Very conservative, needs more history
+
+---
+
+### `INTROSPECTION_VISUAL_MIN_FRAMES` (Default: `5`)
+
+**What it does:** Minimum number of visual frames needed before visual introspection can calculate surprise scores.
+
+**Effect:**
+- Until this many frames are collected, visual s_score stays at 0.0
+- After reaching this threshold, visual surprise calculation begins
+- Lower values = Faster reaction to visual changes
+
+**Recommended values:**
+- `5` - Baby-like: reacts faster (current default)
+- `10` - Moderate reaction speed
+- `15` - Slower reaction, needs more history
 
 ---
 
@@ -282,7 +307,7 @@ See [Surprise Sensitivity](#introspection_noise_floor-default-0001) section abov
 
 ---
 
-### `OPU_VERSION` (Default: `"3.4.1"`)
+### `OPU_VERSION` (Default: `"3.4.2"`)
 
 **What it does:** Current OPU version number.
 
@@ -316,19 +341,90 @@ See [Surprise Sensitivity](#introspection_noise_floor-default-0001) section abov
 
 ---
 
+## YouTube Mode Configuration
+
+These parameters control YouTube video/audio streaming functionality.
+
+### `AUDIO_SENSE_YOUTUBE` (Default: `"AUDIO_V2"`)
+
+**What it does:** Sense label for YouTube audio stream input.
+
+**Effect:** Used to distinguish YouTube audio from microphone audio (`AUDIO_V1`) in memory storage.
+
+---
+
+### `VIDEO_SENSE_YOUTUBE` (Default: `"VIDEO_V2"`)
+
+**What it does:** Sense label for YouTube video stream input.
+
+**Effect:** Used to distinguish YouTube video from webcam video (`VIDEO_V1`) in memory storage.
+
+---
+
+### `YOUTUBE_VIDEO_RESIZE_DIM` (Default: `(640, 360)`)
+
+**What it does:** Target resolution for YouTube video frames (width, height in pixels).
+
+**Effect:**
+- **Smaller dimensions** = Faster processing, lower CPU usage
+- **Larger dimensions** = Better quality, higher CPU usage
+
+**Recommended values:**
+- `(640, 360)` - Balanced (current default)
+- `(320, 180)` - Faster processing
+- `(1280, 720)` - Higher quality
+
+---
+
+### `YOUTUBE_AUDIO_VOLUME_MULTIPLIER` (Default: `0.5`)
+
+**What it does:** Multiplier to reduce YouTube audio volume before processing.
+
+**Effect:**
+- **Lower value** = Quieter audio (prevents clipping)
+- **Higher value** = Louder audio (may cause clipping)
+
+**Recommended values:**
+- `0.5` - Reduces volume by 50% (current default)
+- `0.3` - Quieter, safer
+- `1.0` - Full volume (may clip)
+
+---
+
+### YouTube HUD Display Parameters
+
+These control the HUD overlay displayed on YouTube video frames:
+
+- **`YOUTUBE_HUD_POS_X`** (Default: `10`) - X position for HUD text
+- **`YOUTUBE_HUD_POS_Y_LINE1`** (Default: `30`) - Y position for first HUD line (scores)
+- **`YOUTUBE_HUD_POS_Y_LINE2`** (Default: `60`) - Y position for second HUD line (title)
+- **`YOUTUBE_HUD_POS_Y_LINE3`** (Default: `90`) - Y position for third HUD line (frame/FPS)
+- **`YOUTUBE_HUD_FONT_SCALE_LARGE`** (Default: `0.6`) - Font scale for main HUD text
+- **`YOUTUBE_HUD_FONT_SCALE_SMALL`** (Default: `0.5`) - Font scale for secondary HUD text
+- **`YOUTUBE_HUD_FONT_THICKNESS`** (Default: `2`) - Font thickness for main HUD text
+- **`YOUTUBE_HUD_FONT_THICKNESS_THIN`** (Default: `1`) - Font thickness for secondary HUD text
+
+**Effect:** Adjusts the position and appearance of the HUD overlay on YouTube video frames.
+
+---
+
 ## Quick Reference: Making OPU More Sensitive
 
 To make the OPU more sensitive to surprises (higher s_score more frequently):
 
-1. **Lower `INTROSPECTION_NOISE_FLOOR`**: `0.01` → `0.001` (10x more sensitive)
-2. **Lower `VISUAL_SURPRISE_THRESHOLD`**: `0.5` → `0.2` (stores more memories)
-3. **Reduce `INTROSPECTION_AUDIO_MAX_HISTORY`**: `50` → `30` (faster reaction)
+1. **Lower `INTROSPECTION_NOISE_FLOOR`**: `0.001` → `0.0001` (10x more sensitive)
+2. **Lower `VISUAL_SURPRISE_THRESHOLD`**: `0.2` → `0.05` (stores more memories)
+3. **Reduce `INTROSPECTION_AUDIO_MAX_HISTORY`**: `50` → `10` (faster reaction)
+4. **Reduce `INTROSPECTION_VISUAL_MAX_HISTORY`**: `50` → `10` (faster visual reaction)
+5. **Lower `INTROSPECTION_VISUAL_MIN_FRAMES`**: `10` → `5` (reacts faster)
 
 To make the OPU less sensitive (calmer, fewer surprises):
 
-1. **Raise `INTROSPECTION_NOISE_FLOOR`**: `0.001` → `0.01` or `0.1`
-2. **Raise `VISUAL_SURPRISE_THRESHOLD`**: `0.2` → `0.5`
-3. **Increase `INTROSPECTION_AUDIO_MAX_HISTORY`**: `30` → `50` or `100`
+1. **Raise `INTROSPECTION_NOISE_FLOOR`**: `0.0001` → `0.001` or `0.01`
+2. **Raise `VISUAL_SURPRISE_THRESHOLD`**: `0.05` → `0.2` or `0.5`
+3. **Increase `INTROSPECTION_AUDIO_MAX_HISTORY`**: `10` → `30` or `50`
+4. **Increase `INTROSPECTION_VISUAL_MAX_HISTORY`**: `10` → `30` or `50`
+5. **Raise `INTROSPECTION_VISUAL_MIN_FRAMES`**: `5` → `10` or `15`
 
 ---
 

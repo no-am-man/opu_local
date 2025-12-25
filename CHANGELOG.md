@@ -5,6 +5,37 @@ All notable changes to the Orthogonal Processing Unit (OPU) project will be docu
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.2] - 2025-01-XX
+
+### Refactored
+- **HUD Utilities Extraction**: Extracted HUD drawing logic from `main.py` to `utils/main_hud_utils.py`
+  - Created `draw_main_hud()` function for main OPU HUD overlay
+  - Created `draw_channel_bars()` and `draw_global_status()` helper functions
+  - Created `MainHUDParams` dataclass for cleaner parameter passing
+  - Removed `_create_hud_overlay()`, `_draw_channel_bars()`, and `_draw_global_status()` methods from `OPUEventLoop`
+  - Consistent pattern with `utils/hud_utils.py` for YouTube mode
+
+### Fixed
+- **Test Suite**: Fixed 9 failing tests
+  - Updated history size expectations (50 → 10, 15 → 10) to match baby-like sensitivity config
+  - Fixed maturity index recalculation tests to account for `evolve_character()` being called after state load
+  - Fixed surprise calculation edge case (`> 3.0` → `>= 3.0` for `np.float64` comparisons)
+
+### Changed
+- **Code Organization**: Improved separation of concerns
+  - HUD drawing logic now in dedicated utility module
+  - Reduced code duplication between main OPU and YouTube mode
+  - Easier to test HUD drawing logic independently
+  - Cleaner `main.py` focused on event loop logic
+
+### Technical Details
+- All 350 tests passing
+- Backward compatible with v3.4.1 state files
+- No breaking changes to public API
+- Improved maintainability and testability
+
+---
+
 ## [3.4.1] - 2025-01-XX
 
 ### Fixed

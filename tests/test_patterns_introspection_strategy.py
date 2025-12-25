@@ -96,8 +96,8 @@ class TestVisualIntrospectionStrategy:
     
     def test_init(self):
         """Test VisualIntrospectionStrategy initialization."""
-        strategy = VisualIntrospectionStrategy(max_history=50)
-        assert strategy.max_visual_history == 50
+        strategy = VisualIntrospectionStrategy(max_history=10)
+        assert strategy.max_visual_history == 10
         assert 'R' in strategy.visual_memory
         assert 'G' in strategy.visual_memory
         assert 'B' in strategy.visual_memory
@@ -115,11 +115,11 @@ class TestVisualIntrospectionStrategy:
         """Test that introspect builds history."""
         strategy = VisualIntrospectionStrategy()
         visual_vector = np.array([0.3, 0.4, 0.5])
-        for _ in range(15):  # More than 10 required
+        for _ in range(10):  # Min is 5, but we'll use 10 to test capping
             strategy.introspect(visual_vector)
-        assert len(strategy.visual_memory['R']) == 15
-        assert len(strategy.visual_memory['G']) == 15
-        assert len(strategy.visual_memory['B']) == 15
+        assert len(strategy.visual_memory['R']) == 10
+        assert len(strategy.visual_memory['G']) == 10
+        assert len(strategy.visual_memory['B']) == 10
     
     def test_introspect_calculates_surprise(self):
         """Test that introspect calculates surprise correctly."""

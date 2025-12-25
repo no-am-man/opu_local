@@ -3,6 +3,7 @@ matplotlib>=3.5.0
 sounddevice>=0.4.4
 scipy>=1.7.0
 opencv-python>=4.5.0
+yt-dlp>=2023.12.30  # For YouTube stream extraction (optional, for youtube_opu.py)
 
 # DeepFace for high-accuracy emotion detection
 # Note: DeepFace requires TensorFlow, which currently supports Python 3.8-3.12

@@ -100,7 +100,7 @@ class OrthogonalProcessingUnit(ObservableOPU):
         self._notify_state_change()
         return result
     
-    def store_memory(self, genomic_bit, s_score, sense_label=BRAIN_DEFAULT_SENSE_LABEL, emotion=None):
+    def store_memory(self, genomic_bit, s_score, sense_label=BRAIN_DEFAULT_SENSE_LABEL, emotion=None, timestamp=None):
         """
         Store memory (delegates to Brain).
         Uses EPOCH time for temporal synchronization across all senses.
@@ -108,15 +108,18 @@ class OrthogonalProcessingUnit(ObservableOPU):
         Args:
             genomic_bit: the genomic bit to store
             s_score: the surprise score (determines level)
-            sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1")
+            sense_label: label identifying the input sense (e.g., "AUDIO_V1", "VIDEO_V1", "AUDIO_V2", "VIDEO_V2")
             emotion: optional emotion dict with 'emotion' (str) and 'confidence' (float) from face detection
+            timestamp: optional timestamp for temporal sync (if None, uses current time)
+                      Use same timestamp for all 4 channels (VIDEO_V1, AUDIO_V1, VIDEO_V2, AUDIO_V2) in a cycle
         """
-        # --- FIX: USE EPOCH TIME FOR GLOBAL SYNC ---
+        # --- TEMPORAL SYNC: Use provided timestamp or current time ---
+        # For 4-channel sync (VIDEO_V1, AUDIO_V1, VIDEO_V2, AUDIO_V2), capture timestamp
+        # once at start of cycle and pass it to all store_memory() calls
         # EPOCH time (time.time()) creates a universal "Wall Clock" that forces
-        # Audio and Video to align perfectly on the timeline, regardless of
-        # processing rates (FPS vs Sample Rate).
-        # Old logical time: timestamp = len(self.audio_cortex.genomic_bits_history)
-        timestamp = time.time()
+        # all channels to align perfectly on the timeline, regardless of processing rates
+        if timestamp is None:
+            timestamp = time.time()
         
         self.brain.store_memory(genomic_bit, s_score, sense_label=sense_label, timestamp=timestamp, emotion=emotion)
         

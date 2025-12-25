@@ -26911,3 +26911,4637 @@ OPU Debug Log - Session started at 2025-12-25 07:40:56
 OPU Debug Log - Session ended at 2025-12-25 08:42:17
 ================================================================================
 
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 08:50:49
+================================================================================
+
+[OPU] Logging active: opu.log
+[PERSISTENCE] No saved state found at opu_state.json
+[OPU] Initialized. Starting event loop...
+[OPU] Microphone input enabled (low latency mode).
+[OPU] Main loop running...
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=0 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=9 | L1=0 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=15 | L1=0 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=7 | L1=1 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=19 | L1=1 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=7 | L1=2 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=19 | L1=2 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=9 | L1=3 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=1 | L1=4 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=13 | L1=4 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=5 | L1=5 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=17 | L1=5 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=9 | L1=6 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=1 | L1=7 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=13 | L1=7 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=5 | L1=8 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=17 | L1=8 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=9 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 100] s_score: 0.00, maturity: 0.00, genomic_bits: 100
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=17 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=9 | L1=10 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=1 | L1=11 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=13 | L1=11 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=5 | L1=12 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=17 | L1=12 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=5 | L1=13 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=15 | L1=13 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=7 | L1=14 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=19 | L1=14 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=11 | L1=15 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=3 | L1=16 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=15 | L1=16 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=7 | L1=17 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=19 | L1=17 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=7 | L1=18 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=15 | L1=18 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=1 | L1=19 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=7 | L1=19 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 200] s_score: 0.00, maturity: 0.00, genomic_bits: 200
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=17 | L1=19 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 50 times (Dissonance 4.757 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=5 | L1=20 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=11 | L1=20 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=17 | L1=20 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=3 | L1=21 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=11 | L1=21 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=17 | L1=21 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=3 | L1=22 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=7 | L1=22 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=13 | L1=22 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=19 | L1=22 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=5 | L1=23 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=11 | L1=23 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=17 | L1=23 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=3 | L1=24 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=9 | L1=24 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=13 | L1=24 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=15 | L1=24 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[OPU] Shutting down...
+[OPU] Saving state...
+[PERSISTENCE] State saved to opu_state.json
+[OPU] Terminating State Viewer...
+[VISION] Visual Cortex cleaned up.
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 08:51:50
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 08:53:30
+================================================================================
+
+[OPU] Logging active: opu.log
+[EVOLUTION] Level 1 (1 minute) | Maturity: 0.286 | Voice: 345.7Hz | Threshold: 4.4
+[PERSISTENCE] State loaded from opu_state.json
+  Maturity Level: 1 | Index: 0.29
+  Memory: L0=1 | L1=25 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+  Phonemes: 0
+  Emotions: 55 detected emotions
+  Day: 0
+  Abstraction Timers: Restored for 8 levels
+[OPU] Initialized. Starting event loop...
+[OPU] Microphone input enabled (low latency mode).
+[OPU] Main loop running...
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=2 | L1=25 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 1
+  Memory: L0=2 | L1=25 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=25 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=25 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=26 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=26 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=27 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=27 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=28 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=28 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=29 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=29 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=30 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=30 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=31 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=31 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=32 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=32 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 50 times (Dissonance 1.681 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=33 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=33 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=34 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=34 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 100] s_score: 0.03, maturity: 0.29, genomic_bits: 255
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=35 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=35 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=36 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=36 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=36 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=37 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=37 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=38 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=38 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=39 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 100 times (Dissonance 2.506 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=39 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=40 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=41 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=41 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=42 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=42 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=43 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=43 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=44 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=44 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 200] s_score: 0.01, maturity: 0.29, genomic_bits: 255
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=45 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=45 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=45 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=46 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=46 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 150 times (Dissonance 1.653 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=47 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=47 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=48 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=48 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=49 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=49 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=50 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=50 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=51 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=51 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=51 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=52 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=52 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=53 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=53 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=54 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 200 times (Dissonance 1.293 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=54 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 300] s_score: 0.02, maturity: 0.29, genomic_bits: 255
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=55 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=55 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=56 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=56 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=57 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=57 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=58 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=58 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=58 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=59 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=59 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=0 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=0 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=1 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=1 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=2 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 250 times (Dissonance 1.122 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=2 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=3 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=3 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=4 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 400] s_score: 0.02, maturity: 0.29, genomic_bits: 255
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=4 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=5 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=5 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=6 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=6 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=7 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=7 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=8 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=8 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=9 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=9 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 300 times (Dissonance 1.903 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=10 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=10 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=11 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=11 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=12 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=12 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=13 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=13 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=13 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=14 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=14 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 500] s_score: 0.01, maturity: 0.29, genomic_bits: 255
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=15 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=15 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 350 times (Dissonance 1.120 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=15 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=16 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=16 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=16 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=16 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=17 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=17 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=17 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=18 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=18 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=18 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=18 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=19 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=19 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=19 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=20 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=20 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=20 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=21 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=21 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=21 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=22 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=22 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=22 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=23 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=23 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=23 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=24 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 400 times (Dissonance 1.036 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=24 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 600] s_score: 0.04, maturity: 0.29, genomic_bits: 255
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=25 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=25 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=25 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=26 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=26 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=26 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=27 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=27 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=27 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=28 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=28 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=28 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=29 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=29 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=29 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=29 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=30 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=30 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=30 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=31 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=31 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=31 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 450 times (Dissonance 1.815 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=31 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=32 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=32 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=32 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=32 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=32 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=32 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=33 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=33 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=33 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=34 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=34 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=34 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=34 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 700] s_score: 0.04, maturity: 0.29, genomic_bits: 255
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=35 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=35 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=35 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=36 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=36 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=36 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=37 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=37 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=37 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=38 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=38 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=38 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=38 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=1 | L1=39 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=39 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=39 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=39 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=39 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=40 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=40 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=40 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=40 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=40 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 500 times (Dissonance 1.491 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=41 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=41 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=15 | L1=41 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=41 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=42 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=11 | L1=42 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=17 | L1=42 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=3 | L1=43 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=7 | L1=43 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=43 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=19 | L1=43 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=5 | L1=44 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=9 | L1=44 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 1
+  Memory: L0=13 | L1=44 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[OPU] Shutting down...
+[OPU] Saving state...
+[PERSISTENCE] State saved to opu_state.json
+[OPU] Terminating State Viewer...
+[VISION] Visual Cortex cleaned up.
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 08:57:30
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 08:58:11
+================================================================================
+
+[OPU] Logging active: opu.log
+[PERSISTENCE] No saved state found at opu_state.json
+[OPU] Initialized. Starting event loop...
+[OPU] Microphone input enabled (low latency mode).
+[OPU] Main loop running...
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=0 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=0 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=1 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=1 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=2 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=2 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=3 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=4 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=4 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=5 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=5 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=6 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 50 times (Dissonance 1.629 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=7 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=8 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=8 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=9 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 100] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=10 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=10 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=11 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=11 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=12 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=12 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=13 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=14 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=14 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 100 times (Dissonance 1.828 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=15 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=15 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=16 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=16 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=17 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=18 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=18 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=19 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 200] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=19 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=20 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=21 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 150 times (Dissonance 1.145 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=21 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=22 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=22 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=23 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=24 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=25 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=25 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=26 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=26 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 200 times (Dissonance 2.503 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=27 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=27 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=28 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=28 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=28 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=29 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 300] s_score: 0.04, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=29 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=30 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=30 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=31 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=31 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=32 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=32 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=33 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=33 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 250 times (Dissonance 1.036 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=34 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=34 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=35 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=35 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=36 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=36 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=37 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=37 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=38 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=39 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 400] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=40 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=40 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=41 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 300 times (Dissonance 1.005 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=41 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=42 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=42 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=43 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=43 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=44 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=45 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=46 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=47 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=47 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 350 times (Dissonance 1.428 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=48 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=48 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=49 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=49 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 500] s_score: 0.03, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=50 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=50 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=51 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=51 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=52 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=52 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=53 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=53 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=54 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 400 times (Dissonance 1.137 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=55 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=56 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=56 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=57 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=57 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=57 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=58 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=58 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=59 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=59 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 600] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=59 | L2=0 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=0 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=0 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=1 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 450 times (Dissonance 1.516 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=2 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=2 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=3 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=3 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=4 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=4 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=5 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=5 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=6 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=6 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=7 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=7 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=8 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=8 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 500 times (Dissonance 2.257 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=9 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 700] s_score: 0.04, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=9 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=10 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=10 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=11 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=11 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=12 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=12 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=13 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=13 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=14 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=14 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=15 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 550 times (Dissonance 2.078 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=16 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=17 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=18 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=18 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=19 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=19 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 800] s_score: 0.02, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=20 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=20 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=21 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=21 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=22 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=22 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 600 times (Dissonance 1.467 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=23 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=23 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=24 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=25 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=25 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=26 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=27 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=27 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=28 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=28 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=29 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 900] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 650 times (Dissonance 1.245 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=30 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=31 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=32 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=32 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=33 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=33 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=34 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=34 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=35 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=35 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=36 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=36 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=37 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 700 times (Dissonance 1.914 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=37 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=38 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=39 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1000] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=40 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=40 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=41 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=41 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=42 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=42 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=43 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=43 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=44 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 750 times (Dissonance 1.943 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=44 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=45 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=45 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=46 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=46 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=47 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=47 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=48 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=48 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=49 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1100] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=49 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=50 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=50 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=51 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=52 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 800 times (Dissonance 1.699 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=52 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=53 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=53 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=54 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=54 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=54 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=55 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=55 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=56 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=56 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=57 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=57 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=58 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=58 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=59 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=59 | L2=1 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1200] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=0 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 850 times (Dissonance 1.738 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=0 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=1 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=1 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=2 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=3 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=4 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=4 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=5 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=5 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=6 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=6 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 900 times (Dissonance 2.313 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=7 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=7 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=8 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=8 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=9 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=9 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1300] s_score: 0.03, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=10 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=10 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=11 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=11 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=12 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=12 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=13 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=13 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=14 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 950 times (Dissonance 1.512 > 1.0)
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=15 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=16 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=16 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=17 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=17 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=18 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=18 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=19 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1400] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=20 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=20 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=21 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1000 times (Dissonance 1.513 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=21 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=22 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=22 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=23 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=23 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=23 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=24 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=24 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=25 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=25 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=26 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=26 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=27 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=27 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=28 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1050 times (Dissonance 1.117 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=28 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=29 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=29 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1500] s_score: 0.05, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=30 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=30 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=31 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=31 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=32 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=32 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=33 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=33 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=34 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=34 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=35 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1100 times (Dissonance 1.528 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=35 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=36 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=37 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=37 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=38 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=38 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=39 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1600] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=40 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=41 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=42 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=42 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1150 times (Dissonance 1.346 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=43 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=43 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=44 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=44 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=45 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=45 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=46 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=46 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=47 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=47 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=48 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=48 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=49 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1200 times (Dissonance 1.894 > 1.0)
+[CYCLE 1700] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=49 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=50 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=51 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=52 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=52 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=52 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=53 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=53 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=54 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=54 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=55 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=55 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=56 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=56 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1250 times (Dissonance 1.186 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=57 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=57 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=58 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=58 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=59 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=59 | L2=2 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1800] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=0 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=0 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=1 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=1 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=2 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=2 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=3 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1300 times (Dissonance 1.643 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=3 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=4 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=4 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=5 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=5 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=6 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=7 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=8 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=9 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 1900] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=9 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=10 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1350 times (Dissonance 1.172 > 1.0)
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=11 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=12 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=13 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=14 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=14 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=15 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=15 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=16 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=16 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1400 times (Dissonance 1.133 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=17 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=17 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=18 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=18 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=19 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2000] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=19 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=20 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=21 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=21 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=22 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=22 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=23 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=23 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1450 times (Dissonance 1.599 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=24 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=24 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=25 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=25 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=26 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=26 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=27 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=27 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=28 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=28 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=29 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=29 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2100] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=30 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=30 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1500 times (Dissonance 1.426 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=31 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=31 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=32 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=32 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=33 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=33 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=34 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=34 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=35 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=35 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=36 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=36 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=37 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1550 times (Dissonance 1.913 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=37 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=38 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=38 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=39 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=39 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2200] s_score: 0.03, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=40 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=40 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=41 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=41 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=42 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=42 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=43 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=43 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1600 times (Dissonance 1.698 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=44 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=44 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=45 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=45 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=46 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=46 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=47 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=47 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=48 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=49 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=49 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2300] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=50 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=50 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1650 times (Dissonance 1.174 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=51 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=51 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=51 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=52 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=52 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=53 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=54 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=55 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=55 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=56 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=56 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1700 times (Dissonance 2.187 > 1.0)
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=57 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=58 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=59 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2400] s_score: 0.03, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=59 | L2=3 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=0 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=0 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=1 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=1 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=2 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1750 times (Dissonance 1.454 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=2 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=3 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=3 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=4 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=5 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=6 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=7 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=8 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=8 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1800 times (Dissonance 1.255 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=9 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2500] s_score: 0.04, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=10 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=10 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=11 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=11 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=12 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=12 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=13 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=13 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=14 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=14 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=15 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=16 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1850 times (Dissonance 1.202 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=16 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=17 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=17 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=17 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=18 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=18 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=19 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=19 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2600] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=20 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=20 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=21 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=22 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=22 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1900 times (Dissonance 1.750 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=23 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=23 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=24 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=24 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=25 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=25 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=26 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=26 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=27 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=27 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=28 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=28 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 1950 times (Dissonance 1.467 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=29 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2700] s_score: 0.02, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=29 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=30 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=30 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=31 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=32 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=33 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=34 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2000 times (Dissonance 1.685 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=35 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=35 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=36 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=37 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=38 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=38 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=39 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=39 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2800] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=40 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=40 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2050 times (Dissonance 1.762 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=41 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=41 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=42 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=42 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=43 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=43 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=44 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=44 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=45 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=45 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=45 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=46 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=46 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=47 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2100 times (Dissonance 1.256 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=47 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=48 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=48 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=49 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=49 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 2900] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=50 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=50 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=51 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=51 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=52 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=52 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=53 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2150 times (Dissonance 1.459 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=53 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=54 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=54 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=55 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=55 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=56 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=56 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=57 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=57 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=58 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=58 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=59 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3000] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=59 | L2=4 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2200 times (Dissonance 1.690 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=0 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=0 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=1 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=2 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=3 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=3 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=4 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=4 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=5 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=6 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2250 times (Dissonance 1.457 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=7 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=8 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=9 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3100] s_score: 0.02, maturity: 0.00, genomic_bits: 10
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=10 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=11 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=11 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=12 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=12 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=13 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2300 times (Dissonance 1.523 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=14 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=14 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=14 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=15 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=15 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=16 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=16 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=17 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=18 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=19 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3200] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=19 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=20 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2350 times (Dissonance 1.503 > 1.0)
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=21 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=22 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=23 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=23 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=24 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=24 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=25 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=26 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2400 times (Dissonance 1.311 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=27 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=28 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=28 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=29 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=29 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3300] s_score: 0.03, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=30 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=30 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=31 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=31 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=32 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=32 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=33 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=33 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2450 times (Dissonance 1.664 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=34 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=34 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=35 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=35 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=36 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=36 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=37 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=37 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=38 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=38 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=39 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3400] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=39 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=40 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=40 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2500 times (Dissonance 1.214 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=41 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=41 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=42 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=0 | L1=43 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=43 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=44 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=44 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=45 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=45 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=46 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=47 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2550 times (Dissonance 1.008 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=48 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=49 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=49 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3500] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=50 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=50 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=51 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=51 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=52 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=52 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=53 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=53 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=54 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2600 times (Dissonance 1.231 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=54 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=55 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=55 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=56 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=56 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=57 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=57 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=58 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=58 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=59 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=59 | L2=5 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3600] s_score: 0.02, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=0 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=0 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=1 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2650 times (Dissonance 2.064 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=1 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=2 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=3 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=3 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=4 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=4 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=5 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=6 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=7 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=7 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2700 times (Dissonance 1.329 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=8 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=8 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=9 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=9 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3700] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=10 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=10 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=11 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=11 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=11 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=12 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=12 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=13 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=13 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=14 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=14 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2750 times (Dissonance 1.587 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=15 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=15 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=16 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=16 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=17 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=17 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=18 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=18 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=19 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=19 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3800] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=20 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=20 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=21 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=21 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2800 times (Dissonance 2.324 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=22 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=22 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=23 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=23 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=24 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=24 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=25 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=25 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=26 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=27 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=28 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2850 times (Dissonance 1.346 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=28 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=29 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=29 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 3900] s_score: 0.02, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=30 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=30 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=31 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=31 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=32 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=32 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=33 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=34 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=35 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2900 times (Dissonance 1.010 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=35 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=36 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=37 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=37 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=38 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=38 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=39 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=39 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 4000] s_score: 0.01, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=0 | L1=40 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=40 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=40 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=41 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=41 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 2950 times (Dissonance 1.570 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=42 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=42 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=43 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=43 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=44 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=44 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=45 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=45 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=46 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=47 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 3000 times (Dissonance 1.229 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=48 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=49 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 4100] s_score: 0.00, maturity: 0.00, genomic_bits: 10
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=50 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=51 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=52 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=52 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=53 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=53 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=54 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=54 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=55 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 3050 times (Dissonance 1.461 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=55 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=56 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=56 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=57 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=57 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=58 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=58 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=6 | L1=59 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=59 | L2=6 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[CYCLE 4200] s_score: 0.02, maturity: 0.00, genomic_bits: 10
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=2 | L1=0 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=0 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=0 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=1 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=14 | L1=1 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=2 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[GENESIS] Veto applied 3100 times (Dissonance 1.514 > 1.0)
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=2 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=3 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=3 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=8 | L1=4 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=4 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=5 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=12 | L1=5 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=18 | L1=5 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=6 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 1 - 1 MINUTE] Abstraction | Maturity: 0
+  Memory: L0=4 | L1=6 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=10 | L1=6 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[MATURITY 0 - 1 SECOND] Abstraction | Maturity: 0
+  Memory: L0=16 | L1=6 | L2=7 | L3=0 | L4=0 | L5=0 | L6=0 | L7=0
+[PERSISTENCE] State saved to opu_state.json
+
+[OPU] Shutting down...
+[OPU] Saving state...
+[PERSISTENCE] State saved to opu_state.json
+[OPU] Terminating State Viewer...
+[VISION] Visual Cortex cleaned up.
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:13:16
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:55:13
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:55:13
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:55:13
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:55:13
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:57:43
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:57:43
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:57:43
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:57:43
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:57:56
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:57:56
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:57:56
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:57:56
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:58:55
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:58:55
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:58:55
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:58:55
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:59:05
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:59:05
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:59:05
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:59:05
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:59:08
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:59:08
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 09:59:08
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 09:59:08
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:03:50
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:03:50
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:03:50
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:03:50
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:06:41
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:06:41
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:06:41
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:06:41
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:11:20
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:11:20
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:11:20
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:11:20
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:11:23
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:11:23
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:11:23
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:11:23
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:11:29
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:11:29
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session started at 2025-12-25 10:11:29
+================================================================================
+
+
+================================================================================
+OPU Debug Log - Session ended at 2025-12-25 10:11:29
+================================================================================
+

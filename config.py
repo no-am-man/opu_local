@@ -2,11 +2,11 @@
 Configuration parameters for the OPU (Orthogonal Processing Unit).
 Contains the Genesis Constant and safety limits.
 
-OPU v3.4.1 - MIT License
+OPU v3.4.2 - MIT License
 """
 
 # Version
-OPU_VERSION = "3.4.1"  # v3.4.1: Bug fixes - Emotion extraction, matplotlib compatibility, error logging, semaphore cleanup
+OPU_VERSION = "3.4.2"  # v3.4.2: Code refactoring - HUD utilities extraction, test fixes, improved maintainability
 
 # Genesis Constant: The Order of the Empty Set
 G_EMPTY_SET = 1.0
@@ -72,12 +72,14 @@ STATE_FILE = "opu_state.json"  # Path to save/load OPU state
 # Each input source is labeled with a sense identifier
 # This allows the OPU to track and learn from different input modalities
 # Future senses can be added: TOUCH_V1, TEMPERATURE_V1, etc.
-AUDIO_SENSE = "AUDIO_V1"
-VIDEO_SENSE = "VIDEO_V1"
+AUDIO_SENSE = "AUDIO_V1"  # Microphone input
+VIDEO_SENSE = "VIDEO_V1"  # Webcam input
+AUDIO_SENSE_YOUTUBE = "AUDIO_V2"  # YouTube audio stream
+VIDEO_SENSE_YOUTUBE = "VIDEO_V2"  # YouTube video stream
 BRAIN_DEFAULT_SENSE_LABEL = "UNKNOWN"  # Default sense label for unknown input sources
 
 # Processing Thresholds
-VISUAL_SURPRISE_THRESHOLD = 0.2  # Minimum visual surprise to store memory (lowered for more sensitivity)
+VISUAL_SURPRISE_THRESHOLD = 0.05  # Minimum visual surprise to store memory (baby-like: very sensitive, remembers everything)
 AUDIO_TONE_DURATION_SECONDS = 0.05  # Duration of audio feedback tone
 
 # Audio Input Configuration
@@ -103,9 +105,22 @@ FONT_SCALE_MEDIUM = 0.7  # OpenCV font scale for medium text
 FONT_THICKNESS_THIN = 1  # OpenCV font thickness for thin text
 FONT_THICKNESS_THICK = 2  # OpenCV font thickness for thick text
 TEXT_COLOR_GRAY = (200, 200, 200)  # Gray color for text overlay
+TEXT_COLOR_WHITE = (255, 255, 255)  # White color for text overlay
 STATUS_COLOR_RED = (0, 0, 255)  # BGR color for RED alert
 STATUS_COLOR_YELLOW = (0, 255, 255)  # BGR color for YELLOW interest
 STATUS_COLOR_GREEN = (0, 255, 0)  # BGR color for GREEN calm
+
+# YouTube OPU Configuration
+YOUTUBE_VIDEO_RESIZE_DIM = (640, 360)  # Resize video frames for faster processing
+YOUTUBE_AUDIO_VOLUME_MULTIPLIER = 0.5  # Reduce YouTube audio volume
+YOUTUBE_HUD_POS_X = 10  # X position for HUD text
+YOUTUBE_HUD_POS_Y_LINE1 = 30  # Y position for first HUD line
+YOUTUBE_HUD_POS_Y_LINE2 = 60  # Y position for second HUD line
+YOUTUBE_HUD_POS_Y_LINE3 = 90  # Y position for third HUD line
+YOUTUBE_HUD_FONT_SCALE_LARGE = 0.6  # Font scale for main HUD text
+YOUTUBE_HUD_FONT_SCALE_SMALL = 0.5  # Font scale for secondary HUD text
+YOUTUBE_HUD_FONT_THICKNESS = 2  # Font thickness for main HUD text
+YOUTUBE_HUD_FONT_THICKNESS_THIN = 1  # Font thickness for secondary HUD text
 CHANNEL_COLOR_RED = (0, 0, 255)  # BGR color for R channel
 CHANNEL_COLOR_GREEN = (0, 255, 0)  # BGR color for G channel
 CHANNEL_COLOR_BLUE = (255, 0, 0)  # BGR color for B channel
@@ -281,11 +296,11 @@ COMMAND_MAX_HISTORY_DEFAULT = 100  # Default maximum command history size
 COMMAND_UNDO_SEARCH_MAX_LEVEL = 7  # Maximum level to search when undoing (0-7 for 8-layer architecture)
 
 # Introspection Strategy Configuration
-INTROSPECTION_AUDIO_MAX_HISTORY = 30  # Maximum history size for audio introspection (reduced for faster reaction)
-INTROSPECTION_VISUAL_MAX_HISTORY = 50  # Maximum history size for visual introspection
+INTROSPECTION_AUDIO_MAX_HISTORY = 10  # Maximum history size for audio introspection (baby-like: extremely reactive, very short memory)
+INTROSPECTION_VISUAL_MAX_HISTORY = 10  # Maximum history size for visual introspection (baby-like: extremely reactive, very short memory)
 INTROSPECTION_MIN_DATA_POINTS = 2  # Minimum data points needed for meaningful introspection
-INTROSPECTION_VISUAL_MIN_FRAMES = 10  # Minimum frames needed for visual introspection
-INTROSPECTION_NOISE_FLOOR = 0.001  # Minimum sigma to prevent false high scores from silence (lowered for 10x more sensitivity)
+INTROSPECTION_VISUAL_MIN_FRAMES = 5  # Minimum frames needed for visual introspection (baby-like: reacts faster)
+INTROSPECTION_NOISE_FLOOR = 0.0001  # Minimum sigma to prevent false high scores from silence (baby-like: extremely sensitive, 100x more than default)
 INTROSPECTION_SIGMA_DEFAULT = 0.1  # Default sigma when history is zero
 INTROSPECTION_DEFAULT_S_SCORE = 0.0  # Default surprise score
 INTROSPECTION_DEFAULT_COHERENCE = 1.0  # Default coherence (perfect when no history)

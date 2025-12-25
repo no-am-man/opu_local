@@ -1,4 +1,8 @@
-# Orthogonal Processing Unit (OPU) v3.4.1
+# Coherence OPU v3.4.2
+
+<div align="center">
+  <img src="assets/logo.jpeg" alt="Coherence OPU Logo" width="400">
+</div>
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -11,7 +15,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version
 
-**Current Version: 3.4.1**
+**Current Version: 3.4.2**
 
 ### ⚠️ Breaking Change in v3.2.0
 
@@ -152,6 +156,39 @@ python3 main.py
 ```
 
 **Note:** The launcher script works on all platforms, so you can use it everywhere for consistency.
+
+### YouTube Mode
+
+Feed YouTube video/audio streams directly into the OPU, allowing it to "watch" and "listen" to YouTube content:
+
+```bash
+# Install additional dependencies
+pip install yt-dlp
+
+# Also requires ffmpeg (system dependency)
+# macOS: brew install ffmpeg
+# Linux: apt-get install ffmpeg
+# Windows: Download from https://ffmpeg.org/
+
+# Run with YouTube URL
+python3 youtube_opu.py "https://www.youtube.com/watch?v=jfKfPfyJRdk"
+
+# With custom log file
+python3 youtube_opu.py "https://www.youtube.com/watch?v=jfKfPfyJRdk" --log-file youtube.log
+```
+
+**Features:**
+- **4-Channel Temporal Synchronization**: All sense channels (AUDIO_V1, VIDEO_V1, AUDIO_V2, VIDEO_V2) use synchronized timestamps
+- **Recursive Perception**: OPU analyzes its own annotations (object detection boxes, HUD text) as visual input
+- **Real-time Processing**: Video frames and audio chunks processed in real-time
+- **HUD Overlay**: Displays s_score, audio/visual scores, video title, and FPS on video frames
+- **Separate Memory Channels**: YouTube audio/video stored as `AUDIO_V2` and `VIDEO_V2` (distinct from webcam/mic `AUDIO_V1`/`VIDEO_V1`)
+
+**Configuration:**
+- See [CONFIG.md](CONFIG.md) for YouTube-specific parameters:
+  - `YOUTUBE_VIDEO_RESIZE_DIM` - Video frame resolution
+  - `YOUTUBE_AUDIO_VOLUME_MULTIPLIER` - Audio volume adjustment
+  - `YOUTUBE_HUD_*` - HUD overlay positioning and styling
 
 ### As a Package (Future)
 
@@ -337,7 +374,7 @@ If you use OPU in your research, please cite:
 
 ```bibtex
 @software{opu2024,
-  title = {Orthogonal Processing Unit (OPU) v3.4.1},
+  title = {Coherence OPU v3.4.2},
   author = {NoamTal Cohen-LyShinski},
   year = {2024},
   license = {MIT},
@@ -352,6 +389,20 @@ If you use OPU in your research, please cite:
 - Designed for real-time audio processing and cognitive modeling
 
 ## Changelog
+
+### v3.4.2 (2025-01-XX)
+- **Code Refactoring**:
+  - Extracted HUD drawing logic from `main.py` to `utils/main_hud_utils.py` for better modularity
+  - Created `draw_main_hud()`, `draw_channel_bars()`, and `draw_global_status()` utility functions
+  - Consistent HUD utility pattern matching YouTube mode architecture
+- **Test Fixes**:
+  - Fixed 9 failing tests related to history size expectations and maturity recalculation
+  - Updated test expectations to match baby-like sensitivity configuration
+  - Fixed surprise calculation edge cases for numpy float comparisons
+- **Improvements**:
+  - Reduced code duplication and improved separation of concerns
+  - Easier to test HUD drawing logic independently
+  - Cleaner `main.py` focused on event loop logic
 
 ### v3.4.1 (2025-01-XX)
 - **Bug Fixes**:

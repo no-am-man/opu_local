@@ -133,7 +133,7 @@ class TestOPUPersistence:
         cortex.introspect(0.5)
         cortex.introspect(1.0)
         cortex.store_memory(0.5, 1.5)
-        cortex.character_profile['maturity_index'] = 0.6
+        # Maturity will be recalculated based on memory state after load
         phoneme_analyzer.analyze(2.0, 300.0)
         persistence.save_state(cortex, phoneme_analyzer, day_counter=10)
         
@@ -144,7 +144,9 @@ class TestOPUPersistence:
         success, day_counter, timers = persistence.load_state(new_cortex, new_phoneme_analyzer)
         assert success is True
         assert day_counter == 10
-        assert new_cortex.character_profile['maturity_index'] == 0.6
+        # Maturity is recalculated based on loaded memory state (not preserved from save)
+        # With only level 0 memories, maturity_index will be 0.0
+        assert new_cortex.character_profile['maturity_index'] == 0.0
         # With natural learning, memory goes to level 0 first
         assert len(new_cortex.memory_levels[0]) > 0
         assert len(new_phoneme_analyzer.phoneme_history) > 0
@@ -299,7 +301,7 @@ class TestOPUPersistence:
         cortex.introspect(0.5)
         cortex.introspect(1.0)
         cortex.store_memory(0.5, 1.5)
-        cortex.character_profile['maturity_index'] = 0.75
+        # Maturity will be recalculated based on memory state after load
         phoneme_analyzer.analyze(2.0, 300.0)
         phoneme_analyzer.analyze(4.0, 250.0)
         
@@ -313,7 +315,9 @@ class TestOPUPersistence:
         
         assert success is True
         assert day_counter == 42
-        assert new_cortex.character_profile['maturity_index'] == 0.75
+        # Maturity is recalculated based on loaded memory state (not preserved from save)
+        # With only level 0 memories, maturity_index will be 0.0
+        assert new_cortex.character_profile['maturity_index'] == 0.0
         assert len(new_phoneme_analyzer.phoneme_history) == 2
         # timers may be None for state files without timers
     

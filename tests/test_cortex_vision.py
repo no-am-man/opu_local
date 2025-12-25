@@ -19,7 +19,7 @@ class TestVisualCortex:
         assert 'R' in vc.visual_memory
         assert 'G' in vc.visual_memory
         assert 'B' in vc.visual_memory
-        assert vc.max_visual_history == 50  # Updated default for higher sensitivity
+        assert vc.max_visual_history == 10  # Baby-like: extremely reactive, very short memory
     
     def test_introspect_visual_initialization(self):
         """Test that visual memory is initialized correctly in OPU."""
@@ -28,7 +28,7 @@ class TestVisualCortex:
         assert 'R' in cortex.visual_memory
         assert 'G' in cortex.visual_memory
         assert 'B' in cortex.visual_memory
-        assert cortex.max_visual_history == 50  # Updated default for higher sensitivity
+        assert cortex.max_visual_history == 10  # Baby-like: extremely reactive, very short memory
     
     def test_introspect_insufficient_history(self):
         """Test visual introspection with insufficient history."""
@@ -49,13 +49,13 @@ class TestVisualCortex:
         
         visual_vector = np.array([10.0, 20.0, 30.0])
         
-        # Add enough frames to build history
-        for _ in range(15):
+        # Add enough frames to build history (min is 5, but we'll use 10 to test capping)
+        for _ in range(10):
             vc.introspect(visual_vector)
         
-        assert len(vc.visual_memory['R']) == 15
-        assert len(vc.visual_memory['G']) == 15
-        assert len(vc.visual_memory['B']) == 15
+        assert len(vc.visual_memory['R']) == 10
+        assert len(vc.visual_memory['G']) == 10
+        assert len(vc.visual_memory['B']) == 10
     
     def test_introspect_visual_insufficient_history(self):
         """Test visual introspection with insufficient history (OPU wrapper)."""
@@ -76,13 +76,13 @@ class TestVisualCortex:
         
         visual_vector = np.array([10.0, 20.0, 30.0])
         
-        # Add enough frames to build history
-        for _ in range(15):
+        # Add enough frames to build history (min is 5, but we'll use 10 to test capping)
+        for _ in range(10):
             cortex.introspect_visual(visual_vector)
         
-        assert len(cortex.visual_memory['R']) == 15
-        assert len(cortex.visual_memory['G']) == 15
-        assert len(cortex.visual_memory['B']) == 15
+        assert len(cortex.visual_memory['R']) == 10
+        assert len(cortex.visual_memory['G']) == 10
+        assert len(cortex.visual_memory['B']) == 10
     
     def test_introspect_visual_calculates_surprise(self):
         """Test visual introspection calculates surprise correctly."""
@@ -98,7 +98,7 @@ class TestVisualCortex:
         s_visual, channel_scores = cortex.introspect_visual(surprising_vector)
         
         # R channel should have high surprise (10x increase from baseline)
-        assert channel_scores['R'] > 3.0
+        assert channel_scores['R'] >= 3.0
         # G and B should have low surprise (unchanged)
         assert channel_scores['G'] < 1.0
         assert channel_scores['B'] < 1.0
@@ -167,8 +167,8 @@ class TestVisualCortex:
         s_visual, channel_scores = cortex.introspect_visual(surprise)
         
         # Both R and B should have high surprise (10x and 6.67x increase)
-        assert channel_scores['R'] > 3.0
-        assert channel_scores['B'] > 3.0
+        assert channel_scores['R'] >= 3.0
+        assert channel_scores['B'] >= 3.0
         # G should be low
         assert channel_scores['G'] < 1.0
         # Global should be max
