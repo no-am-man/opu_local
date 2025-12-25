@@ -319,6 +319,8 @@ Edit `config.py` to adjust:
 - Visualization parameters
 - State file path (`STATE_FILE`)
 
+**For detailed configuration documentation, see [CONFIG.md](CONFIG.md)** - This guide explains all parameters, their effects, and recommended values for tuning surprise sensitivity, memory behavior, and more.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
