@@ -188,6 +188,12 @@ class Brain:
               f"{emotion_str}{sense_str}")
         
         self._check_recursive_consolidation(level + 1)
+        
+        # Always update character evolution after consolidation
+        # This ensures maturity_index reflects current memory state, regardless of level
+        self.evolve_character()
+        
+        # Legacy: Also trigger evolution if minimum level reached (for logging)
         self._trigger_evolution_if_needed(level + 1)
     
     def _can_consolidate(self, level):
