@@ -44,13 +44,22 @@ except ImportError:
 
 try:
     import subprocess
-    FFMPEG_AVAILABLE = True
+    # Check if ffmpeg is actually available in PATH
+    try:
+        subprocess.run(['ffmpeg', '-version'], 
+                      stdout=subprocess.PIPE, 
+                      stderr=subprocess.PIPE, 
+                      timeout=2)
+        FFMPEG_AVAILABLE = True
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError):
+        FFMPEG_AVAILABLE = False
 except ImportError:
     FFMPEG_AVAILABLE = False
 
 from config import (
     SAMPLE_RATE, CHUNK_SIZE, AUDIO_SENSE_YOUTUBE, VIDEO_SENSE_YOUTUBE, OPU_VERSION,
-    YOUTUBE_VIDEO_RESIZE_DIM, YOUTUBE_AUDIO_VOLUME_MULTIPLIER, VISUAL_SURPRISE_THRESHOLD
+    YOUTUBE_VIDEO_RESIZE_DIM, YOUTUBE_AUDIO_VOLUME_MULTIPLIER, VISUAL_SURPRISE_THRESHOLD,
+    BASE_FREQUENCY
 )
 from core.opu import OrthogonalProcessingUnit
 from core.mic import perceive
@@ -185,6 +194,7 @@ class YouTubeStreamer:
         
         if not FFMPEG_AVAILABLE:
             print("[YOUTUBE] ffmpeg not available, audio disabled")
+            print("[YOUTUBE] Install ffmpeg: brew install ffmpeg (macOS) or apt-get install ffmpeg (Linux)")
             self.audio_enabled = False
             return
         
@@ -330,7 +340,7 @@ def run_youtube_opu(youtube_url, enable_state_viewer=True, log_file=None):
     print("[OPU] Initializing...")
     cortex = OrthogonalProcessingUnit()
     genesis = GenesisKernel()
-    afl = AestheticFeedbackLoop(base_frequency=220.0)
+    afl = AestheticFeedbackLoop(base_pitch=BASE_FREQUENCY)
     phoneme_analyzer = PhonemeAnalyzer()
     visualizer = CognitiveMapVisualizer()
     visual_perception = VisualPerception(camera_index=0, use_color_constancy=True)

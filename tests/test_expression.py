@@ -7,6 +7,7 @@ import pytest
 import numpy as np
 from unittest.mock import Mock, patch, MagicMock
 from core.expression import AestheticFeedbackLoop, PhonemeAnalyzer
+from core.phoneme_inventory import PHONEME_INVENTORY
 from config import SAMPLE_RATE, BASE_FREQUENCY
 
 
@@ -250,53 +251,122 @@ class TestPhonemeAnalyzer:
         assert len(analyzer.phoneme_history) == 0
     
     def test_analyze_vowel_high_pitch(self):
-        """Test analyze returns vowel 'a' for high pitch."""
-        analyzer = PhonemeAnalyzer()
+        """Test analyze returns vowel for high pitch."""
+        # Test with full inventory disabled (backward compatibility)
+        analyzer = PhonemeAnalyzer(use_full_inventory=False)
         result = analyzer.analyze(2.0, 300.0)  # s_score < 3.0, pitch > 200
-        assert result == "a"
+        assert result == "a"  # Simple mode returns "a"
         assert len(analyzer.phoneme_history) == 1
         assert analyzer.phoneme_history[0]['phoneme'] == "a"
+        
+        # Test with full inventory enabled
+        analyzer_full = PhonemeAnalyzer(use_full_inventory=True)
+        result_full = analyzer_full.analyze(2.0, 300.0)
+        assert result_full is not None
+        assert result_full.startswith("/")  # IPA format
+        assert result_full.endswith("/")
+        # Should be a vowel
+        from core.phoneme_inventory import PHONEME_INVENTORY
+        phoneme_def = PHONEME_INVENTORY.get_phoneme(result_full)
+        assert phoneme_def is not None
+        assert phoneme_def.category == "vowel"
     
     def test_analyze_vowel_low_pitch(self):
-        """Test analyze returns vowel 'o' for low pitch."""
-        analyzer = PhonemeAnalyzer()
+        """Test analyze returns vowel for low pitch."""
+        # Test with full inventory disabled
+        analyzer = PhonemeAnalyzer(use_full_inventory=False)
         result = analyzer.analyze(2.0, 150.0)  # s_score < 3.0, pitch <= 200
-        assert result == "o"
+        assert result == "o"  # Simple mode returns "o"
         assert analyzer.phoneme_history[0]['phoneme'] == "o"
+        
+        # Test with full inventory enabled
+        analyzer_full = PhonemeAnalyzer(use_full_inventory=True)
+        result_full = analyzer_full.analyze(2.0, 150.0)
+        assert result_full is not None
+        assert result_full.startswith("/")
+        phoneme_def = PHONEME_INVENTORY.get_phoneme(result_full)
+        assert phoneme_def is not None
+        assert phoneme_def.category == "vowel"
     
     def test_analyze_fricative(self):
-        """Test analyze returns fricative 's'."""
-        analyzer = PhonemeAnalyzer()
+        """Test analyze returns fricative."""
+        # Test with full inventory disabled
+        analyzer = PhonemeAnalyzer(use_full_inventory=False)
         result = analyzer.analyze(4.0, 300.0)  # 3.0 <= s_score < 6.0
-        assert result == "s"
+        assert result == "s"  # Simple mode returns "s"
         assert analyzer.phoneme_history[0]['phoneme'] == "s"
+        
+        # Test with full inventory enabled
+        analyzer_full = PhonemeAnalyzer(use_full_inventory=True)
+        result_full = analyzer_full.analyze(4.0, 300.0)
+        assert result_full is not None
+        assert result_full.startswith("/")
+        phoneme_def = PHONEME_INVENTORY.get_phoneme(result_full)
+        assert phoneme_def is not None
+        assert phoneme_def.articulation == "fricative"
     
     def test_analyze_plosive(self):
-        """Test analyze returns plosive 'k'."""
-        analyzer = PhonemeAnalyzer()
+        """Test analyze returns plosive."""
+        # Test with full inventory disabled
+        analyzer = PhonemeAnalyzer(use_full_inventory=False)
         result = analyzer.analyze(7.0, 300.0)  # s_score >= 6.0
-        assert result == "k"
+        assert result == "k"  # Simple mode returns "k"
         assert analyzer.phoneme_history[0]['phoneme'] == "k"
+        
+        # Test with full inventory enabled
+        analyzer_full = PhonemeAnalyzer(use_full_inventory=True)
+        result_full = analyzer_full.analyze(7.0, 300.0)
+        assert result_full is not None
+        assert result_full.startswith("/")
+        phoneme_def = PHONEME_INVENTORY.get_phoneme(result_full)
+        assert phoneme_def is not None
+        assert phoneme_def.articulation == "plosive"
     
     def test_analyze_boundary_vowel_fricative(self):
         """Test analyze at boundary between vowel and fricative."""
-        analyzer = PhonemeAnalyzer()
+        # Test with simple mode for exact boundary behavior
+        analyzer = PhonemeAnalyzer(use_full_inventory=False)
         # Just below 3.0
         result1 = analyzer.analyze(2.99, 300.0)
         assert result1 == "a"
         # Just at 3.0
         result2 = analyzer.analyze(3.0, 300.0)
         assert result2 == "s"
+        
+        # Test with full inventory
+        analyzer_full = PhonemeAnalyzer(use_full_inventory=True)
+        result1_full = analyzer_full.analyze(2.99, 300.0)
+        phoneme1 = PHONEME_INVENTORY.get_phoneme(result1_full)
+        assert phoneme1 is not None
+        assert phoneme1.category == "vowel"
+        
+        result2_full = analyzer_full.analyze(3.0, 300.0)
+        phoneme2 = PHONEME_INVENTORY.get_phoneme(result2_full)
+        assert phoneme2 is not None
+        assert phoneme2.articulation == "fricative"
     
     def test_analyze_boundary_fricative_plosive(self):
         """Test analyze at boundary between fricative and plosive."""
-        analyzer = PhonemeAnalyzer()
+        # Test with simple mode for exact boundary behavior
+        analyzer = PhonemeAnalyzer(use_full_inventory=False)
         # Just below 6.0
         result1 = analyzer.analyze(5.99, 300.0)
         assert result1 == "s"
         # Just at 6.0
         result2 = analyzer.analyze(6.0, 300.0)
         assert result2 == "k"
+        
+        # Test with full inventory
+        analyzer_full = PhonemeAnalyzer(use_full_inventory=True)
+        result1_full = analyzer_full.analyze(5.99, 300.0)
+        phoneme1 = PHONEME_INVENTORY.get_phoneme(result1_full)
+        assert phoneme1 is not None
+        assert phoneme1.articulation == "fricative"
+        
+        result2_full = analyzer_full.analyze(6.0, 300.0)
+        phoneme2 = PHONEME_INVENTORY.get_phoneme(result2_full)
+        assert phoneme2 is not None
+        assert phoneme2.articulation == "plosive"
     
     def test_analyze_stores_history(self):
         """Test that analyze stores phoneme in history."""
@@ -317,7 +387,8 @@ class TestPhonemeAnalyzer:
     
     def test_get_recent_phonemes(self):
         """Test get_recent_phonemes."""
-        analyzer = PhonemeAnalyzer()
+        # Test with simple mode
+        analyzer = PhonemeAnalyzer(use_full_inventory=False)
         analyzer.analyze(2.0, 300.0)  # 'a'
         analyzer.analyze(4.0, 300.0)  # 's'
         analyzer.analyze(7.0, 300.0)  # 'k'
@@ -325,6 +396,17 @@ class TestPhonemeAnalyzer:
         recent = analyzer.get_recent_phonemes(2)
         assert len(recent) == 2
         assert recent == ['s', 'k']
+        
+        # Test with full inventory
+        analyzer_full = PhonemeAnalyzer(use_full_inventory=True)
+        analyzer_full.analyze(2.0, 300.0)  # vowel
+        analyzer_full.analyze(4.0, 300.0)  # fricative
+        analyzer_full.analyze(7.0, 300.0)  # plosive
+        
+        recent_full = analyzer_full.get_recent_phonemes(2)
+        assert len(recent_full) == 2
+        # Should be IPA format
+        assert all(p.startswith("/") and p.endswith("/") for p in recent_full)
     
     def test_get_recent_phonemes_count_exceeds_history(self):
         """Test get_recent_phonemes when count exceeds history."""

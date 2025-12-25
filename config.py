@@ -2,11 +2,11 @@
 Configuration parameters for the OPU (Orthogonal Processing Unit).
 Contains the Genesis Constant and safety limits.
 
-OPU v3.4.2 - MIT License
+OPU v3.4.3 - MIT License
 """
 
 # Version
-OPU_VERSION = "3.4.2"  # v3.4.2: Code refactoring - HUD utilities extraction, test fixes, improved maintainability
+OPU_VERSION = "3.4.3"  # v3.4.3: Language system refactoring - extracted common utilities, reduced duplication, improved maintainability
 
 # Genesis Constant: The Order of the Empty Set
 G_EMPTY_SET = 1.0
@@ -203,6 +203,25 @@ PHONEME_VOWEL_BOUNDARY = 3.0  # Boundary between vowels and fricatives
 PHONEME_FRICATIVE_BOUNDARY = 6.0  # Boundary between fricatives and plosives
 PHONEME_PITCH_THRESHOLD = 200.0  # Pitch threshold for vowel selection (a vs o)
 PHONEME_MAX_HISTORY = 10000  # Maximum phoneme history entries (prevents memory leak)
+PHONEME_USE_FULL_INVENTORY = True  # Use full IPA inventory (~44 phonemes) instead of basic set
+
+# Speech Synthesis Configuration
+SPEECH_USE_TTS = True  # Use TTS library (pyttsx3) for word-level synthesis
+SPEECH_TTS_RATE = 150  # TTS speech rate (words per minute)
+SPEECH_TTS_VOLUME = 0.8  # TTS volume (0.0 to 1.0)
+SPEECH_FORMANT_ENABLED = True  # Enable formant synthesis for phoneme-level generation
+
+# Speech Recognition Configuration
+SPEECH_RECOGNITION_ENABLED = False  # Enable speech recognition for comprehension
+SPEECH_USE_WHISPER = True  # Use Whisper for recognition (requires openai-whisper)
+SPEECH_WHISPER_MODEL = "base"  # Whisper model size: tiny, base, small, medium, large
+SPEECH_RECOGNITION_TIMEOUT = 1.0  # Recognition timeout in seconds
+SPEECH_PHRASE_TIME_LIMIT = 5.0  # Maximum phrase length in seconds
+
+# Language Memory Configuration
+LANGUAGE_MEMORY_MAX_WORDS = 10000  # Maximum number of words to store
+LANGUAGE_MEMORY_MAX_SEQUENCES = 1000  # Maximum number of word sequences (phrases)
+LANGUAGE_MEMORY_ENABLED = True  # Enable language learning and word association
 
 # Brain Configuration
 BRAIN_CHILD_PITCH = 440.0  # Base pitch for child state (Hz)

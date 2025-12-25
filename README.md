@@ -1,4 +1,4 @@
-# Coherence OPU v3.4.2
+# Coherence OPU v3.4.3
 
 <div align="center">
   <img src="assets/logo.jpeg" alt="Coherence OPU Logo" width="400">
@@ -15,7 +15,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Version
 
-**Current Version: 3.4.2**
+**Current Version: 3.4.3**
 
 ### ⚠️ Breaking Change in v3.2.0
 
@@ -374,7 +374,7 @@ If you use OPU in your research, please cite:
 
 ```bibtex
 @software{opu2024,
-  title = {Coherence OPU v3.4.2},
+  title = {Coherence OPU v3.4.3},
   author = {NoamTal Cohen-LyShinski},
   year = {2024},
   license = {MIT},
@@ -389,6 +389,13 @@ If you use OPU in your research, please cite:
 - Designed for real-time audio processing and cognitive modeling
 
 ## Changelog
+
+### v3.4.3 (2025-01-XX)
+- **Language System Refactoring**: Extracted common utilities, reduced code duplication (~100+ lines)
+  - Created `core/language_utils.py` with shared dependency checking and audio processing utilities
+  - Refactored formant synthesizer, speech synthesis, and speech recognition modules
+  - Improved error handling and code organization
+  - All 376 tests passing
 
 ### v3.4.2 (2025-01-XX)
 - **Code Refactoring**:

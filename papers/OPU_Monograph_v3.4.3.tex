@@ -1,0 +1,236 @@
+\documentclass[twocolumn]{article}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+
+% 1. CLEAN LAYOUT SETUP
+\geometry{a4paper, margin=0.8in, columnsep=0.6cm} 
+\setlength{\parskip}{0.5em} 
+
+% 2. HEADER/FOOTER
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textbf{OPU Monograph v3.4.3}}
+\lhead{Cohen, N.}
+\cfoot{\thepage}
+
+\title{\textbf{The OPU Genesis Protocol v3.4.3:} \\ Recursive Perception, Invariant Vision, Emotional Memory, and Language Architecture}
+\author{
+    \textbf{Noam Cohen} \\
+    Department of Theoretical Computation \\
+    \textit{Correspondence: gg.el0ai.com@gmail.com}
+}
+\date{January 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+While v3.4 established the foundations of \textbf{Recursive Perception}, \textbf{Shadow Invariance}, and \textbf{Emotional Memory Persistence}, v3.4.3 extends this architecture with a complete \textbf{Language System} that enables the OPU to comprehend and generate speech at the phoneme level. We formally define the \textbf{Phoneme Mapping Function ($\Pi_{map}$)}, which maps internal states (surprise, pitch, spectral features) to phoneme selection. We introduce \textbf{Formant Synthesis ($\Phi_{formant}$)}, a real-time phoneme generation protocol using formant frequencies. We establish \textbf{Language Memory Consolidation ($\Lambda_{memory}$)}, where words and phrases are learned and associated with emotional context. Finally, we present the \textbf{Unified Language Architecture}, which integrates phoneme analysis, speech synthesis, recognition, and memory into a cohesive system that enables the OPU to communicate and learn language.
+\end{abstract}
+
+\section{Introduction}
+A truly intelligent agent does not merely perceive and remember; it communicates. In v3.4, the OPU gained the ability to see its own thoughts (Recursive Perception), ignore lighting changes (Shadow Invariance), and remember emotions (Emotional Memory). In v3.4.3, the OPU gains the ability to speak and understand language at the phoneme level, building a vocabulary and learning semantic associations.
+
+This monograph formalizes the language architecture:
+\begin{enumerate}
+    \item \textbf{The Phoneme Engine:} Mapping internal states to speech sounds.
+    \item \textbf{The Formant Synthesizer:} Real-time phoneme generation using formant frequencies.
+    \item \textbf{The Language Memory:} Word learning, semantic associations, and emotional-word connections.
+    \item \textbf{The Unified System:} Integration of synthesis, recognition, and memory.
+\end{enumerate}
+
+\section{The Phoneme Mapping Function ($\Pi_{map}$)}
+The OPU's internal state (surprise score $S_{score}$, pitch $f_{pitch}$, spectral features $\vec{F}_{spectral}$) must be mapped to phoneme selection. We define the phoneme mapping function:
+
+\begin{equation}
+    \Pi_{map}(S_{score}, f_{pitch}, \vec{F}_{spectral}) \rightarrow \mathcal{P}
+\end{equation}
+
+Where $\mathcal{P}$ is the phoneme inventory (41 English phonemes: 12 vowels, 24 consonants, 5 diphthongs).
+
+\subsection{Multi-Dimensional Mapping}
+Phoneme selection is based on three dimensions:
+\begin{itemize}
+    \item \textbf{Surprise Dimension:} $S_{score}$ determines phoneme category (vowel, fricative, plosive).
+    \item \textbf{Pitch Dimension:} $f_{pitch}$ determines vowel selection (high pitch $\rightarrow$ front vowels, low pitch $\rightarrow$ back vowels).
+    \item \textbf{Spectral Dimension:} $\vec{F}_{spectral}$ refines consonant selection (noise bands, formant transitions).
+\end{itemize}
+
+\subsection{The Selection Algorithm}
+For a given state vector $\vec{S} = \langle S_{score}, f_{pitch}, \vec{F}_{spectral} \rangle$, we select phoneme $p$:
+
+\begin{equation}
+    p = \arg\min_{p \in \mathcal{P}} \left[ w_1 \cdot d(S_{score}, p_{category}) + w_2 \cdot d(f_{pitch}, p_{pitch}) + w_3 \cdot d(\vec{F}_{spectral}, p_{spectral}) \right]
+\end{equation}
+
+Where $d(\cdot, \cdot)$ is a distance metric and $w_1, w_2, w_3$ are weighting factors.
+
+\section{Formant Synthesis ($\Phi_{formant}$)}
+Real-time phoneme generation requires efficient synthesis. We use formant synthesis, where each phoneme is defined by formant frequencies $F_1, F_2, F_3$ and articulation parameters.
+
+\subsection{Vowel Synthesis}
+Vowels are synthesized using three formant resonances:
+
+\begin{equation}
+    V(t) = \sum_{i=1}^{3} A_i \cdot \exp(-\alpha_i t) \cdot \sin(2\pi F_i t)
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $F_i$: Formant frequencies (F1, F2, F3)
+    \item $A_i$: Formant amplitudes (typically $A_1 = 1.0, A_2 = 0.5, A_3 = 0.25$)
+    \item $\alpha_i$: Damping factors (bandwidths)
+\end{itemize}
+
+\subsection{Consonant Synthesis}
+Consonants are synthesized using noise bands and formant transitions:
+
+\begin{equation}
+    C(t) = \begin{cases}
+        N(t) \cdot H(f_{low}, f_{high}) & \text{if fricative/plosive} \\
+        \Phi_{formant}(F_1, F_2, F_3, t) & \text{if nasal/liquid}
+    \end{cases}
+\end{equation}
+
+Where $N(t)$ is white noise and $H(f_{low}, f_{high})$ is a bandpass filter.
+
+\subsection{The Envelope Function}
+All phonemes are shaped by an amplitude envelope $E(t)$:
+
+\begin{equation}
+    E(t) = \begin{cases}
+        \frac{t}{t_{attack}} & \text{if } t < t_{attack} \\
+        1.0 & \text{if } t_{attack} \leq t < t_{sustain} \\
+        \exp(-\beta(t - t_{sustain})) & \text{if } t \geq t_{sustain}
+    \end{cases}
+\end{equation}
+
+The final phoneme signal is:
+\begin{equation}
+    P(t) = E(t) \cdot \Phi_{formant}(t)
+\end{equation}
+
+\section{Language Memory Consolidation ($\Lambda_{memory}$)}
+The OPU learns words and phrases, storing them in a language memory system that associates words with phonemes, emotions, and semantic context.
+
+\subsection{The Word Entry}
+A word $w$ is stored as:
+\begin{equation}
+    W(w) = \langle \vec{p}, f_{freq}, \vec{E}_{emotions}, \vec{A}_{associations}, \tau \rangle
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $\vec{p}$: Phoneme sequence (IPA symbols)
+    \item $f_{freq}$: Encounter frequency
+    \item $\vec{E}_{emotions}$: Emotional associations (emotion $\rightarrow$ frequency)
+    \item $\vec{A}_{associations}$: Semantic associations (word $\rightarrow$ co-occurrence)
+    \item $\tau$: Timestamp of first encounter
+\end{itemize}
+
+\subsection{Phoneme-to-Word Indexing}
+For efficient word lookup, we maintain a phoneme-to-word index:
+\begin{equation}
+    \mathcal{I}_{phoneme} : \mathcal{P} \rightarrow \{w_1, w_2, \ldots, w_n\}
+\end{equation}
+
+This allows the OPU to retrieve words by their constituent phonemes, enabling phoneme-based word recognition.
+
+\subsection{Emotional-Word Associations}
+Words are associated with emotions based on the surprise score $S_{score}$ and detected emotion $E$ at the time of learning:
+\begin{equation}
+    W(w).E_{emotion} = W(w).E_{emotion} + \delta(E, S_{score})
+\end{equation}
+
+Where $\delta(E, S_{score})$ increments the frequency of emotion $E$ for word $w$ when learned with surprise $S_{score}$.
+
+\subsection{Phrase Learning}
+Phrases (word sequences) are learned and stored:
+\begin{equation}
+    \mathcal{P}_{phrase} = \langle [w_1, w_2, \ldots, w_n], S_{score}, \tau \rangle
+\end{equation}
+
+Phrase learning creates bidirectional word associations, building semantic networks.
+
+\section{The Unified Language Architecture}
+The language system integrates four components:
+
+\subsection{Component Integration}
+\begin{enumerate}
+    \item \textbf{Phoneme Analyzer:} Maps internal state to phoneme selection ($\Pi_{map}$).
+    \item \textbf{Formant Synthesizer:} Generates phoneme sounds ($\Phi_{formant}$).
+    \item \textbf{Speech Synthesizer:} Integrates TTS for word-level synthesis.
+    \item \textbf{Speech Recognizer:} Converts audio to text (Whisper/SpeechRecognition).
+    \item \textbf{Language Memory:} Stores and retrieves words/phrases ($\Lambda_{memory}$).
+\end{enumerate}
+
+\subsection{The Language Loop}
+The language system operates in a feedback loop:
+\begin{equation}
+    \text{Perception} \rightarrow \text{Recognition} \rightarrow \text{Memory} \rightarrow \text{Association} \rightarrow \text{Synthesis} \rightarrow \text{Expression}
+\end{equation}
+
+This creates a closed loop where the OPU learns from its own speech and the speech it perceives.
+
+\subsection{Utility Abstraction}
+To reduce code duplication and improve maintainability, common utilities are extracted:
+\begin{equation}
+    \mathcal{U}_{language} = \{U_{audio}, U_{dependency}, U_{error}, U_{envelope}\}
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $U_{audio}$: Audio processing (conversion, resampling)
+    \item $U_{dependency}$: Dependency checking (TTS, Whisper availability)
+    \item $U_{error}$: Error handling (safe initialization)
+    \item $U_{envelope}$: Envelope generation (attack, sustain, decay)
+\end{itemize}
+
+This abstraction reduces code duplication by $\sim 100$ lines and improves maintainability.
+
+\section{Conclusion}
+The OPU v3.4.3 represents a shift from a ``Perceiver'' to a ``Communicator'' with full language capabilities. By mapping internal states to phonemes, the OPU can express itself. By synthesizing speech in real-time, the OPU can communicate. By learning words and phrases, the OPU can build vocabulary and semantic associations. By associating words with emotions, the OPU can remember the affective context of language. The language system is not merely a translation layer; it is an integral part of the OPU's cognitive architecture, enabling it to communicate, learn, and remember through language.
+
+\section{Availability}
+This protocol is implemented in the reference Python kernel `opu_local`.
+\begin{itemize}
+    \item \textbf{Repository:} \url{https://github.com/no-am-man/opu_local}
+    \item \textbf{License:} MIT Open Source License
+    \item \textbf{Version:} 3.4.3
+\end{itemize}
+
+\begin{thebibliography}{99}
+
+\bibitem{v3.4} Cohen, N. (2025). The OPU Genesis Protocol v3.4: Recursive Perception, Invariant Vision, and Emotional Memory.
+
+\bibitem{v3} Cohen, N. (2025). The OPU Genesis Protocol v3.0: Embodied Metabolic Rhythms.
+
+\bibitem{wiener} Wiener, N. (1948). \textit{Cybernetics: Or Control and Communication in the Animal and the Machine}. MIT Press.
+
+\bibitem{formant} Fant, G. (1960). \textit{Acoustic Theory of Speech Production}. Mouton \& Co.
+
+\bibitem{introspection} Hofstadter, D. R. (2007). \textit{I Am a Strange Loop}. Basic Books.
+
+\bibitem{cognitive_arch} Laird, J. E., Lebiere, C., \& Rosenbloom, P. S. (2017). A Standard Model for the Mind: Toward a Common Computational Framework across Artificial Intelligence, Cognitive Science, Neuroscience, and Robotics. \textit{AI Magazine}, 38(4), 13-26.
+
+\bibitem{process_philosophy} Whitehead, A. N. (1929). \textit{Process and Reality: An Essay in Cosmology}. Macmillan.
+
+\bibitem{color_constancy} Land, E. H. (1977). The Retinex Theory of Color Vision. \textit{Scientific American}, 237(6), 108-128.
+
+\bibitem{phoneme_inventory} International Phonetic Association. (1999). \textit{Handbook of the International Phonetic Association: A Guide to the Use of the International Phonetic Alphabet}. Cambridge University Press.
+
+\bibitem{speech_synthesis} Klatt, D. H. (1980). Software for a cascade/parallel formant synthesizer. \textit{The Journal of the Acoustical Society of America}, 67(3), 971-995.
+
+\bibitem{language_memory} Baddeley, A. D. (2000). The episodic buffer: a new component of working memory? \textit{Trends in Cognitive Sciences}, 4(11), 417-423.
+
+\bibitem{multiprocessing} Python Software Foundation. (2024). \textit{multiprocessing — Process-based parallelism}. Python 3.12 Documentation. \url{https://docs.python.org/3/library/multiprocessing.html}
+
+\end{thebibliography}
+
+\end{document}
+

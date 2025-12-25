@@ -1,4 +1,4 @@
-# OPU v3.4.2 Test Suite
+# OPU v3.4.3 Test Suite
 
 Comprehensive test suite with 100% code coverage target for the Orthogonal Processing Unit.
 

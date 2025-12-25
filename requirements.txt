@@ -5,6 +5,11 @@ scipy>=1.7.0
 opencv-python>=4.5.0
 yt-dlp>=2023.12.30  # For YouTube stream extraction (optional, for youtube_opu.py)
 
+# Speech Synthesis and Recognition (optional, for full language capabilities)
+pyttsx3>=2.90  # Text-to-speech synthesis
+SpeechRecognition>=3.10.0  # Speech recognition (fallback)
+openai-whisper>=20231117  # Whisper speech recognition (recommended)
+
 # DeepFace for high-accuracy emotion detection
 # Note: DeepFace requires TensorFlow, which currently supports Python 3.8-3.12
 # For Python 3.13+, DeepFace will not install. The OPU will automatically

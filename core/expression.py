@@ -16,6 +16,8 @@ from config import (
     PHONEME_SPEECH_THRESHOLD, PHONEME_VOWEL_BOUNDARY, PHONEME_FRICATIVE_BOUNDARY,
     PHONEME_PITCH_THRESHOLD, PHONEME_MAX_HISTORY
 )
+from core.phoneme_inventory import PHONEME_INVENTORY
+from core.formant_synthesizer import FORMANT_SYNTHESIZER
 
 
 class AestheticFeedbackLoop:
@@ -181,14 +183,18 @@ class AestheticFeedbackLoop:
 
 class PhonemeAnalyzer:
     """
-    Maps s_score ranges to phonemes.
+    Maps s_score ranges to phonemes using full English IPA inventory.
     Filters out noise and only recognizes "Spoken" sounds with Structural Intent.
+    Now supports ~44 English phonemes with intelligent selection based on
+    s_score, pitch, and spectral features.
     """
     
-    def __init__(self, speech_threshold=None, max_history=None):
+    def __init__(self, speech_threshold=None, max_history=None, use_full_inventory=True):
         self.speech_threshold = speech_threshold or PHONEME_SPEECH_THRESHOLD
         self.phoneme_history = []
-        self.max_history = max_history or PHONEME_MAX_HISTORY 
+        self.max_history = max_history or PHONEME_MAX_HISTORY
+        self.use_full_inventory = use_full_inventory
+        self.inventory = PHONEME_INVENTORY if use_full_inventory else None 
     
     def analyze(self, s_score, pitch):
         """
@@ -219,34 +225,125 @@ class PhonemeAnalyzer:
         return s_score >= self.speech_threshold
     
     def _map_tension_to_phoneme(self, s_score, pitch):
-        """Map tension level (s_score) to phoneme type using method dispatch."""
-        method_map = self._build_phoneme_method_map()
+        """Map tension level (s_score) to phoneme using full IPA inventory."""
+        if not self.use_full_inventory or self.inventory is None:
+            # Fallback to simple mapping for backward compatibility
+            return self._map_tension_to_phoneme_simple(s_score, pitch)
         
-        # Find the appropriate method based on s_score
+        # Use full inventory with intelligent selection
+        if s_score < PHONEME_VOWEL_BOUNDARY:
+            return self._get_vowel_phoneme_advanced(s_score, pitch)
+        elif s_score < PHONEME_FRICATIVE_BOUNDARY:
+            return self._get_fricative_phoneme_advanced(s_score, pitch)
+        else:
+            return self._get_plosive_phoneme_advanced(s_score, pitch)
+    
+    def _map_tension_to_phoneme_simple(self, s_score, pitch):
+        """Simple mapping for backward compatibility."""
+        method_map = self._build_phoneme_method_map()
         for boundary, method in method_map:
             if s_score < boundary:
                 return method(s_score, pitch)
-        
-        # Default to plosive for highest tension
-        return self._get_plosive_phoneme(s_score, pitch)
+        return self._get_plosive_phoneme_simple(s_score, pitch)
     
     def _build_phoneme_method_map(self):
-        """Build method dispatch map for phoneme selection."""
+        """Build method dispatch map for phoneme selection (legacy)."""
         return [
-            (PHONEME_VOWEL_BOUNDARY, self._get_vowel_phoneme),
-            (PHONEME_FRICATIVE_BOUNDARY, self._get_fricative_phoneme)
+            (PHONEME_VOWEL_BOUNDARY, self._get_vowel_phoneme_simple),
+            (PHONEME_FRICATIVE_BOUNDARY, self._get_fricative_phoneme_simple)
         ]
     
-    def _get_vowel_phoneme(self, s_score, pitch):
-        """Get vowel phoneme based on pitch."""
+    def _get_vowel_phoneme_advanced(self, s_score, pitch):
+        """Get vowel phoneme from full inventory based on pitch and s_score."""
+        vowels = self.inventory.get_vowels()
+        
+        # Map pitch to vowel height (high pitch = high vowels, low pitch = low vowels)
+        if pitch > 400:  # Very high pitch
+            candidates = [v for v in vowels if v.symbol in ["/i/", "/ɪ/", "/e/"]]
+        elif pitch > 300:  # High pitch
+            candidates = [v for v in vowels if v.symbol in ["/e/", "/ɛ/", "/æ/"]]
+        elif pitch > 200:  # Mid pitch
+            candidates = [v for v in vowels if v.symbol in ["/ɛ/", "/æ/", "/ʌ/", "/ə/"]]
+        elif pitch > 150:  # Low-mid pitch
+            candidates = [v for v in vowels if v.symbol in ["/ɑ/", "/ɔ/", "/o/", "/ʌ/"]]
+        else:  # Very low pitch
+            candidates = [v for v in vowels if v.symbol in ["/ɔ/", "/o/", "/ʊ/", "/u/"]]
+        
+        if not candidates:
+            candidates = vowels
+        
+        # Select based on s_score (higher s_score = more open/back vowels)
+        index = min(int(s_score * len(candidates) / PHONEME_VOWEL_BOUNDARY), len(candidates) - 1)
+        selected = candidates[index]
+        return selected.symbol
+    
+    def _get_fricative_phoneme_advanced(self, s_score, pitch):
+        """Get fricative phoneme from full inventory."""
+        fricatives = self.inventory.get_by_articulation("fricative")
+        
+        if not fricatives:
+            return "/s/"
+        
+        # Map s_score to fricative type (higher = more intense)
+        # Common fricatives: /s/, /z/, /f/, /v/, /θ/, /ð/, /ʃ/, /ʒ/, /h/
+        if s_score < 4.0:
+            candidates = [f for f in fricatives if f.symbol in ["/f/", "/v/", "/h/"]]
+        elif s_score < 5.0:
+            candidates = [f for f in fricatives if f.symbol in ["/θ/", "/ð/", "/s/", "/z/"]]
+        else:
+            candidates = [f for f in fricatives if f.symbol in ["/ʃ/", "/ʒ/"]]
+        
+        if not candidates:
+            candidates = fricatives
+        
+        # Select based on voicing (pitch correlates with voicing)
+        if pitch > 250:
+            voiced = [f for f in candidates if f.voiced]
+            if voiced:
+                candidates = voiced
+        
+        index = min(int((s_score - PHONEME_VOWEL_BOUNDARY) * len(candidates) / 
+                       (PHONEME_FRICATIVE_BOUNDARY - PHONEME_VOWEL_BOUNDARY)), len(candidates) - 1)
+        selected = candidates[index]
+        return selected.symbol
+    
+    def _get_plosive_phoneme_advanced(self, s_score, pitch):
+        """Get plosive phoneme from full inventory."""
+        plosives = self.inventory.get_by_articulation("plosive")
+        
+        if not plosives:
+            return "/k/"
+        
+        # Map s_score to plosive type
+        # Common plosives: /p/, /b/, /t/, /d/, /k/, /g/
+        if s_score < 7.0:
+            candidates = [p for p in plosives if p.symbol in ["/p/", "/b/", "/t/", "/d/"]]
+        else:
+            candidates = [p for p in plosives if p.symbol in ["/k/", "/g/"]]
+        
+        if not candidates:
+            candidates = plosives
+        
+        # Select based on voicing
+        if pitch > 250:
+            voiced = [p for p in candidates if p.voiced]
+            if voiced:
+                candidates = voiced
+        
+        index = min(int((s_score - PHONEME_FRICATIVE_BOUNDARY) * len(candidates) / 5.0), len(candidates) - 1)
+        selected = candidates[index]
+        return selected.symbol
+    
+    def _get_vowel_phoneme_simple(self, s_score, pitch):
+        """Get vowel phoneme (legacy simple version)."""
         return "a" if pitch > PHONEME_PITCH_THRESHOLD else "o"
     
-    def _get_fricative_phoneme(self, s_score, pitch):
-        """Get fricative phoneme."""
+    def _get_fricative_phoneme_simple(self, s_score, pitch):
+        """Get fricative phoneme (legacy simple version)."""
         return "s"
     
-    def _get_plosive_phoneme(self, s_score, pitch):
-        """Get plosive phoneme."""
+    def _get_plosive_phoneme_simple(self, s_score, pitch):
+        """Get plosive phoneme (legacy simple version)."""
         return "k"
     
     def _store_phoneme(self, phoneme, s_score, pitch):
@@ -321,18 +418,33 @@ class PhonemeAnalyzer:
     
     def _count_vowels(self, phonemes):
         """Count vowel phonemes."""
-        vowel_set = {'a', 'o', 'e', 'i', 'u'}
-        return sum(1 for p in phonemes if p in vowel_set)
+        if self.use_full_inventory and self.inventory:
+            vowel_symbols = {v.symbol for v in self.inventory.get_vowels()}
+            return sum(1 for p in phonemes if p in vowel_symbols)
+        else:
+            # Legacy: simple vowel set
+            vowel_set = {'a', 'o', 'e', 'i', 'u'}
+            return sum(1 for p in phonemes if p in vowel_set)
     
     def _count_fricatives(self, phonemes):
         """Count fricative phonemes."""
-        fricative_set = {'s', 'f', 'h'}
-        return sum(1 for p in phonemes if p in fricative_set)
+        if self.use_full_inventory and self.inventory:
+            fricative_symbols = {f.symbol for f in self.inventory.get_by_articulation("fricative")}
+            return sum(1 for p in phonemes if p in fricative_symbols)
+        else:
+            # Legacy: simple fricative set
+            fricative_set = {'s', 'f', 'h'}
+            return sum(1 for p in phonemes if p in fricative_set)
     
     def _count_plosives(self, phonemes):
         """Count plosive phonemes."""
-        plosive_set = {'k', 'p', 't', 'b', 'd', 'g'}
-        return sum(1 for p in phonemes if p in plosive_set)
+        if self.use_full_inventory and self.inventory:
+            plosive_symbols = {p.symbol for p in self.inventory.get_by_articulation("plosive")}
+            return sum(1 for p in phonemes if p in plosive_symbols)
+        else:
+            # Legacy: simple plosive set
+            plosive_set = {'k', 'p', 't', 'b', 'd', 'g'}
+            return sum(1 for p in phonemes if p in plosive_set)
     
     def _calculate_distribution(self, phonemes, vowels, fricatives, plosives):
         """Calculate phoneme distribution percentages."""

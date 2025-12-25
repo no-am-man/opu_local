@@ -5,6 +5,46 @@ All notable changes to the Orthogonal Processing Unit (OPU) project will be docu
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.3] - 2025-01-XX
+
+### Refactored
+- **Language System Utilities**: Created `core/language_utils.py` with common utilities
+  - Extracted dependency checking (TTS, Whisper, SpeechRecognition)
+  - Created `safe_initialize()` for consistent error handling
+  - Added audio processing utilities: `convert_audio_bytes_to_array()`, `resample_audio()`, `create_audio_envelope()`, `generate_formant_resonance()`
+  - Added `requires_dependency()` decorator for dependency validation
+- **Formant Synthesizer**: Refactored to use shared utilities
+  - Removed duplicate `_generate_formant()` and `_generate_envelope()` methods
+  - Now uses utilities from `language_utils`
+  - Reduced code duplication by ~50 lines
+- **Speech Synthesis**: Improved error handling and code organization
+  - Uses `language_utils` for dependency checking and audio processing
+  - Extracted `_init_tts_engine()` method for cleaner initialization
+  - Uses `safe_initialize()` for TTS engine setup
+- **Speech Recognition**: Cleaner error handling
+  - Uses `language_utils` for dependency checking
+  - Uses `safe_initialize()` for model/recognizer setup
+  - Uses audio utilities for conversion
+- **Language System**: Simplified configuration defaults
+  - Uses dict-based config defaults for cleaner parameter handling
+  - More maintainable configuration management
+
+### Changed
+- **Code Organization**: Improved separation of concerns
+  - Centralized common utilities in `language_utils.py`
+  - Reduced code duplication across language modules (~100+ lines)
+  - Consistent error handling patterns
+  - Easier to maintain and test
+
+### Technical Details
+- All 376 tests passing
+- Backward compatible with v3.4.2 state files
+- No breaking changes to public API
+- Improved maintainability and testability
+- Reduced code duplication significantly
+
+---
+
 ## [3.4.2] - 2025-01-XX
 
 ### Refactored
@@ -197,6 +237,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[3.4.3]: https://github.com/no-am-man/opu_local/releases/tag/v3.4.3
+[3.4.2]: https://github.com/no-am-man/opu_local/releases/tag/v3.4.2
 [3.4.1]: https://github.com/no-am-man/opu_local/releases/tag/v3.4.1
 [3.4.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.4.0
 [3.3.0]: https://github.com/no-am-man/opu_local/releases/tag/v3.3.0

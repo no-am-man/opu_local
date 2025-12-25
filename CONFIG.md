@@ -307,7 +307,7 @@ See [Surprise Sensitivity](#introspection_noise_floor-default-0001) section abov
 
 ---
 
-### `OPU_VERSION` (Default: `"3.4.2"`)
+### `OPU_VERSION` (Default: `"3.4.3"`)
 
 **What it does:** Current OPU version number.
 
