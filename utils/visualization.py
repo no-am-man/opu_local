@@ -126,14 +126,22 @@ class CognitiveMapVisualizer(OPUObserver):
             
             # Calculate pulse size from s_score
             # Normalize s_score to reasonable radius (0.1 to 1.5)
-            pulse_radius = 0.1 + min(self.current_s_score / 5.0, 1.4)
+            # Ensure minimum visible size even when s_score is 0
+            pulse_radius = 0.15 + min(self.current_s_score / 5.0, 1.35)
             
             # Calculate color based on tension (s_score)
             # High tension = red, low tension = blue
+            # When s_score is 0, use a light blue-gray to make it visible
             tension = min(self.current_s_score / 10.0, 1.0)
-            color_r = tension
-            color_b = 1.0 - tension
-            color_g = 0.3
+            if self.current_s_score <= 0.01:
+                # Very low or zero s_score: use light blue-gray for visibility
+                color_r = 0.4
+                color_g = 0.5
+                color_b = 0.7
+            else:
+                color_r = tension
+                color_b = 1.0 - tension
+                color_g = 0.3
             pulse_color = (color_r, color_g, color_b)
             
             # Draw pulse circle
@@ -185,7 +193,7 @@ class CognitiveMapVisualizer(OPUObserver):
             
             # Draw text info
             info_text = (
-                f"s_score: {self.current_s_score:.2f}\n"
+                f"s_score: {self.current_s_score:.4f}\n"
                 f"Coherence: {self.current_coherence:.2f}\n"
                 f"Maturity Level: {self.current_maturity_level} ({time_scale})\n"
                 f"Maturity Index: {self.current_maturity:.2f}\n"

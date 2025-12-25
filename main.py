@@ -213,15 +213,21 @@ class OPUEventLoop:
         self._analyze_phonemes(audio_result['surprise'])
         self._display_visual_hud(visual_result)
         
-        # Update and Send Graph
-        self._update_visualization()
+        # Update and Send Graph (use fresh audio_result s_score to ensure it's current)
+        self._update_visualization(audio_result.get('surprise'))
         
         self._process_opencv_events()
     
     def _process_audio_perception(self):
         audio_input = self.audio_handler.get_audio_input()
         perception = perceive(audio_input)
-        return {'genomic_bit': perception['genomic_bit'], 'surprise': self.cortex.introspect(perception['genomic_bit'])}
+        # Call introspect to calculate s_score - this updates audio_cortex.s_score
+        s_score = self.cortex.introspect(perception['genomic_bit'])
+        # Verify s_score was calculated (debug)
+        if s_score == 0.0 and len(self.cortex.audio_cortex.genomic_bits_history) >= 2:
+            # Only log if we have data but s_score is still 0 (potential issue)
+            pass  # Silent - don't spam logs
+        return {'genomic_bit': perception['genomic_bit'], 'surprise': s_score}
     
     def _process_visual_perception(self):
         try:
@@ -273,14 +279,22 @@ class OPUEventLoop:
         phoneme = self.phoneme_analyzer.analyze(score, self.afl.current_frequency)
         if phoneme: print(f"[PHONEME] {phoneme} (s_score: {score:.2f})")
     
-    def _update_visualization(self):
-        """Update local cognitive map and PUSH TO QUEUE for viewer."""
+    def _update_visualization(self, audio_s_score=None):
+        """Update local cognitive map and PUSH TO QUEUE for viewer.
+        
+        Args:
+            audio_s_score: Optional s_score from audio processing (most current value)
+        """
         state = self.cortex.get_current_state()
         char = self.cortex.get_character_state()
         
+        # Use the audio_s_score if provided (most current), otherwise fall back to state
+        # This ensures we always use the s_score that was just calculated
+        s_score = audio_s_score if audio_s_score is not None else state.get('s_score', 0.0)
+        
         # 1. Update Plot Data
         self.visualizer.update_state(
-            state['s_score'], state['coherence'],
+            s_score, state['coherence'],
             char['maturity_index'], char.get('maturity_level', 0)
         )
         self.visualizer.draw_cognitive_map()
@@ -424,8 +438,18 @@ class OPUEventLoop:
             self.cleanup()
     
     def _print_status(self, cycle):
+        # Use the most recent audio result if available, otherwise fall back to get_current_state()
+        if hasattr(self, '_last_audio_result') and self._last_audio_result:
+            audio_s_score = self._last_audio_result.get('surprise', 0.0)
+        else:
+            s = self.cortex.get_current_state()
+            audio_s_score = s.get('s_score', 0.0)
+        
         s = self.cortex.get_current_state()
-        print(f"[CYCLE {cycle}] s_score: {s['s_score']:.2f}, maturity: {s['maturity']:.2f}")
+        char = self.cortex.get_character_state()
+        # Use the fresh audio_s_score for logging
+        print(f"[CYCLE {cycle}] s_score: {audio_s_score:.2f}, maturity: {char.get('maturity_index', 0.0):.2f}, "
+              f"genomic_bits: {len(self.cortex.audio_cortex.genomic_bits_history)}")
     
     def cleanup(self):
         print("[OPU] Saving state...")

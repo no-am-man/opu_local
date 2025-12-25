@@ -138,8 +138,14 @@ class OPUPersistence:
             return
         
         cortex_data = state['cortex']
-        self._restore_character_profile(cortex_data, cortex)
+        # Restore memory levels FIRST, then recalculate character profile
+        # This ensures maturity is calculated based on actual memory state
         self._restore_memory_levels(cortex_data, cortex)
+        # Restore character profile (maturity fields will be recalculated below)
+        self._restore_character_profile(cortex_data, cortex)
+        # Recalculate maturity based on loaded memory levels
+        # This fixes the issue where maturity_index stays at 0.0 after loading state
+        cortex.brain.evolve_character()
         self._restore_history(cortex_data, cortex)
         self._restore_current_state(cortex_data, cortex)
         self._restore_emotion_history(cortex_data, cortex)
