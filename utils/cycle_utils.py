@@ -195,3 +195,85 @@ def can_consolidate_at_level(level: int, memory_count: int) -> bool:
     required = get_consolidation_ratio(level)
     return memory_count >= required
 
+
+# Timestamp approximation utilities (for memory consolidation)
+def approximate_timestamp(timestamp: float, time_window: float) -> float:
+    """
+    Approximate a timestamp to a time window.
+    This mimics how real memories are grouped by approximate time periods.
+    
+    Args:
+        timestamp: Exact timestamp
+        time_window: Size of time window in seconds
+        
+    Returns:
+        Approximate timestamp (rounded to time window)
+    """
+    # Round timestamp to nearest time window
+    # This creates "fuzzy" time grouping like in real memory
+    return int(timestamp / time_window) * time_window
+
+
+def get_time_window_for_level(level: int) -> float:
+    """
+    Get approximate time window for grouping memories at this level.
+    In real life, memories are grouped by approximate time periods, not exact timestamps.
+    
+    Args:
+        level: Memory level (0-7)
+        
+    Returns:
+        Time window in seconds for this level
+    """
+    from config import MATURITY_LEVEL_TIMES
+    return MATURITY_LEVEL_TIMES.get(level, 1.0)
+
+
+def group_memories_by_time_window(memories: list, target_size: int, time_window: float) -> list:
+    """
+    Group memories by approximate time windows.
+    This mimics real-life memory consolidation where memories are grouped
+    by approximate time periods rather than exact timestamps.
+    
+    Args:
+        memories: List of memory dictionaries with 'timestamp' key
+        target_size: Target number of memories to group
+        time_window: Time window size in seconds
+        
+    Returns:
+        List of memories grouped by approximate time window
+    """
+    if not memories:
+        return []
+    
+    # Sort memories by timestamp (oldest first)
+    sorted_memories = sorted(memories, key=lambda m: m.get('timestamp', 0))
+    
+    if not sorted_memories:
+        return []
+    
+    # Start with the oldest memory
+    chunk = []
+    base_timestamp = sorted_memories[0].get('timestamp', 0)
+    
+    # Approximate timestamp: round to time window
+    # This makes memories "fuzzy" like in real life
+    base_time_window = approximate_timestamp(base_timestamp, time_window)
+    
+    for mem in sorted_memories:
+        if len(chunk) >= target_size:
+            break
+        
+        mem_timestamp = mem.get('timestamp', 0)
+        mem_time_window = approximate_timestamp(mem_timestamp, time_window)
+        
+        # Group memories within the same approximate time window
+        if mem_time_window == base_time_window or len(chunk) < target_size:
+            chunk.append(mem)
+        else:
+            # If we have enough items from this time window, stop
+            if len(chunk) >= target_size:
+                break
+    
+    return chunk[:target_size] if len(chunk) > target_size else chunk
+

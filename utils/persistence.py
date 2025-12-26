@@ -7,11 +7,16 @@ import json
 import os
 import numpy as np
 from pathlib import Path
+from typing import Any, Dict, Optional, Tuple, Union
 from config import (
     PERSISTENCE_DEFAULT_DAY_COUNTER, PERSISTENCE_DEFAULT_S_SCORE,
     PERSISTENCE_STATE_VERSION, PERSISTENCE_TEMP_FILE_SUFFIX,
-    BRAIN_MAX_MEMORY_LEVEL
+    BRAIN_MAX_MEMORY_LEVEL, BRAIN_DEFAULT_SENSE_LABEL
 )
+
+# Constants
+DEFAULT_STATE_FILE = "opu_state.json"
+EMPTY_LIST = []
 
 
 class OPUPersistence:
@@ -19,7 +24,7 @@ class OPUPersistence:
     Handles saving and loading of OPU state to/from disk.
     """
     
-    def __init__(self, state_file="opu_state.json"):
+    def __init__(self, state_file: Union[str, Path] = DEFAULT_STATE_FILE):
         """
         Initialize persistence manager.
         
@@ -99,7 +104,7 @@ class OPUPersistence:
         print(f"[PERSISTENCE] Traceback:")
         traceback.print_exc()
     
-    def load_state(self, cortex, phoneme_analyzer):
+    def load_state(self, cortex, phoneme_analyzer) -> Tuple[bool, int, Optional[Dict[int, float]]]:
         """
         Load OPU state from disk.
         
@@ -124,8 +129,12 @@ class OPUPersistence:
             return True, day_counter, last_abstraction_times
             
         except Exception as e:
-            print(f"[PERSISTENCE] Error loading state: {e}")
+            self._handle_load_error(e)
             return False, PERSISTENCE_DEFAULT_DAY_COUNTER, None
+    
+    def _handle_load_error(self, error: Exception) -> None:
+        """Handle load error with message."""
+        print(f"[PERSISTENCE] Error loading state: {error}")
     
     def _read_state_from_file(self):
         """Read state from JSON file."""
@@ -207,14 +216,40 @@ class OPUPersistence:
                 last_abstraction_times[level] = float(timestamp)
         return last_abstraction_times
     
-    def _print_load_summary(self, cortex, phoneme_analyzer, day_counter, last_abstraction_times):
+    def _print_load_summary(self, cortex, phoneme_analyzer, day_counter: int, 
+                           last_abstraction_times: Optional[Dict[int, float]]) -> None:
         """Print summary of loaded state."""
         print(f"[PERSISTENCE] State loaded from {self.state_file}")
-        print(f"  Maturity Level: {cortex.character_profile.get('maturity_level', 0)} | Index: {cortex.character_profile['maturity_index']:.2f}")
-        print(f"  Memory: " + " | ".join([f"L{i}={len(cortex.memory_levels.get(i, []))}" for i in range(BRAIN_MAX_MEMORY_LEVEL + 1)]))
-        print(f"  Phonemes: {len(phoneme_analyzer.phoneme_history)}")
-        print(f"  Emotions: {len(getattr(cortex, 'emotion_history', []))} detected emotions")
+        self._print_maturity_info(cortex)
+        self._print_memory_info(cortex)
+        self._print_phoneme_info(phoneme_analyzer)
+        self._print_emotion_info(cortex)
         print(f"  Day: {day_counter}")
+        self._print_abstraction_timers(last_abstraction_times)
+    
+    def _print_maturity_info(self, cortex) -> None:
+        """Print maturity level information."""
+        maturity_level = cortex.character_profile.get('maturity_level', 0)
+        maturity_index = cortex.character_profile['maturity_index']
+        print(f"  Maturity Level: {maturity_level} | Index: {maturity_index:.2f}")
+    
+    def _print_memory_info(self, cortex) -> None:
+        """Print memory level information."""
+        memory_counts = [f"L{i}={len(cortex.memory_levels.get(i, []))}" 
+                        for i in range(BRAIN_MAX_MEMORY_LEVEL + 1)]
+        print(f"  Memory: " + " | ".join(memory_counts))
+    
+    def _print_phoneme_info(self, phoneme_analyzer) -> None:
+        """Print phoneme history information."""
+        print(f"  Phonemes: {len(phoneme_analyzer.phoneme_history)}")
+    
+    def _print_emotion_info(self, cortex) -> None:
+        """Print emotion history information."""
+        emotion_history = getattr(cortex, 'emotion_history', [])
+        print(f"  Emotions: {len(emotion_history)} detected emotions")
+    
+    def _print_abstraction_timers(self, last_abstraction_times: Optional[Dict[int, float]]) -> None:
+        """Print abstraction timers information."""
         if last_abstraction_times:
             print(f"  Abstraction Timers: Restored for {len(last_abstraction_times)} levels")
     
@@ -236,7 +271,7 @@ class OPUPersistence:
             'speech_threshold': self._convert_numpy_types_to_native(phoneme_analyzer.speech_threshold)
         }
     
-    def _convert_numpy_types_to_native(self, obj):
+    def _convert_numpy_types_to_native(self, obj: Any) -> Any:
         """
         Recursively convert numpy types to native Python types.
         Handles all numpy scalar types including float32, float64, int32, int64, etc.
@@ -248,48 +283,58 @@ class OPUPersistence:
         Returns:
             Object with all numpy types converted to native Python types
         """
-        # Handle None values
         if obj is None:
             return None
         
-        # Handle numpy arrays
         if isinstance(obj, np.ndarray):
-            return [self._convert_numpy_types_to_native(x) for x in obj.tolist()]
+            return self._convert_array(obj)
         
-        # Handle lists and tuples
         if isinstance(obj, (list, tuple)):
-            return [self._convert_numpy_types_to_native(x) for x in obj]
+            return self._convert_sequence(obj)
         
-        # Handle dictionaries
         if isinstance(obj, dict):
-            return {k: self._convert_numpy_types_to_native(v) for k, v in obj.items()}
+            return self._convert_dict(obj)
         
-        # Handle numpy scalar types (NumPy 2.0 compatible)
-        # np.generic is the base class for all numpy scalars
         if isinstance(obj, np.generic):
-            if np.issubdtype(type(obj), np.integer):
-                return int(obj)
-            elif np.issubdtype(type(obj), np.floating):
-                return float(obj)
-            else:
-                # Fallback: try to convert to float, then int if that fails
-                try:
-                    return float(obj)
-                except (ValueError, TypeError):
-                    try:
-                        return int(obj)
-                    except (ValueError, TypeError):
-                        return str(obj)  # Last resort: convert to string
+            return self._convert_numpy_scalar(obj)
         
-        # Handle numpy number types (additional check)
-        # Note: This is effectively unreachable because all np.integer/np.floating
-        # are also np.generic, so they're caught by the check above.
-        # Kept for defensive programming and potential future numpy versions.
+        # Handle numpy number types (additional check for defensive programming)
         if isinstance(obj, (np.integer, np.floating)):  # pragma: no cover
             return float(obj) if np.issubdtype(type(obj), np.floating) else int(obj)
         
-        # Return as-is for native Python types
         return obj
+    
+    def _convert_array(self, arr: np.ndarray) -> list:
+        """Convert numpy array to list with recursive conversion."""
+        return [self._convert_numpy_types_to_native(x) for x in arr.tolist()]
+    
+    def _convert_sequence(self, seq: Union[list, tuple]) -> list:
+        """Convert list or tuple to list with recursive conversion."""
+        return [self._convert_numpy_types_to_native(x) for x in seq]
+    
+    def _convert_dict(self, dct: dict) -> dict:
+        """Convert dictionary with recursive conversion."""
+        return {k: self._convert_numpy_types_to_native(v) for k, v in dct.items()}
+    
+    def _convert_numpy_scalar(self, scalar: np.generic) -> Union[int, float, str]:
+        """Convert numpy scalar to native Python type."""
+        if np.issubdtype(type(scalar), np.integer):
+            return int(scalar)
+        elif np.issubdtype(type(scalar), np.floating):
+            return float(scalar)
+        else:
+            # Fallback conversion chain
+            return self._convert_scalar_fallback(scalar)
+    
+    def _convert_scalar_fallback(self, scalar: np.generic) -> Union[float, int, str]:
+        """Fallback conversion for numpy scalars that aren't integer/floating."""
+        try:
+            return float(scalar)
+        except (ValueError, TypeError):
+            try:
+                return int(scalar)
+            except (ValueError, TypeError):
+                return str(scalar)  # Last resort: convert to string
     
     def _serialize_memory_levels(self, memory_levels):
         """
@@ -328,12 +373,17 @@ class OPUPersistence:
             level = int(level_str)
             if level in memory_levels:
                 # Add backward compatibility: if memories don't have 'sense' field,
-                # add default 'UNKNOWN' sense label for old state files
-                for mem in memories:
-                    if isinstance(mem, dict) and 'sense' not in mem:
-                        mem['sense'] = 'UNKNOWN'
+                # add default sense label for old state files
+                memories = self._add_default_sense_to_memories(memories)
                 memory_levels[level] = memories
         return memory_levels
+    
+    def _add_default_sense_to_memories(self, memories: list) -> list:
+        """Add default sense label to memories missing it (backward compatibility)."""
+        for mem in memories:
+            if isinstance(mem, dict) and 'sense' not in mem:
+                mem['sense'] = BRAIN_DEFAULT_SENSE_LABEL
+        return memories
     
     def _serialize_array(self, arr):
         """
@@ -348,7 +398,7 @@ class OPUPersistence:
         # Use the robust conversion function
         return self._convert_numpy_types_to_native(arr)
     
-    def _deserialize_array(self, data):
+    def _deserialize_array(self, data: Any) -> list:
         """
         Deserialize array from JSON format.
         
@@ -356,9 +406,9 @@ class OPUPersistence:
             data: list or array data
             
         Returns:
-            list
+            list (empty list if data is falsy or not a list)
         """
         if isinstance(data, list):
             return [float(x) for x in data]
-        return data if data else []
+        return data if data else EMPTY_LIST
 

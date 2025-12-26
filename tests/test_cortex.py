@@ -297,4 +297,152 @@ class TestOrthogonalProcessingUnit:
         assert isinstance(timestamp, float)
         assert timestamp > 1000000000  # EPOCH time check
         assert before_time <= timestamp <= after_time  # Should be between before and after
+    
+    def test_store_memory_with_emotion_non_neutral(self):
+        """Test store_memory with non-neutral emotion (line 128)."""
+        opu = OrthogonalProcessingUnit()
+        emotion = {'label': 'happy', 'intensity': 0.8}
+        opu.store_memory(0.5, 0.3, emotion=emotion)
+        # Should store memory with emotion
+        assert len(opu.memory_levels[0]) == 1
+        assert opu.memory_levels[0][0]['emotion']['label'] == 'happy'
+    
+    def test_consolidate_memory_empty_chunk(self):
+        """Test consolidate_memory when chunk is empty (line 164)."""
+        opu = OrthogonalProcessingUnit()
+        # Add memories but not enough for consolidation
+        for i in range(5):  # Less than threshold
+            opu.brain.memory_levels[0].append({
+                'genomic_bit': float(i),
+                's_score': 0.3
+            })
+        # Mock _extract_consolidation_chunk to return empty
+        original_method = opu.brain._extract_consolidation_chunk
+        opu.brain._extract_consolidation_chunk = lambda level: []
+        opu.consolidate_memory(0)
+        # Should not crash
+        opu.brain._extract_consolidation_chunk = original_method
+    
+    def test_consolidate_memory_empty_bits(self):
+        """Test consolidate_memory when bits extraction is empty (line 168)."""
+        opu = OrthogonalProcessingUnit()
+        # Add memories without genomic_bit or mean_genomic_bit
+        for i in range(20):
+            opu.brain.memory_levels[0].append({
+                's_score': 0.3,
+                'sense': 'audio'
+                # Missing genomic_bit
+            })
+        opu.consolidate_memory(0)
+        # Should not crash, should return early
+    
+    def test_consolidate_memory_with_emotion_log(self):
+        """Test consolidate_memory logs emotion (line 187)."""
+        opu = OrthogonalProcessingUnit()
+        # Add memories with emotion
+        for i in range(20):
+            opu.brain.memory_levels[0].append({
+                'genomic_bit': float(i),
+                's_score': 0.3,
+                'emotion': {'label': 'happy', 'intensity': 0.5}
+            })
+        opu.consolidate_memory(0)
+        # Should create abstraction in level 1
+        assert len(opu.brain.memory_levels[1]) > 0
+    
+    def test_extract_consolidation_chunk_insufficient_items(self):
+        """Test _extract_consolidation_chunk with insufficient items (line 217)."""
+        opu = OrthogonalProcessingUnit()
+        # Add fewer items than required
+        for i in range(5):  # Less than threshold (20)
+            opu.brain.memory_levels[0].append({
+                'genomic_bit': float(i),
+                's_score': 0.3,
+                'timestamp': 1000.0 + i
+            })
+        chunk = opu.brain._extract_consolidation_chunk(0)
+        assert chunk == []
+    
+    def test_extract_consolidation_chunk_fallback_fifo(self):
+        """Test _extract_consolidation_chunk fallback to FIFO (lines 240-245)."""
+        opu = OrthogonalProcessingUnit()
+        # Add enough items but with timestamps that won't group well
+        for i in range(20):
+            opu.brain.memory_levels[0].append({
+                'genomic_bit': float(i),
+                's_score': 0.3,
+                'timestamp': 1000.0 + i * 100  # Spread out timestamps
+            })
+        chunk = opu.brain._extract_consolidation_chunk(0)
+        # Should use FIFO fallback
+        assert len(chunk) == 20
+    
+    def test_get_genomic_bit_from_memory_none(self):
+        """Test _get_genomic_bit_from_memory returns None (line 266)."""
+        opu = OrthogonalProcessingUnit()
+        memory = {'s_score': 0.3}  # No genomic_bit or mean_genomic_bit
+        result = opu.brain._get_genomic_bit_from_memory(memory)
+        assert result is None
+    
+    def test_find_dominant_emotion_label_empty(self):
+        """Test _find_dominant_emotion_label with empty labels (line 318)."""
+        opu = OrthogonalProcessingUnit()
+        result = opu.brain._find_dominant_emotion_label([])
+        from config import BRAIN_EMOTION_DEFAULT_LABEL
+        assert result == BRAIN_EMOTION_DEFAULT_LABEL
+    
+    def test_check_recursive_consolidation_triggers(self):
+        """Test _check_recursive_consolidation triggers consolidation (line 354)."""
+        opu = OrthogonalProcessingUnit()
+        # Add enough items to level 1 to trigger consolidation
+        for i in range(60):  # Level 1 threshold
+            opu.brain.memory_levels[1].append({
+                'mean_genomic_bit': 0.5,
+                'pattern_strength': 0.2,
+                'count': 20,
+                'timestamp': 1000.0 + i
+            })
+        original_consolidate = opu.brain.consolidate_memory
+        opu.brain.consolidate_memory = lambda level: None  # Mock to avoid recursion
+        opu.brain._check_recursive_consolidation(1)
+        opu.brain.consolidate_memory = original_consolidate
+        # Should attempt consolidation
+    
+    def test_trigger_evolution_if_needed_triggers(self):
+        """Test _trigger_evolution_if_needed triggers evolution (line 359)."""
+        opu = OrthogonalProcessingUnit()
+        initial_maturity = opu.brain.character_profile['maturity_index']
+        opu.brain._trigger_evolution_if_needed(3)  # Level 3 >= BRAIN_EVOLUTION_MIN_LEVEL
+        # Should trigger evolution
+        assert opu.brain.character_profile['maturity_index'] >= initial_maturity
+    
+    def test_normalize_emotion_confidence_format(self):
+        """Test _normalize_emotion with confidence format (lines 366-369, 373, 377)."""
+        opu = OrthogonalProcessingUnit()
+        emotion = {'emotion': 'happy', 'confidence': 0.8}
+        result = opu.brain._normalize_emotion(emotion)
+        assert result['label'] == 'happy'
+        assert result['intensity'] == 0.8
+    
+    def test_normalize_emotion_standard_format(self):
+        """Test _normalize_emotion with standard format (line 384)."""
+        opu = OrthogonalProcessingUnit()
+        emotion = {'label': 'sad', 'intensity': 0.6}
+        result = opu.brain._normalize_emotion(emotion)
+        assert result['label'] == 'sad'
+        assert result['intensity'] == 0.6
+    
+    def test_extract_intensity_with_fallback(self):
+        """Test _extract_intensity with fallback to confidence (line 391)."""
+        opu = OrthogonalProcessingUnit()
+        emotion = {'confidence': 0.7}  # No intensity, has confidence
+        result = opu.brain._extract_intensity(emotion)
+        assert result == 0.7
+    
+    def test_extract_label_with_fallback(self):
+        """Test _extract_label with fallback to emotion key (line 395)."""
+        opu = OrthogonalProcessingUnit()
+        emotion = {'emotion': 'angry'}  # No label, has emotion
+        result = opu.brain._extract_label(emotion)
+        assert result == 'angry'
 

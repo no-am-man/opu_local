@@ -19,6 +19,9 @@ from config import (
     BRAIN_DEFAULT_SENSE_LABEL
 )
 from core.patterns.maturity_state import MaturityContext
+from utils.cycle_utils import (
+    get_time_window_for_level, group_memories_by_time_window
+)
 
 
 @dataclass
@@ -204,11 +207,42 @@ class Brain:
         return len(self.memory_levels[level]) >= chunk_size
     
     def _extract_consolidation_chunk(self, level):
-        """Extract and remove chunk from current level."""
+        """
+        Extract and remove chunk from current level.
+        Groups memories by approximate time windows (like real-life memory consolidation).
+        """
         chunk_size = self._get_consolidation_ratio(level)
-        chunk = self.memory_levels[level][:chunk_size]
-        self.memory_levels[level] = self.memory_levels[level][chunk_size:]
-        return chunk
+        
+        if len(self.memory_levels[level]) < chunk_size:
+            return []
+        
+        # Get time window for this level (approximate grouping)
+        time_window = get_time_window_for_level(level)
+        
+        # Group memories by approximate time windows
+        chunk = group_memories_by_time_window(
+            self.memory_levels[level], 
+            chunk_size, 
+            time_window
+        )
+        
+        if chunk and len(chunk) >= chunk_size:
+            # Remove chunk from memory level efficiently
+            # Create a set of chunk items for O(1) lookup
+            chunk_set = {id(item) for item in chunk}
+            self.memory_levels[level] = [
+                item for item in self.memory_levels[level] 
+                if id(item) not in chunk_set
+            ]
+            return chunk
+        
+        # Fallback: simple FIFO if time-based grouping doesn't work
+        if len(self.memory_levels[level]) >= chunk_size:
+            chunk = self.memory_levels[level][:chunk_size]
+            self.memory_levels[level] = self.memory_levels[level][chunk_size:]
+            return chunk
+        
+        return []
     
     def _get_consolidation_ratio(self, level):
         """Get consolidation ratio for given level."""

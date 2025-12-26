@@ -467,36 +467,74 @@ class OPUEventLoop:
     def check_abstraction_cycle(self):
         """Check if any abstraction cycles have elapsed and trigger consolidation."""
         now = time.time()
+        
+        # Time-based consolidation check
         for lvl in range(8):
-            if now - self.last_abstraction_times[lvl] >= self.maturity_level_times[lvl]:
-                # Check if consolidation can actually happen before resetting timer
-                memory_count = len(self.cortex.memory_levels[lvl])
-                can_consolidate = can_consolidate_at_level(lvl, memory_count)
-                
-                if memory_count > 0:
-                    if can_consolidate:
-                        print(f"[ABSTRACTION] Triggering L{lvl} consolidation (time elapsed: {self.maturity_level_times[lvl]:.1f}s)")
-                        # Reset timer only if we're actually consolidating
-                        self.last_abstraction_times[lvl] = now
-                        self.cortex.consolidate_memory(lvl)
-                        self._print_abstraction_summary(lvl)
-                        
-                        # Language generation hook: At Level 3 (Day), generate and speak words
-                        if lvl == 3 and self.language_system:
-                            self._generate_daily_reflection()
-                    else:
-                        # Not enough items yet - don't reset timer, will check again next cycle
-                        required = get_consolidation_ratio(lvl)
-                        print(f"[ABSTRACTION] L{lvl} cycle elapsed but insufficient items ({memory_count}/{required}). Waiting for more memories...")
-                else:
-                    # No memories at this level - reset timer and continue
-                    self.last_abstraction_times[lvl] = now
-                    print(f"[ABSTRACTION] L{lvl} cycle elapsed but no memories to consolidate")
-                
-                self._save_state()
-                if lvl == DAY_COUNTER_LEVEL and can_consolidate:
-                    self.day_counter += 1
-                    print(f"[ABSTRACTION] Day counter incremented: Day {self.day_counter}")
+            if self._should_check_time_based_consolidation(lvl, now):
+                self._handle_time_based_consolidation(lvl, now)
+        
+        # Automatic consolidation check (threshold-based, not time-based)
+        self._check_automatic_consolidation(now)
+    
+    def _should_check_time_based_consolidation(self, level: int, now: float) -> bool:
+        """Check if time-based consolidation should be triggered for this level."""
+        return now - self.last_abstraction_times[level] >= self.maturity_level_times[level]
+    
+    def _handle_time_based_consolidation(self, level: int, now: float):
+        """Handle time-based consolidation for a specific level."""
+        memory_count = len(self.cortex.memory_levels[level])
+        can_consolidate = can_consolidate_at_level(level, memory_count)
+        
+        if memory_count > 0:
+            if can_consolidate:
+                self._trigger_consolidation(level, now, is_time_based=True)
+            else:
+                # Not enough items yet - don't reset timer, will check again next cycle
+                required = get_consolidation_ratio(level)
+                print(f"[ABSTRACTION] L{level} cycle elapsed but insufficient items ({memory_count}/{required}). Waiting for more memories...")
+        else:
+            # No memories at this level - reset timer and continue
+            self.last_abstraction_times[level] = now
+            print(f"[ABSTRACTION] L{level} cycle elapsed but no memories to consolidate")
+        
+        self._save_state()
+        
+        # Increment day counter if this is the day level
+        if level == DAY_COUNTER_LEVEL and can_consolidate:
+            self.day_counter += 1
+            print(f"[ABSTRACTION] Day counter incremented: Day {self.day_counter}")
+    
+    def _check_automatic_consolidation(self, now: float):
+        """Check for automatic consolidation (threshold-based, not time-based)."""
+        # Skip Level 0 (handled by store_memory in brain.py)
+        for lvl in range(1, 8):
+            memory_count = len(self.cortex.memory_levels[lvl])
+            if can_consolidate_at_level(lvl, memory_count):
+                # Only consolidate if we haven't just checked this level
+                # (avoid double consolidation in same cycle)
+                time_since_last_check = now - self.last_abstraction_times[lvl]
+                if time_since_last_check > 1.0:  # At least 1 second since last check
+                    self._trigger_consolidation(lvl, now, is_time_based=False)
+    
+    def _trigger_consolidation(self, level: int, now: float, is_time_based: bool = True):
+        """Trigger consolidation for a specific level."""
+        memory_count = len(self.cortex.memory_levels[level])
+        
+        if is_time_based:
+            print(f"[ABSTRACTION] Triggering L{level} consolidation (time elapsed: {self.maturity_level_times[level]:.1f}s)")
+            # Reset timer only if we're actually consolidating
+            self.last_abstraction_times[level] = now
+        else:
+            print(f"[ABSTRACTION] Automatic L{level} consolidation triggered ({memory_count} items)")
+        
+        self.cortex.consolidate_memory(level)
+        self._print_abstraction_summary(level)
+        
+        # Language generation hook: At Level 3 (Day), generate and speak words
+        if level == 3 and self.language_system:
+            self._generate_daily_reflection()
+        
+        self._save_state()
 
     def _print_abstraction_summary(self, lvl):
         char = self.cortex.get_character_state()

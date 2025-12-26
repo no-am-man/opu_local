@@ -106,4 +106,33 @@ class TestDrawYouTubeHUD:
             
             # Should be called 3 times (3 lines of HUD text)
             assert mock_puttext.call_count == 3
+    
+    def test_draw_youtube_hud_cv2_not_available(self, monkeypatch):
+        """Test draw_youtube_hud when cv2 is not available (covers lines 16-18)."""
+        # Mock cv2 import failure
+        import sys
+        if 'utils.hud_utils' in sys.modules:
+            del sys.modules['utils.hud_utils']
+        
+        with patch.dict('sys.modules', {'cv2': None}):
+            with patch('utils.hud_utils.CV2_AVAILABLE', False):
+                # Re-import to trigger the except block
+                import importlib
+                import utils.hud_utils
+                importlib.reload(utils.hud_utils)
+                
+                # Now test the function
+                frame = np.zeros((360, 640, 3), dtype=np.uint8)
+                result = utils.hud_utils.draw_youtube_hud(
+                    frame,
+                    safe_score=0.5,
+                    s_audio=0.3,
+                    s_visual=0.4,
+                    title="Test",
+                    frame_count=100,
+                    fps=30.0
+                )
+                
+                # Should return frame as-is when cv2 not available
+                assert result is not None
 
