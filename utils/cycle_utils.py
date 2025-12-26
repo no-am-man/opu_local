@@ -5,6 +5,13 @@ Extracts shared logic from main.py and youtube_processor.py.
 
 from typing import Dict, Any, Optional, Tuple
 import numpy as np
+from config import (
+    BRAIN_CONSOLIDATION_RATIO_L0, BRAIN_CONSOLIDATION_RATIO_L1,
+    BRAIN_CONSOLIDATION_RATIO_L2, BRAIN_CONSOLIDATION_RATIO_L3,
+    BRAIN_CONSOLIDATION_RATIO_L4, BRAIN_CONSOLIDATION_RATIO_L5,
+    BRAIN_CONSOLIDATION_RATIO_L6, BRAIN_CONSOLIDATION_RATIO_L7,
+    BRAIN_DEFAULT_CONSOLIDATION_RATIO
+)
 
 
 def fuse_scores(s_audio: float, s_visual: float) -> float:
@@ -146,4 +153,45 @@ def create_processing_result(
         result['channel_scores'] = channel_scores
     
     return result
+
+
+# Consolidation ratio mapping (shared across main.py and core/brain.py)
+_CONSOLIDATION_RATIOS = {
+    0: BRAIN_CONSOLIDATION_RATIO_L0,
+    1: BRAIN_CONSOLIDATION_RATIO_L1,
+    2: BRAIN_CONSOLIDATION_RATIO_L2,
+    3: BRAIN_CONSOLIDATION_RATIO_L3,
+    4: BRAIN_CONSOLIDATION_RATIO_L4,
+    5: BRAIN_CONSOLIDATION_RATIO_L5,
+    6: BRAIN_CONSOLIDATION_RATIO_L6,
+    7: BRAIN_CONSOLIDATION_RATIO_L7
+}
+
+
+def get_consolidation_ratio(level: int) -> int:
+    """
+    Get consolidation ratio for a given memory level.
+    
+    Args:
+        level: Memory level (0-7)
+        
+    Returns:
+        Consolidation ratio (number of items needed to consolidate)
+    """
+    return _CONSOLIDATION_RATIOS.get(level, BRAIN_DEFAULT_CONSOLIDATION_RATIO)
+
+
+def can_consolidate_at_level(level: int, memory_count: int) -> bool:
+    """
+    Check if consolidation can happen at given level with current memory count.
+    
+    Args:
+        level: Memory level (0-7)
+        memory_count: Current number of memories at this level
+        
+    Returns:
+        True if consolidation can happen, False otherwise
+    """
+    required = get_consolidation_ratio(level)
+    return memory_count >= required
 

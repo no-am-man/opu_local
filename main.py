@@ -56,7 +56,8 @@ from utils.reflection_generator import (
 )
 from utils.cycle_utils import (
     fuse_scores, apply_ethical_veto, extract_visual_bit,
-    extract_emotion_from_detections, format_emotion_string, LogCounter
+    extract_emotion_from_detections, format_emotion_string, LogCounter,
+    get_consolidation_ratio, can_consolidate_at_level
 )
 
 # Language System (optional - for word generation)
@@ -468,19 +469,32 @@ class OPUEventLoop:
         now = time.time()
         for lvl in range(8):
             if now - self.last_abstraction_times[lvl] >= self.maturity_level_times[lvl]:
-                self.last_abstraction_times[lvl] = now
-                if len(self.cortex.memory_levels[lvl]) > 0:
-                    print(f"[ABSTRACTION] Triggering L{lvl} consolidation (time elapsed: {self.maturity_level_times[lvl]:.1f}s)")
-                    self.cortex.consolidate_memory(lvl)
-                    self._print_abstraction_summary(lvl)
-                    
-                    # Language generation hook: At Level 3 (Day), generate and speak words
-                    if lvl == 3 and self.language_system:
-                        self._generate_daily_reflection()
+                # Check if consolidation can actually happen before resetting timer
+                memory_count = len(self.cortex.memory_levels[lvl])
+                can_consolidate = can_consolidate_at_level(lvl, memory_count)
+                
+                if memory_count > 0:
+                    if can_consolidate:
+                        print(f"[ABSTRACTION] Triggering L{lvl} consolidation (time elapsed: {self.maturity_level_times[lvl]:.1f}s)")
+                        # Reset timer only if we're actually consolidating
+                        self.last_abstraction_times[lvl] = now
+                        self.cortex.consolidate_memory(lvl)
+                        self._print_abstraction_summary(lvl)
+                        
+                        # Language generation hook: At Level 3 (Day), generate and speak words
+                        if lvl == 3 and self.language_system:
+                            self._generate_daily_reflection()
+                    else:
+                        # Not enough items yet - don't reset timer, will check again next cycle
+                        required = get_consolidation_ratio(lvl)
+                        print(f"[ABSTRACTION] L{lvl} cycle elapsed but insufficient items ({memory_count}/{required}). Waiting for more memories...")
                 else:
+                    # No memories at this level - reset timer and continue
+                    self.last_abstraction_times[lvl] = now
                     print(f"[ABSTRACTION] L{lvl} cycle elapsed but no memories to consolidate")
+                
                 self._save_state()
-                if lvl == DAY_COUNTER_LEVEL:
+                if lvl == DAY_COUNTER_LEVEL and can_consolidate:
                     self.day_counter += 1
                     print(f"[ABSTRACTION] Day counter incremented: Day {self.day_counter}")
 
