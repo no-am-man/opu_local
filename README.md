@@ -210,6 +210,74 @@ pip install opu
 8. **Visualization**: Displays real-time cognitive map
 9. **Abstraction Cycle**: Every 10 seconds triggers memory consolidation and character evolution
 
+### Processing Flow
+
+The following flowchart illustrates the complete processing cycle of the OPU:
+
+```mermaid
+flowchart TD
+    Start([Start Processing Cycle]) --> CaptureTS[Capture Cycle Timestamp<br/>t = time.time]
+    
+    CaptureTS --> AudioPerception[Audio Perception<br/>Capture audio chunk]
+    CaptureTS --> VisualPerception[Visual Perception<br/>Capture video frame]
+    
+    AudioPerception --> AudioGenomic[Extract Genomic Bit<br/>σ from audio]
+    VisualPerception --> ObjectDetect[Object Detection<br/>Faces & Emotions]
+    ObjectDetect --> VisualGenomic[Extract Visual Vector<br/>σ_R, σ_G, σ_B]
+    
+    AudioGenomic --> AudioIntrospect[Audio Introspection<br/>Calculate s_audio<br/>Compare to history]
+    VisualGenomic --> VisualIntrospect[Visual Introspection<br/>Calculate s_visual<br/>Compare to history]
+    
+    AudioIntrospect --> Fusion[Fusion<br/>fused_score = max<br/>s_audio, s_visual]
+    VisualIntrospect --> Fusion
+    
+    Fusion --> EthicalVeto{Ethical Veto<br/>Genesis Kernel<br/>Safety Check}
+    
+    EthicalVeto -->|Safe| SafeScore[safe_score]
+    EthicalVeto -->|Unsafe| SafeScore[safe_score<br/>Reduced]
+    
+    SafeScore --> StoreMemories[Store Memories<br/>AUDIO_V1: Always<br/>VIDEO_V1: If threshold met<br/>Timestamp: t]
+    
+    StoreMemories --> Expression[Expression<br/>Update pitch<br/>Play tone<br/>Analyze phonemes]
+    
+    Expression --> Visualization[Visualization<br/>Update cognitive map<br/>Draw HUD overlay]
+    
+    Visualization --> CheckAbstraction{Abstraction<br/>Cycle Elapsed?}
+    
+    CheckAbstraction -->|Yes| Consolidate[Memory Consolidation<br/>Level 0 → 1 → 2 → ...<br/>Character Evolution]
+    CheckAbstraction -->|No| EndCycle([End Cycle])
+    
+    Consolidate --> CheckDay{Day Cycle<br/>Level 3?}
+    CheckDay -->|Yes| DailyReflection[Daily Reflection<br/>Generate & Speak Words<br/>Learn Vocabulary]
+    CheckDay -->|No| SaveState
+    
+    DailyReflection --> SaveState[Save State<br/>opu_state.json]
+    SaveState --> EndCycle
+    
+    EndCycle --> Start
+    
+    style Start fill:#4CAF50
+    style EndCycle fill:#4CAF50
+    style EthicalVeto fill:#F44336
+    style Consolidate fill:#2196F3
+    style DailyReflection fill:#FF9800
+    style SafeScore fill:#9C27B0
+```
+
+**Key Flow Steps:**
+
+1. **Temporal Synchronization**: Single timestamp captured at cycle start ensures all channels (AUDIO_V1, VIDEO_V1, AUDIO_V2, VIDEO_V2) are synchronized
+2. **Parallel Perception**: Audio and visual inputs processed in parallel
+3. **Genomic Extraction**: Scale-invariant signatures extracted from raw input
+4. **Introspection**: Surprise scores calculated by comparing current state to historical patterns
+5. **Fusion**: Audio and visual scores combined (max operation)
+6. **Ethical Veto**: Safety kernel ensures actions maintain Order (0-th Law)
+7. **Memory Storage**: Experiences stored with synchronized timestamp and emotions
+8. **Expression**: Audio feedback and phoneme analysis based on safe_score
+9. **Visualization**: Cognitive map and HUD updated in real-time
+10. **Abstraction**: Periodic memory consolidation triggers character evolution
+11. **Language Generation**: At Level 3 (Day), OPU generates and speaks daily reflections
+
 ## Emotion Detection
 
 The OPU can detect emotions in faces it sees! This enables the OPU to react to human emotions, creating a more interactive and empathetic experience.

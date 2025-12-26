@@ -37,7 +37,8 @@ from config import (
     VISUAL_SURPRISE_THRESHOLD, AUDIO_TONE_DURATION_SECONDS,
     MATURITY_TIME_SCALES, DAY_COUNTER_LEVEL,
     MAIN_DEFAULT_CONFIDENCE_THRESHOLD, MAIN_DEFAULT_SURPRISE_SCORE,
-    MAIN_EMPTY_VISUAL_VECTOR, YOUTUBE_AUTO_START_URL
+    MAIN_EMPTY_VISUAL_VECTOR, YOUTUBE_AUTO_START_URL,
+    SPEECH_USE_TTS, LANGUAGE_MEMORY_ENABLED
 )
 from core.genesis import GenesisKernel
 from core.mic import perceive
@@ -50,6 +51,21 @@ from utils.visualization import CognitiveMapVisualizer
 from utils.persistence import OPUPersistence
 from utils.file_logger import FileLogger
 from utils.main_hud_utils import draw_main_hud, MainHUDParams
+from utils.reflection_generator import (
+    ReflectionGenerator, extract_reflection_context, extract_words_from_text
+)
+from utils.cycle_utils import (
+    fuse_scores, apply_ethical_veto, extract_visual_bit,
+    extract_emotion_from_detections, format_emotion_string, LogCounter
+)
+
+# Language System (optional - for word generation)
+try:
+    from core.language_system import LanguageSystem
+    LANGUAGE_SYSTEM_AVAILABLE = True
+except ImportError:
+    LANGUAGE_SYSTEM_AVAILABLE = False
+    LanguageSystem = None
 
 # --- HELPER PROCESS ---
 def launch_state_viewer_process(state_file_path, image_queue):
@@ -118,6 +134,22 @@ class OPUEventLoop:
         self.object_detector = ObjectDetector(use_dnn=False, confidence_threshold=MAIN_DEFAULT_CONFIDENCE_THRESHOLD)
         self.persistence = OPUPersistence(state_file=state_file or STATE_FILE)
         
+        # Language System (optional - for word generation at maturity)
+        self.language_system = None
+        if LANGUAGE_SYSTEM_AVAILABLE and (SPEECH_USE_TTS or LANGUAGE_MEMORY_ENABLED):
+            try:
+                self.language_system = LanguageSystem(
+                    use_tts=SPEECH_USE_TTS,
+                    enable_memory=LANGUAGE_MEMORY_ENABLED
+                )
+                print("[OPU] Language system initialized (TTS + Memory)")
+            except Exception as e:
+                print(f"[OPU] Warning: Language system initialization failed: {e}")
+                self.language_system = None
+        
+        # Reflection Generator (for daily reflections)
+        self.reflection_generator = ReflectionGenerator()
+        
         self.original_stdout = sys.stdout
         self.original_stderr = sys.stderr
         self.opencv_preview_enabled = True
@@ -154,6 +186,11 @@ class OPUEventLoop:
         self.day_counter = 0
         self.maturity_level_times = MATURITY_LEVEL_TIMES
         self.audio_handler = AudioInputHandler(self.afl, self.start_time)
+        
+        # Log counters for periodic logging
+        self.audio_log_counter = LogCounter(interval=100)
+        self.visual_log_counter = LogCounter(interval=100)
+        self.veto_log_counter = LogCounter(interval=50)
         
         self._load_state()
         print("[OPU] Initialized. Starting event loop...")
@@ -208,10 +245,10 @@ class OPUEventLoop:
         visual_result = self._process_visual_perception()
         
         # Fusion: combine audio and visual surprise scores
-        fused_score = max(audio_result['surprise'], visual_result['surprise'])
+        fused_score = fuse_scores(audio_result['surprise'], visual_result['surprise'])
         
         # Ethical veto: apply safety kernel
-        safe_score = self._apply_ethical_veto(fused_score, audio_result['genomic_bit'])
+        safe_score = apply_ethical_veto(self.genesis, fused_score, audio_result['genomic_bit'])
         
         # Store memories with synchronized timestamp (VIDEO_V1, AUDIO_V1)
         self._store_memories(audio_result, visual_result, safe_score, cycle_timestamp)
@@ -237,10 +274,7 @@ class OPUEventLoop:
         s_score = self.cortex.introspect(genomic_bit)
         
         # Log introspection result (every 100 cycles to avoid spam)
-        if not hasattr(self, '_audio_log_counter'):
-            self._audio_log_counter = 0
-        self._audio_log_counter += 1
-        if self._audio_log_counter % 100 == 0:
+        if self.audio_log_counter.should_log():
             history_len = len(self.cortex.audio_cortex.genomic_bits_history)
             print(f"[AUDIO] g_bit: {genomic_bit:.4f} | s_score: {s_score:.4f} | history: {history_len}")
         
@@ -260,15 +294,12 @@ class OPUEventLoop:
             # Visual analysis
             visual_vector = self.visual_perception.analyze_frame(processed_frame)
             surprise, channel_scores = self.cortex.introspect_visual(visual_vector)
-            emotion = self._extract_emotion(detections)
+            emotion = extract_emotion_from_detections(detections)
             
             # Log visual processing (every 100 cycles to avoid spam)
-            if not hasattr(self, '_visual_log_counter'):
-                self._visual_log_counter = 0
-            self._visual_log_counter += 1
-            if self._visual_log_counter % 100 == 0:
+            if self.visual_log_counter.should_log():
                 det_count = len(detections)
-                emotion_str = f" | Emotion: {emotion['emotion']} ({emotion['confidence']:.2f})" if emotion else ""
+                emotion_str = format_emotion_string(emotion)
                 print(f"[VISUAL] s_visual: {surprise:.4f} | Channels: R={channel_scores.get('R', 0):.4f} "
                       f"G={channel_scores.get('G', 0):.4f} B={channel_scores.get('B', 0):.4f} | "
                       f"Detections: {det_count}{emotion_str}")
@@ -287,25 +318,6 @@ class OPUEventLoop:
             'detections': [], 'emotion': None, 'processed_frame': None, 'channel_scores': {}
         }
     
-    def _extract_emotion(self, detections):
-        if not detections: return None
-        for d in detections:
-            if d.get('label') == 'face' and 'emotion' in d: return d['emotion']
-        return None
-    
-    def _apply_ethical_veto(self, score, bit):
-        """Apply ethical veto (safety kernel) to fused score."""
-        action = self.genesis.ethical_veto(np.array([score, bit]))
-        safe_score = action[0] if len(action) > 0 else score
-        
-        # Log if veto modified the score (every 50 cycles to avoid spam)
-        if not hasattr(self, '_veto_log_counter'):
-            self._veto_log_counter = 0
-        self._veto_log_counter += 1
-        if self._veto_log_counter % 50 == 0 and abs(safe_score - score) > 0.01:
-            print(f"[FUSION] Ethical veto: {score:.4f} → {safe_score:.4f} (reduced by {score - safe_score:.4f})")
-        
-        return safe_score
     
     def _store_memories(self, audio, visual, score, timestamp=None):
         """
@@ -322,12 +334,12 @@ class OPUEventLoop:
         
         # Store visual memory (VIDEO_V1) if surprise threshold met
         if visual['surprise'] > VISUAL_SURPRISE_THRESHOLD:
-            v_bit = max(visual['vector']) if len(visual['vector']) > 0 else 0
+            v_bit = extract_visual_bit(visual['vector'])
             emotion = visual.get('emotion')
             self.cortex.store_memory(v_bit, visual['surprise'], sense_label=VIDEO_SENSE, emotion=emotion, timestamp=timestamp)
             
             # Log visual memory storage
-            emotion_str = f" | Emotion: {emotion['emotion']} ({emotion['confidence']:.2f})" if emotion else ""
+            emotion_str = format_emotion_string(emotion)
             print(f"[MEMORY] Stored VIDEO_V1: s_visual={visual['surprise']:.4f} | v_bit={v_bit:.4f}{emotion_str}")
     
     def _update_expression(self, score):
@@ -461,6 +473,10 @@ class OPUEventLoop:
                     print(f"[ABSTRACTION] Triggering L{lvl} consolidation (time elapsed: {self.maturity_level_times[lvl]:.1f}s)")
                     self.cortex.consolidate_memory(lvl)
                     self._print_abstraction_summary(lvl)
+                    
+                    # Language generation hook: At Level 3 (Day), generate and speak words
+                    if lvl == 3 and self.language_system:
+                        self._generate_daily_reflection()
                 else:
                     print(f"[ABSTRACTION] L{lvl} cycle elapsed but no memories to consolidate")
                 self._save_state()
@@ -473,6 +489,47 @@ class OPUEventLoop:
         name = MATURITY_TIME_SCALES[lvl]
         print(f"\n[MATURITY {lvl} - {name.upper()}] Abstraction | Maturity: {char['maturity_level']}")
         print("  Memory: " + " | ".join([f"L{i}={len(self.cortex.memory_levels[i])}" for i in range(8)]))
+    
+    def _generate_daily_reflection(self):
+        """
+        Generate a daily reflection using emotion history and s_scores.
+        This is the "language center" hook that makes the OPU speak words.
+        
+        At Level 3 (Day) consolidation, the OPU reflects on its day and speaks.
+        """
+        if not self.language_system or not self.language_system.speech_synthesizer:
+            return
+        
+        # Extract reflection context from OPU state
+        emotion_stats = self.cortex.get_emotion_statistics()
+        char = self.cortex.get_character_state()
+        context = extract_reflection_context(
+            emotion_stats, char, self.cortex.memory_levels, self.day_counter
+        )
+        
+        # Generate reflection text
+        reflection = self.reflection_generator.generate_reflection(context)
+        
+        if reflection:
+            print(f"[LANGUAGE] Daily reflection: \"{reflection}\"")
+            # Speak the reflection using TTS
+            self.language_system.speak_text(reflection, async_mode=True)
+            
+            # Learn the words from the reflection
+            self._learn_words_from_reflection(reflection, context)
+    
+    def _learn_words_from_reflection(self, reflection: str, context):
+        """Learn words from reflection text."""
+        if not self.language_system or not self.language_system.language_memory:
+            return
+        
+        words = extract_words_from_text(reflection)
+        for word in words:
+            self.language_system.learn_word(
+                word,
+                emotion=context.dominant_emotion,
+                s_score=context.avg_s_score
+            )
     
     def run(self):
         self.audio_handler.setup_audio_input()
@@ -565,6 +622,8 @@ class OPUEventLoop:
                 pass  # Ignore errors during cleanup
         
         # Cleanup other resources
+        if self.language_system:
+            self.language_system.cleanup()
         self.afl.cleanup()
         self.visual_perception.cleanup()
         if hasattr(self, 'object_detector'): self.object_detector.cleanup()
